@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lift Co. — lift scale test</title>
+<style>
+:root{color-scheme:light;font-family:Georgia,'Times New Roman',serif;color:#29372f;background:#deded6}
+*{box-sizing:border-box}body{margin:0;overflow:hidden}canvas{display:block;touch-action:none}
+.panel{max-height:calc(100dvh - 95px);overflow-y:auto;position:fixed;top:24px;left:24px;width:260px;padding:20px;background:#f7f4e9ed;border:1px solid #fff9;box-shadow:0 8px 30px #27332812}
+.kicker{font:10px/1.4 monospace;letter-spacing:2px;text-transform:uppercase;color:#687165}
+h1{font-size:29px;font-weight:400;letter-spacing:-1px;margin:8px 0 5px}.intro{font:12px/1.6 sans-serif;color:#637064;margin:0 0 17px}
+.group{border-top:1px solid #d6dbcc;padding-top:12px;margin-top:12px}.label{display:block;font:10px monospace;text-transform:uppercase;letter-spacing:1px;color:#687165;margin-bottom:8px}
+.buttons{display:flex;flex-wrap:wrap;gap:5px}button{border:1px solid #cdd3c5;background:transparent;color:#3d4a3d;font:11px sans-serif;padding:7px 9px;cursor:pointer}button:hover{background:#e5e9dd}button.active{background:#344b3f;border-color:#344b3f;color:#fff9e9}button:focus-visible{outline:2px solid #947537;outline-offset:2px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;font:11px/1.6 sans-serif;color:#677365}.stats strong{display:block;color:#354633;font-size:15px;font-weight:400}
+#legend{font:11px/1.7 sans-serif;display:none;margin-top:10px}.key{display:inline-block;width:9px;height:9px;margin-right:6px}.footer{position:fixed;bottom:18px;left:24px;right:24px;display:flex;justify-content:space-between;gap:16px;font:11px monospace;color:#40503f;pointer-events:none}#readout{background:#f7f4e9dd;padding:7px 10px;min-width:180px}#error{display:none;position:fixed;bottom:60px;left:24px;background:#7b302b;color:white;padding:15px;font:12px monospace;max-width:600px;white-space:pre-wrap}
+@media(max-width:650px){.panel{left:12px;top:12px;width:210px;padding:14px}h1{font-size:25px}.intro{font-size:11px}.footer{left:12px;right:12px;font-size:9px}.footer>span{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<main class="panel">
+<div class="kicker">Lift Co. / lift scale / test area</div>
+<h1>Back on the mountain.</h1>
+<p class="intro">A small crop of the approved terrain. One world unit is one metre.</p>
+<div class="stats"><div>Footprint<strong>1 × 1.2 km</strong></div><div>Terrain relief<strong id="height">—</strong></div></div>
+<div class="group"><span class="label">Gondola line</span><div class="buttons" id="lines"><button data-line="0" class="active">Meadows</button><button data-line="1">Belle Combe</button></div><p id="lineStats" style="font:11px/1.7 sans-serif;margin:10px 0 0"></p></div>
+<div class="group"><span class="label">Viewpoint</span><div class="buttons" id="views">
+<button data-view="overview" class="active">Test area</button><button data-view="line">Whole line</button><button data-view="base">Base station</button><button data-view="top">Top station</button><button data-view="ride">Ride cabin</button>
+</div></div>
+<div class="group"><span class="label">Lift speed</span><div class="buttons" id="speeds"><button data-speed="0">Pause</button><button data-speed="1" class="active">1×</button><button data-speed="2">2×</button></div></div>
+<div class="group"><span class="label">Surface</span><div class="buttons" id="surfaces"><button data-mode="snow" class="active">Snow / rock</button><button data-mode="plain">Clay</button><button data-mode="slope">Slope angle</button><button data-mode="wire">Wireframe</button></div>
+<div id="legend"><div><i class="key" style="background:#7895b1"></i>0–15° · gentle</div><div><i class="key" style="background:#91a67c"></i>15–25° · moderate</div><div><i class="key" style="background:#c3aa70"></i>25–35° · steep</div><div><i class="key" style="background:#bf7962"></i>35–45° · very steep</div><div><i class="key" style="background:#766478"></i>45°+ · rock face</div></div>
+</div>
+<div class="group"><label style="font:11px sans-serif"><input type="checkbox" id="scaleRefs" checked> Scale references: 1.8 m people / 10 m ruler</label>
+<p style="font:10px/1.6 sans-serif;color:#687165;margin:10px 0 0"><a href="./terrain.html" style="color:inherit">Open full terrain study →</a><br>Courchevel elevation crop · 12,221 vertices<br><a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener" style="color:inherit">Mapzen Terrain Tiles</a> · <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener" style="color:inherit">data credits</a></p></div>
+</main>
+<div class="footer"><div id="readout">Move over the mountain to inspect</div><span>drag to orbit · scroll to zoom · right-drag to pan</span></div><div id="error" role="alert"></div>
+<script>
+const errorBox=document.getElementById('error');
+function showError(message){errorBox.style.display='block';errorBox.textContent=String(message);}
+window.addEventListener('error',e=>showError(e.message));window.addEventListener('unhandledrejection',e=>showError(e.reason));
+</script>
+<script src="../assets/data/lift-scale-heightmap.js"></script>
+<script src="../src/lifts/gondola.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+// The fixed base is actual Alpine elevation data, bundled locally so file:// works.
+// There is no generated peak, profile curve, height exaggeration or flattened perimeter.
+const DATA=window.LIFT_TEST_DATA;
+if(!DATA)throw new Error('Missing lift-test-heightmap.js. Keep the test files together.');
+const MOUNTAIN={width:DATA.width,depth:DATA.depth,segmentsX:DATA.columns-1,segmentsZ:DATA.rows-1};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function smooth(a,b,x){const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);}
+function decodeHeights(encoded){
+  const bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0)),view=new DataView(bytes.buffer),result=new Float32Array(bytes.length/2);
+  for(let i=0;i<result.length;i++)result[i]=view.getUint16(i*2,true)*DATA.quantization-DATA.originElevation;
+  return result;
+}
+const coreHeights=decodeHeights(DATA.heights);
+function sampleGrid(x,z,values,width,depth,columns,rows){
+  const gx=clamp((x/width+.5)*(columns-1),0,columns-1),gz=clamp((z/depth+.5)*(rows-1),0,rows-1);
+  const ix=Math.min(Math.floor(gx),columns-2),iz=Math.min(Math.floor(gz),rows-2),u=gx-ix,v=gz-iz,a=iz*columns+ix;
+  return values[a]*(1-u)*(1-v)+values[a+1]*u*(1-v)+values[a+columns]*(1-u)*v+values[a+columns+1]*u*v;
+}
+const rawHeight=(x,z)=>sampleGrid(x,z,coreHeights,DATA.width,DATA.depth,DATA.columns,DATA.rows);
+const LIFT_PLAN=[
+  {name:'Meadows',base:[240,270],top:[300,-400],cabins:10,color:0xd94f4f},
+  {name:'Belle Combe',base:[-200,100],top:[-350,-350],cabins:8,color:0xd94f4f},
+];
+const pads=LIFT_PLAN.flatMap(def=>{
+  const angle=Math.atan2(def.base[0]-def.top[0],def.base[1]-def.top[1]);
+  return [def.base,def.top].map(([x,z])=>({x,z,y:rawHeight(x,z),cos:Math.cos(angle),sin:Math.sin(angle)}));
+});
+function gradedHeight(x,z){
+  let h=rawHeight(x,z);
+  for(const pad of pads){const dx=x-pad.x,dz=z-pad.z,lx=pad.cos*dx-pad.sin*dz,lz=pad.sin*dx+pad.cos*dz;
+    const weight=(1-smooth(9,18,Math.abs(lx)))*(1-smooth(14,24,Math.abs(lz)));h=THREE.MathUtils.lerp(h,pad.y,weight);}
+  return h;
+}
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+document.body.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xd7dddf);scene.fog=new THREE.Fog(0xd7dddf,1900,4200);
+const camera=new THREE.PerspectiveCamera(44,innerWidth/innerHeight,.15,7000);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.09;controls.minDistance=3;controls.maxDistance=2400;controls.maxPolarAngle=Math.PI*.49;
+scene.add(new THREE.HemisphereLight(0xc3d8f1,0x8d9398,1.0));
+const sun=new THREE.DirectionalLight(0xffe0b6,2.25);sun.position.set(-1000,2300,800);sun.target.position.set(0,1100,0);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-850,right:850,top:850,bottom:-850,near:1,far:5000});sun.shadow.normalBias=.08;scene.add(sun,sun.target);
+const material=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.98,metalness:0,vertexColors:true});
+const snowColor=new THREE.Color(0xf0eee7),stoneColor=new THREE.Color(0x535b66);
+function buildPatch(width,depth,nx,nz,cx,cz,getHeight){
+  const geometry=new THREE.PlaneGeometry(width,depth,nx,nz);geometry.rotateX(-Math.PI/2);geometry.translate(cx,0,cz);
+  const positions=geometry.attributes.position;
+  for(let i=0;i<positions.count;i++)positions.setY(i,getHeight(positions.getX(i),positions.getZ(i)));
+  positions.needsUpdate=true;geometry.computeVertexNormals();geometry.computeBoundingSphere();
+  const colors=new Float32Array(positions.count*3),normal=geometry.attributes.normal;
+  // Rock follows steep faces. Broad snow slopes retain a single quiet material.
+  for(let i=0;i<positions.count;i++){
+    const angle=Math.acos(clamp(normal.getY(i),-1,1))*180/Math.PI;
+    const exposed=smooth(36,58,angle)*smooth(1900,2450,positions.getY(i)+DATA.originElevation);
+    snowColor.clone().lerp(stoneColor,exposed).toArray(colors,i*3);
+  }
+  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));geometry.userData.snowColors=colors;
+  const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;scene.add(mesh);return mesh;
+}
+const mountain=buildPatch(DATA.width,DATA.depth,DATA.columns-1,DATA.rows-1,0,0,gradedHeight);
+const geometry=mountain.geometry,positions=geometry.attributes.position;
+const contextGroup=new THREE.Group(); // Empty compatibility group for the surface inspector.
+const minHeight=DATA.minElevation-DATA.originElevation,maxHeight=DATA.maxElevation-DATA.originElevation;
+document.getElementById('height').textContent=Math.round(maxHeight-minHeight)+' m';
+
+// Future construction tools can share these queries. Heights interpolate the rendered
+// triangles, so a station, tower or skier can sit on the exact surface being displayed.
+function heightAt(x,z){
+  if(Math.abs(x)>MOUNTAIN.width/2||Math.abs(z)>MOUNTAIN.depth/2)return null;
+  const gx=(x/MOUNTAIN.width+.5)*MOUNTAIN.segmentsX,gz=(z/MOUNTAIN.depth+.5)*MOUNTAIN.segmentsZ;
+  const ix=Math.min(Math.floor(gx),MOUNTAIN.segmentsX-1),iz=Math.min(Math.floor(gz),MOUNTAIN.segmentsZ-1),u=gx-ix,v=gz-iz,cols=MOUNTAIN.segmentsX+1;
+  const a=iz*cols+ix,h00=positions.getY(a),h10=positions.getY(a+1),h01=positions.getY(a+cols),h11=positions.getY(a+cols+1);
+  return u+v<=1?h00+(h10-h00)*u+(h01-h00)*v:h11+(h01-h11)*(1-u)+(h10-h11)*(1-v);
+}
+function slopeAt(x,z){
+  if(heightAt(x,z)===null)return null;
+  const x0=clamp(x-2,-MOUNTAIN.width/2,MOUNTAIN.width/2),x1=clamp(x+2,-MOUNTAIN.width/2,MOUNTAIN.width/2);
+  const z0=clamp(z-2,-MOUNTAIN.depth/2,MOUNTAIN.depth/2),z1=clamp(z+2,-MOUNTAIN.depth/2,MOUNTAIN.depth/2);
+  const dx=(heightAt(x1,z)-heightAt(x0,z))/(x1-x0),dz=(heightAt(x,z1)-heightAt(x,z0))/(z1-z0);
+  return Math.atan(Math.hypot(dx,dz))*180/Math.PI;
+}
+window.terrainStudy={dimensions:{width:MOUNTAIN.width,depth:MOUNTAIN.depth},heightAt,slopeAt,elevationAt:(x,z)=>{const h=heightAt(x,z);return h===null?null:h+DATA.originElevation;},source:DATA.sourceURL};
+const slopeColors=new Float32Array(positions.count*3),bands=[new THREE.Color(0x7895b1),new THREE.Color(0x91a67c),new THREE.Color(0xc3aa70),new THREE.Color(0xbf7962),new THREE.Color(0x766478)];
+const normals=geometry.attributes.normal;
+for(let i=0;i<positions.count;i++){
+  const angle=Math.acos(clamp(normals.getY(i),-1,1))*180/Math.PI,color=bands[angle<15?0:angle<25?1:angle<35?2:angle<45?3:4];color.toArray(slopeColors,i*3);
+}
+geometry.userData.slopeColors=slopeColors;
+const lifts=LIFT_PLAN.map((definition,index)=>window.createGondolaLift(THREE,{scene,heightAt,definition,index}));
+const references=new THREE.Group();scene.add(references);
+function makePerson(x,z,color){
+  const g=new THREE.Group(),coat=new THREE.MeshStandardMaterial({color}),dark=new THREE.MeshStandardMaterial({color:0x303b43}),skin=new THREE.MeshStandardMaterial({color:0xe3c4a2});
+  const parts=[new THREE.Mesh(new THREE.BoxGeometry(.43,.65,.28),dark),new THREE.Mesh(new THREE.CapsuleGeometry(.23,.38,3,7),coat),new THREE.Mesh(new THREE.SphereGeometry(.12,10,7),skin)];
+  parts[0].position.y=.4;parts[1].position.y=1.12;parts[2].position.y=1.68;
+  for(const part of parts){part.castShadow=true;g.add(part);}g.position.set(x,heightAt(x,z)+.02,z);references.add(g);
+}
+for(const lift of lifts){
+  const half=lift.frame.length/2;
+  for(const [i,x] of [9.2,10.6,12].entries()){const p=lift.worldPoint(x,half+5);makePerson(p.x,p.z,[0xd94f4f,0x537d8b,0xc29951][i]);}
+  // A 10m survey ruler follows the snow beside the loading apron.
+  const material=new THREE.MeshStandardMaterial({color:0xb39253});
+  for(let i=0;i<=10;i++){
+    const p=lift.worldPoint(12,half-5+i),mark=new THREE.Mesh(new THREE.BoxGeometry(i%5===0?.75:.35,.055,.06),material);mark.position.set(p.x,p.y+.1,p.z);mark.rotation.y=lift.frame.angle;references.add(mark);
+    if(i<10){const q=lift.worldPoint(12,half-4+i),a=new THREE.Vector3(p.x,p.y+.1,p.z),b=new THREE.Vector3(q.x,q.y+.1,q.z),d=b.clone().sub(a),bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,d.length(),5),material);bar.position.copy(a).add(b).multiplyScalar(.5);bar.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());references.add(bar);}
+  }
+}
+document.getElementById('scaleRefs').onchange=e=>{references.visible=e.target.checked;};
+let selectedLine=0,speed=1,ride=false,rideCabin=0;
+const centerHeight=heightAt(0,0);
+function viewFor(name){
+  const lift=lifts[selectedLine],half=lift.frame.length/2;
+  if(name==='overview')return {eye:[850,centerHeight+700,1150],target:[0,centerHeight,-60]};
+  if(name==='line'){
+    const mid=lift.worldPoint(0,0);mid.y=(lift.LIFT.base.y+lift.LIFT.top.y)/2;
+    const eye=lift.worldPoint(lift.frame.length*.66,lift.frame.length*.28);eye.y=mid.y+lift.frame.length*.6;
+    return {eye:eye.toArray(),target:mid.toArray()};
+  }
+  const end=name==='top'?-half:half,eye=lift.worldPoint(23,end+(name==='top'?22:28)),target=lift.worldPoint(0,end);
+  eye.y=target.y+12;target.y+=3;return {eye:eye.toArray(),target:target.toArray()};
+}
+function updateLineStats(){const lift=lifts[selectedLine];document.getElementById('lineStats').textContent=Math.round(lift.length)+' m rope span · '+Math.round(lift.rise)+' m rise · '+lift.cabins.length+' cabins · 6 m/s';}
+document.getElementById('lines').onclick=e=>{const button=e.target.closest('[data-line]');if(!button)return;selectedLine=Number(button.dataset.line);rideCabin=0;updateLineStats();for(const b of document.querySelectorAll('[data-line]'))b.classList.toggle('active',b===button);setView('base');};
+document.getElementById('speeds').onclick=e=>{const button=e.target.closest('[data-speed]');if(!button)return;speed=Number(button.dataset.speed);for(const b of document.querySelectorAll('[data-speed]'))b.classList.toggle('active',b===button);};
+updateLineStats();
+let transition=null;
+function setView(name,instant=false){
+  if(name==='ride'){if(ride)rideCabin=(rideCabin+1)%lifts[selectedLine].cabins.length;ride=true;transition=null;controls.enabled=false;for(const b of document.querySelectorAll('[data-view]'))b.classList.toggle('active',b.dataset.view===name);return;}
+  ride=false;controls.enabled=true;const view=viewFor(name);
+  const eye=new THREE.Vector3(...view.eye),target=new THREE.Vector3(...view.target);
+  if(instant){camera.position.copy(eye);controls.target.copy(target);controls.update();}
+  else transition={start:performance.now(),eye:camera.position.clone(),target:controls.target.clone(),endEye:eye,endTarget:target};
+  for(const button of document.querySelectorAll('[data-view]'))button.classList.toggle('active',button.dataset.view===name);
+}
+document.getElementById('views').onclick=e=>{const button=e.target.closest('[data-view]');if(button)setView(button.dataset.view);};
+controls.addEventListener('start',()=>{transition=null;for(const b of document.querySelectorAll('[data-view]'))b.classList.remove('active');});
+document.getElementById('surfaces').onclick=e=>{
+  const button=e.target.closest('[data-mode]');if(!button)return;
+  const mode=button.dataset.mode;material.wireframe=mode==='wire';material.vertexColors=mode==='slope'||mode==='snow';
+  material.color.set(mode==='plain'?0xe8e5da:mode==='wire'?0x68786b:0xffffff);material.needsUpdate=true;
+  for(const mesh of [mountain,...contextGroup.children]) {
+    const g=mesh.geometry;
+    if(mode==='slope'&&!g.userData.slopeColors){
+      const colors=new Float32Array(g.attributes.position.count*3),normals=g.attributes.normal;
+      for(let i=0;i<normals.count;i++){const angle=Math.acos(clamp(normals.getY(i),-1,1))*180/Math.PI;bands[angle<15?0:angle<25?1:angle<35?2:angle<45?3:4].toArray(colors,i*3);}
+      g.userData.slopeColors=colors;
+    }
+    g.setAttribute('color',new THREE.BufferAttribute(mode==='slope'?g.userData.slopeColors:g.userData.snowColors,3));
+  }
+  document.getElementById('legend').style.display=mode==='slope'?'block':'none';
+  for(const b of document.querySelectorAll('[data-mode]'))b.classList.toggle('active',b===button);
+};
+const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let pointerPending=false;
+renderer.domElement.addEventListener('pointermove',e=>{pointer.set(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);pointerPending=true;});
+renderer.domElement.addEventListener('pointerleave',()=>{pointerPending=false;document.getElementById('readout').textContent='Move over the mountain to inspect';});
+setView('base',true);
+const clock=new THREE.Clock(),ridePosition=new THREE.Vector3(),rideDirection=new THREE.Vector3(),rideEye=new THREE.Vector3();
+function animate(){
+  requestAnimationFrame(animate);
+  const rawDt=Math.min(clock.getDelta(),.05);for(const lift of lifts)lift.update(rawDt*speed);
+  if(transition){const t=smooth(0,800,performance.now()-transition.start);camera.position.lerpVectors(transition.eye,transition.endEye,t);controls.target.lerpVectors(transition.target,transition.endTarget,t);if(t>=1)transition=null;}
+  if(ride){const lift=lifts[selectedLine],c=lift.cabins[rideCabin];c.g.getWorldPosition(ridePosition);lift.LOOP.dir(c.s,rideDirection).transformDirection(lift.root.matrixWorld);
+    rideEye.copy(ridePosition).addScaledVector(rideDirection,-8);rideEye.y+=2.5;camera.position.lerp(rideEye,1-Math.exp(-rawDt*4));camera.lookAt(ridePosition.x+rideDirection.x*10,ridePosition.y-2,ridePosition.z+rideDirection.z*10);
+  }else controls.update();
+  if(pointerPending){
+    pointerPending=false;raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObject(mountain)[0];
+    document.getElementById('readout').textContent=hit?Math.round(hit.point.y+DATA.originElevation)+' m elevation  /  '+Math.round(slopeAt(hit.point.x,hit.point.z))+'° slope':'Outside test area';
+  }
+  renderer.render(scene,camera);
+}
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+animate();
+</script>
+</body>
+</html>

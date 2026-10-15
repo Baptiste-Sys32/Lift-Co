@@ -1,0 +1,23 @@
+{
+  "name": "Saulire / Courchevel",
+  "latitude": 45.399,
+  "longitude": 6.624,
+  "width": 3200,
+  "depth": 3800,
+  "columns": 321,
+  "rows": 381,
+  "contextWidth": 7200,
+  "contextDepth": 7800,
+  "contextColumns": 241,
+  "contextRows": 261,
+  "originElevation": 900,
+  "minElevation": 1540.9,
+  "maxElevation": 2699.1,
+  "quantization": 0.1,
+  "source": "Mapzen Terrain Tiles",
+  "sourceURL": "https://registry.opendata.aws/terrain-tiles/",
+  "attributionURL": "https://github.com/tilezen/joerd/blob/master/docs/attribution.md",
+  "accessed": "2026-10-14",
+  "zoom": 13,
+  "processing": "Terrarium RGB decoding; geographic bilinear resampling; 0.1 m quantization. No vertical exaggeration or generated height detail."
+}

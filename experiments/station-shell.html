@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lift Co. — Station housing study</title>
+<style>
+:root{--paper:#f5f2e8;--ink:#354d3e;--muted:#7e8676;--line:#d3d7c9;--gold:#c98f3f;--side:290px;color-scheme:light;font-family:Georgia,'Times New Roman',serif;color:var(--ink);background:#e8e8df}*{box-sizing:border-box}body{margin:0;overflow:hidden}button,input{font:inherit;color:inherit}button{cursor:pointer;border:1px solid var(--line);background:#faf8f0;border-radius:3px;padding:9px 11px;font:10px/1.5 monospace}button:hover{background:#e5e8db}button.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}[hidden]{display:none!important}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--paper);padding:25px 22px;overflow:auto;border-right:1px solid var(--line);z-index:5}.brand{display:flex;align-items:center;justify-content:space-between}.brand a{font-size:23px;color:var(--ink);text-decoration:none;letter-spacing:-1px}.brand a span{color:var(--gold)}.eyebrow{font:9px/1.6 monospace;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted)}h1{font-size:39px;line-height:1.05;font-weight:400;letter-spacing:-1.6px;margin:28px 0 15px}h2,p{margin:0}.small{font:11px/1.8 sans-serif;color:var(--muted)}.section{border-top:1px solid var(--line);margin-top:22px;padding-top:17px}.section>.eyebrow{display:block;margin-bottom:11px}.views{display:grid;grid-template-columns:1fr 1fr;gap:6px}.views button{text-align:left}.views button:last-child{grid-column:1/-1}.colors{display:flex;gap:7px}.colors button{width:37px;height:29px;padding:4px}.colors i{display:block;width:100%;height:100%;background:var(--swatch);border-radius:1px}.colors button.active{outline:1px solid var(--gold);outline-offset:2px;background:transparent}.check{display:flex;align-items:center;gap:8px;margin:12px 0;font:11px sans-serif;color:#71816c}input{accent-color:var(--gold)}input[type=range]{width:100%;margin:12px 0}.row{display:flex;justify-content:space-between;align-items:center}.mono{font:10px/1.6 monospace;color:var(--muted)}.refs{display:grid;grid-template-columns:1fr 1fr;gap:7px}.refs img{display:block;width:100%;height:88px;object-fit:cover;border:1px solid var(--line)}.refs a{color:var(--muted);text-decoration:none;font:9px/1.8 monospace}.note{border-left:2px solid var(--gold);padding-left:10px;margin-top:17px}.footer{margin:22px 0 2px;font:10px/1.9 sans-serif;color:var(--muted)}.footer a{color:var(--ink)}#stage{position:fixed;inset:0 0 0 var(--side)}canvas{display:block;touch-action:none}.topbar{position:absolute;top:25px;left:28px;right:28px;display:flex;justify-content:space-between;gap:15px;pointer-events:none}.topbar button{pointer-events:auto}.title{font-size:21px;font-weight:400;margin-top:4px}.caption{position:absolute;left:30px;bottom:30px;pointer-events:none;max-width:290px}.caption h2{font-weight:400;font-size:32px;letter-spacing:-.8px;margin:8px 0}.caption p{font:11px/1.8 sans-serif;color:#7d8575}.tools{position:absolute;bottom:30px;right:28px;text-align:right}.tools button{margin-bottom:8px}.pill{font:8px monospace;letter-spacing:1px;background:#f5f2e8c9;border:1px solid var(--line);padding:8px 11px;align-self:flex-start}.loading{position:absolute;top:48%;width:100%;text-align:center;font:12px monospace;color:var(--muted)}#error{position:fixed;z-index:20;left:calc(var(--side) + 20px);right:20px;bottom:15px;padding:12px;background:#fff0e4;color:#92543e;border:1px solid #d9c9bb;font:11px monospace;white-space:pre-wrap}#refDialog{border:1px solid var(--line);padding:10px;background:var(--paper);max-width:90vw;max-height:90vh}#refDialog::backdrop{background:#24382fd9}#refDialog img{display:block;max-width:83vw;max-height:80vh}#refDialog button{display:block;margin:8px 0 0 auto}
+@media(max-height:850px){.sidebar{padding:19px}h1{font-size:34px;margin-top:21px}.section{margin-top:17px;padding-top:13px}.refs img{height:70px}.check{margin:10px 0}.caption{max-width:250px}.caption h2{font-size:28px}}@media(max-width:950px){:root{--side:245px}.sidebar{padding:20px 16px}h1{font-size:34px}.topbar{left:20px;right:20px}.caption{bottom:85px;left:20px}.tools{bottom:20px;right:20px}.pill{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script></head>
+<body><aside class="sidebar"><div class="brand"><a href="../empty-map.html">Lift Co<span>.</span></a><span class="eyebrow">DESIGN STUDY / 04</span></div><h1>A new face<br>for the station.</h1><p class="small">Full lower cheeks, a narrower roof, curved dark glazing and a ribbed metal roof, shaped from your two references.</p>
+<section class="section"><span class="eyebrow">01 / WALK AROUND</span><div class="views"><button data-view="overview" class="active">Three-quarter ↗</button><button data-view="front">Front face</button><button data-view="side">Long side</button><button data-view="roof">Roof panels</button><button data-view="receptors">Cable receptors — close-up ↗</button></div></section>
+<section class="section"><span class="eyebrow">02 / MATERIAL & STRUCTURE</span><div class="colors"><button data-color="#e64a12" class="active" aria-label="Reference orange" title="Reference orange"><i style="--swatch:#e64a12"></i></button><button data-color="#b7352c" aria-label="Lift Co red" title="Lift Co red"><i style="--swatch:#b7352c"></i></button><button data-color="#e0dfd2" aria-label="Warm ivory" title="Warm ivory"><i style="--swatch:#e0dfd2"></i></button><button data-color="#354f59" aria-label="Alpine blue" title="Alpine blue"><i style="--swatch:#354f59"></i></button></div><label class="check"><input id="cutaway" type="checkbox"> Open the upper housing</label><label class="check"><input id="upperOnly" type="checkbox"> Upper part only</label><label class="check"><input id="people" type="checkbox" checked> People for scale</label><label class="check"><input id="spin" type="checkbox"> Slowly rotate the view</label></section>
+<section class="section"><span class="eyebrow">03 / CABLE ENTRY</span><div class="row"><label class="mono" for="angle">Approach angle</label><span id="angleLabel" class="mono">8°</span></div><input id="angle" type="range" min="-15" max="25" step="1" value="8"><p class="small">Three exposed sheaves per lane, wrapped by short swept steel receptors at the front openings.</p></section>
+<section class="section"><span class="eyebrow">04 / YOUR REFERENCES</span><div class="refs"><a href="../assets/references/stations/shell-study/three-quarter.jpg" data-ref><img src="../assets/references/stations/shell-study/three-quarter.jpg" alt="Orange station with curved side glazing and ribbed roof">Housing & roof ↗</a><a href="../assets/references/stations/shell-study/front.jpeg" data-ref><img src="../assets/references/stations/shell-study/front.jpeg" alt="Front face and swept cable entry receptors">Front & receptors ↗</a></div><p class="small note">The current concrete platforms, recessed channels, ramps and railings are reproduced beneath the new housing.</p></section><p class="footer">Separate visual prototype.<br><a href="../empty-map.html">← Return to the game</a></p></aside>
+<main id="stage"><header class="topbar"><div><span class="eyebrow">LIFT CO. / DETACHABLE TERMINAL</span><h2 class="title" id="viewTitle">Housing / three-quarter</h2></div><span class="pill">UPPER HOUSING STUDY</span></header><div class="caption"><span class="eyebrow" id="captionLabel">01 / THE SILHOUETTE</span><h2 id="captionTitle">Curved glass.<br>A solid front.</h2><p id="captionText">Full rounded lower cheeks taper inward to a narrower roof above the existing platforms.</p></div><div class="tools"><button id="reset">Reset view ↗</button><div class="mono">drag = orbit · right-drag = pan · scroll = zoom</div></div><div class="loading" id="loading">Opening the station study…</div></main><div id="error" hidden></div><dialog id="refDialog"><img id="refImage" alt="Station design reference"><button id="closeRef">Close ×</button></dialog>
+<script src="../src/lifts/detachable-station.js"></script>
+<script type="module">
+import * as T from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const $=id=>document.getElementById(id);
+function report(e){$('error').hidden=false;$('error').textContent=e.message||String(e);$('loading').hidden=true;}
+addEventListener('error',e=>report(e));addEventListener('unhandledrejection',e=>report(e.reason));
+const stage=$('stage'),scene=new T.Scene();scene.background=new T.Color(0xe8e8df);scene.fog=new T.Fog(0xe8e8df,100,240);
+const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.setSize(stage.clientWidth,stage.clientHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;stage.prepend(renderer.domElement);
+const pmrem=new T.PMREMGenerator(renderer),room=new RoomEnvironment();scene.environment=pmrem.fromScene(room,.04).texture;room.dispose();pmrem.dispose();
+scene.add(new T.HemisphereLight(0xfff4dd,0x9faeaa,2));const sun=new T.DirectionalLight(0xffe2ba,3);sun.position.set(-25,45,-20);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-40,right:40,top:45,bottom:-35,near:.1,far:140});sun.shadow.camera.updateProjectionMatrix();sun.shadow.normalBias=.025;sun.shadow.bias=-.00008;sun.shadow.radius=4;scene.add(sun);sun.target.position.set(0,0,12);scene.add(sun.target);
+const camera=new T.PerspectiveCamera(38,stage.clientWidth/stage.clientHeight,.04,800),controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.075;controls.minDistance=2;controls.maxDistance=220;controls.maxPolarAngle=Math.PI*.49;controls.zoomToCursor=true;
+const root=new T.Group();scene.add(root);const foundation=new T.Group(),housing=new T.Group(),mechanics=new T.Group(),entry=new T.Group(),people=new T.Group(),supports=new T.Group();root.add(foundation,housing,mechanics,entry,people,supports);
+const mat=(color,roughness=.6,metalness=0,extra={})=>new T.MeshStandardMaterial({color,roughness,metalness,...extra});
+const frameM=mat(0x596165,.5,.5),platM=mat(0x929994,.95),pitM=mat(0x3e484b,1),timberM=mat(0x8c7155,.9),orange=mat(0xe64a12,.35,.15),edgeM=mat(0x2b3439,.52,.5),silver=mat(0x9ea8a9,.4,.7),roofM=mat(0x7a8181,.7,.35),rubber=mat(0x20272b,.85),glass=mat(0x526476,.17,.35,{transparent:true,opacity:.72,side:T.DoubleSide,depthWrite:false}),snowM=mat(0xeceee8,1),interiorM=mat(0x414b50,.9),receptorMetal=mat(0xaab0b0,.5,.6,{side:T.DoubleSide});
+const cache=new Map();function geo(key,fn){if(!cache.has(key))cache.set(key,fn());return cache.get(key);}
+function mesh(g,geometry,material,x=0,y=0,z=0){const o=new T.Mesh(geometry,material);o.position.set(x,y,z);o.castShadow=!material.transparent;o.receiveShadow=true;g.add(o);return o;}
+function box(g,w,h,d,x,y,z,m){return mesh(g,geo('box'+[w,h,d],()=>new T.BoxGeometry(w,h,d)),m,x,y,z);}
+function beam(g,a,b,r,m=frameM){const p=new T.Vector3(...a),q=new T.Vector3(...b),delta=q.clone().sub(p),o=mesh(g,geo('bar'+r+','+delta.length().toFixed(4),()=>new T.CylinderGeometry(r,r,delta.length(),10)),m);o.position.copy(p).add(q).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());return o;}
+function tube(g,points,r,m){return mesh(g,new T.TubeGeometry(new T.CatmullRomCurve3(points.map(p=>new T.Vector3(...p))),Math.max(16,points.length*5),r,8,false),m);}
+// Cut the same U-shaped carrier channel out of the snow so its recessed floor is visible.
+const snowOutline=new T.Shape();snowOutline.moveTo(-200,-200);snowOutline.lineTo(200,-200);snowOutline.lineTo(200,200);snowOutline.lineTo(-200,200);snowOutline.closePath();
+const channel=[[-4.28,-.6],[-1.92,-.6],[-1.92,26]];
+for(let i=0;i<=40;i++){const a=Math.PI-i/40*Math.PI;channel.push([1.92*Math.cos(a),26+1.92*Math.sin(a)]);}
+channel.push([1.92,-.6],[4.28,-.6],[4.28,26]);
+for(let i=0;i<=40;i++){const a=i/40*Math.PI;channel.push([4.28*Math.cos(a),26+4.28*Math.sin(a)]);}
+const channelHole=new T.Path();channel.forEach(([x,z],i)=>i?channelHole.lineTo(x,-z):channelHole.moveTo(x,-z));channelHole.closePath();snowOutline.holes.push(channelHole);
+mesh(scene,new T.ShapeGeometry(snowOutline),snowM,0,-.09,0).rotation.x=-Math.PI/2;
+// Exact game foundation dimensions and levels; only the surrounding terrain is flat here.
+const STATION={straight:26,railX:3.1},center=13;
+for(const side of [-1,1]){
+ box(foundation,3.15,1,23,side*5.975,.02,11.5,platM);
+ box(foundation,2.35,.12,26,side*3.1,-.55,13,pitM);
+ box(foundation,.12,1.4,23,side*4.31,-.18,11.5,platM);
+ for(let d=2;d<23;d+=3)box(foundation,.1,1.1,.1,side*7.5,1.06,d,timberM);
+ box(foundation,.1,.12,21,side*7.5,1.52,11.5,timberM);
+ const x0=side*4.6,x1=side*6.9,rg=new T.BufferGeometry();rg.setAttribute('position',new T.Float32BufferAttribute([x0,.52,3,x1,.52,3,x0,.04,-7,x1,.04,-7],3));rg.setIndex(side>0?[0,1,2,1,3,2]:[0,2,1,1,2,3]);rg.computeVertexNormals();mesh(foundation,rg,new T.MeshStandardMaterial({color:0x929994,roughness:1,side:T.DoubleSide}));
+}
+const pitPoints=[],pitIndices=[];for(let i=0;i<=32;i++){const a=i/32*Math.PI;for(const r of [1.92,4.28])pitPoints.push(Math.cos(a)*r,-.49,26+Math.sin(a)*r);if(i<32){const k=i*2;pitIndices.push(k,k+1,k+2,k+1,k+3,k+2);}}
+const pitG=new T.BufferGeometry();pitG.setAttribute('position',new T.Float32BufferAttribute(pitPoints,3));pitG.setIndex(pitIndices);pitG.computeVertexNormals();mesh(foundation,pitG,new T.MeshStandardMaterial({color:0x3e484b,roughness:1,side:T.DoubleSide}));
+// Existing recessed channels continue through the rounded return, rather than a new deck.
+const bed=new T.Shape();bed.moveTo(-4.45,-.5);bed.lineTo(4.45,-.5);bed.lineTo(4.45,26);bed.absarc(0,26,4.45,0,Math.PI,false);bed.closePath();mesh(foundation,new T.ShapeGeometry(bed),mat(0x3e484b,1,0,{side:T.DoubleSide}),0,-.58,0).rotation.x=Math.PI/2;
+const stationHousing=window.LiftCoDetachableStation.create(T,{parent:housing,supportParent:supports,color:0xe64a12,name:'Alpine terminal'});
+// Interior structure, independently visible when the upper shell is opened.
+box(mechanics,7.5,.25,26,0,6.1,13,interiorM);for(const x of [-2.45,2.45])box(mechanics,.23,.5,27,x,5.8,13,frameM);
+const bullwheel=new T.Group();bullwheel.position.set(0,4.48,26);mechanics.add(bullwheel);
+mesh(bullwheel,geo('bull-rim',()=>{const g=new T.TorusGeometry(2.55,.09,8,64);g.rotateX(Math.PI/2);return g;}),frameM);
+mesh(bullwheel,new T.CylinderGeometry(.4,.4,.5,16),edgeM);for(let i=0;i<8;i++){const a=i/8*Math.PI*2;beam(bullwheel,[0,0,0],[2.5*Math.cos(a),0,2.5*Math.sin(a)],.07,silver);}
+box(mechanics,2.2,1,3.3,0,6.7,22,frameM);for(const x of [-3.1,3.1]){
+ box(mechanics,.16,.2,26,x,4.92,13,silver);
+ for(let z=.7;z<26;z+=.8){const wheel=mesh(mechanics,geo('tyre',()=>{const g=new T.CylinderGeometry(.24,.24,.2,12);g.rotateZ(Math.PI/2);return g;}),rubber,x,4.5,z);}
+}
+// Both cables run over the real station path and enter through the front mouths.
+const spinning=[];
+function clearEntry(){const shared=new Set(cache.values()),disposed=new Set();for(const o of [...entry.children]){entry.remove(o);o.traverse(m=>{if(m.geometry&&!shared.has(m.geometry)&&!disposed.has(m.geometry)){disposed.add(m.geometry);m.geometry.dispose();}});}spinning.length=0;}
+function cableY(s,angle){const slope=Math.tan(T.MathUtils.degToRad(angle));return s<=3.2?5+slope*s*s/6.4:5+slope*(s-1.6);}
+function receptors(angle){clearEntry();const m=Math.tan(T.MathUtils.degToRad(angle)),sign=m>=0?1:-1;
+ for(const side of [-1,1]){
+  const x=side*3.1,contact=[];
+  for(const d of [.3,1.6,2.9]){
+   const slope=m*d/3.2,n=1/Math.hypot(1,slope),cy=cableY(d,angle),wheel=mesh(entry,geo('sheave',()=>{const g=new T.LatheGeometry([[.11,-.13],[.31,-.13],[.35,-.09],[.31,-.04],[.31,.04],[.35,.09],[.31,.13],[.11,.13]].map(([r,y])=>new T.Vector2(r,y)),20);g.rotateZ(Math.PI/2);return g;}),rubber,x,cy+sign*.365*n,-d+sign*.365*slope*n);
+   mesh(wheel,geo('entryhub',()=>{const g=new T.CylinderGeometry(.14,.14,.37,12);g.rotateZ(Math.PI/2);return g;}),silver);contact.push(wheel.position.clone());spinning.push(wheel);
+  }
+  // Smooth swept side cheeks, with a raised tip and an open cable groove below.
+  for(const flank of [-1,1]){
+   const first=contact[0],middle=contact[1],last=contact[2],tip=cableY(3.2,angle)+sign*.7;
+   const shape=new T.Shape();shape.moveTo(.45,5+sign*.1);shape.lineTo(.45,5+sign*.62);
+   shape.bezierCurveTo(-.2,5+sign*.82,-.8,middle.y+sign*.3,middle.z,middle.y+sign*.3);
+   shape.bezierCurveTo(last.z,last.y+sign*.25,-3.18,tip-sign*.15,-3.42,tip);
+   shape.quadraticCurveTo(-3.62,tip-sign*.12,-3.45,tip-sign*.35);
+   shape.bezierCurveTo(-3,last.y-sign*.08,-1,first.y-sign*.06,.45,5+sign*.1);shape.closePath();
+   const g=new T.ExtrudeGeometry(shape,{depth:.075,bevelEnabled:true,bevelSize:.018,bevelThickness:.012,bevelSegments:2,curveSegments:32});
+   g.applyMatrix4(new T.Matrix4().set(0,0,1,x+flank*.29,0,1,0,0,1,0,0,0,0,0,0,1));mesh(entry,g,receptorMetal);
+  }
+  for(let i=1;i<contact.length;i++)beam(entry,[x-side*.36,contact[i-1].y,contact[i-1].z],[x-side*.36,contact[i].y,contact[i].z],.08,silver);
+  const points=[];for(let s=24;s>=0;s-=.15)points.push([x,cableY(s,angle),-s]);for(let z=.1;z<26;z+=.4)points.push([side*(3.1-.55*Math.min(1,z/4)),5-.55*Math.min(1,z/4),z]);tube(entry,points,.047,edgeM);
+ }
+ const turn=[];for(let i=0;i<=48;i++){const a=i/48*Math.PI;turn.push([2.55*Math.cos(a),4.45,26+2.55*Math.sin(a)]);}tube(entry,turn,.047,edgeM);
+}
+receptors(8);
+// Two quiet figures show the unchanged platform height and upper-body scale.
+function person(x,z,color){const g=new T.Group();people.add(g);g.position.set(x,.52,z);const jacket=mat(color,.9),trousers=mat(0x394c51,.95),skin=mat(0xd7b49c,.95);box(g,.48,.65,.27,0,1.08,0,jacket);mesh(g,new T.SphereGeometry(.16,14,10),skin,0,1.6,0);for(const s of [-1,1]){beam(g,[s*.12,.2,0],[s*.12,.75,0],.075,trousers);beam(g,[s*.29,1.25,0],[s*.33,.8,.04],.055,jacket);box(g,.14,.1,.32,s*.12,.1,-.06,trousers);}return g;}
+person(5.8,10,0xa46e46);person(-5.9,17,0x637b6e);
+const views={overview:{eye:[29,20,-29],target:[0,4.8,12],title:'Housing / three-quarter',label:'01 / THE SILHOUETTE',head:'Curved glass.<br>A solid front.',text:'Full rounded lower cheeks taper inward to a narrower roof above the existing platforms.'},front:{eye:[0,8.8,-25],target:[0,5.6,2],title:'Front / two cable openings',label:'02 / THE FRONT FACE',head:'Two mouths.<br>Three sheaves each.',text:'A central glazed face sits between the swept cable receptors and rounded outer cheeks.'},side:{eye:[43,16,14],target:[0,5,14],title:'Side / curved glazing',label:'03 / THE LONG SIDE',head:'A continuous<br>window ribbon.',text:'Dark glass wraps the rounded shoulder, divided by fine black mullions.'},roof:{eye:[24,38,15],target:[0,5,15],title:'Roof / inset metal panels',label:'04 / ABOVE THE HOUSING',head:'Ribbed metal.<br>An orange border.',text:'The grey roof sits inside the rounded shell, with regular standing seams.'},receptors:{eye:[10,9,-10],target:[3.1,5.35,-.6],title:'Detail / cable receptor',label:'05 / THE CABLE ENTRY',head:'Short, swept<br>steel receptors.',text:'Three grooved sheaves per lane guide the cable through each opening.'}};
+let currentView='overview';function setView(id){currentView=id;const v=views[id];controls.enableDamping=false;controls.update();camera.position.fromArray(v.eye);controls.target.fromArray(v.target);controls.update();controls.enableDamping=true;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));$('viewTitle').textContent=v.title;$('captionLabel').textContent=v.label;$('captionTitle').innerHTML=v.head;$('captionText').textContent=v.text;}
+for(const b of document.querySelectorAll('[data-view]'))b.onclick=()=>setView(b.dataset.view);
+$('reset').onclick=()=>setView(currentView);$('cutaway').onchange=()=>housing.visible=!$('cutaway').checked;
+$('upperOnly').onchange=()=>{foundation.visible=!$('upperOnly').checked;supports.visible=!$('upperOnly').checked;people.visible=!$('upperOnly').checked&&$('people').checked;};$('people').onchange=()=>people.visible=$('people').checked&&!$('upperOnly').checked;
+$('spin').onchange=()=>controls.autoRotate=$('spin').checked;controls.autoRotateSpeed=.6;
+for(const b of document.querySelectorAll('[data-color]'))b.onclick=()=>{stationHousing.setColor(b.dataset.color);document.querySelectorAll('[data-color]').forEach(o=>o.classList.toggle('active',o===b));};
+$('angle').oninput=e=>{$('angleLabel').textContent=e.target.value+'°';receptors(+e.target.value);};
+for(const a of document.querySelectorAll('[data-ref]'))a.onclick=e=>{e.preventDefault();$('refImage').src=a.href;$('refDialog').showModal();};$('closeRef').onclick=()=>$('refDialog').close();$('refDialog').onclick=e=>{if(e.target===$('refDialog'))$('refDialog').close();};
+addEventListener('resize',()=>{camera.aspect=stage.clientWidth/stage.clientHeight;camera.updateProjectionMatrix();renderer.setSize(stage.clientWidth,stage.clientHeight);});const initialView=new URLSearchParams(location.search).get('view');setView(views[initialView]?initialView:'overview');$('loading').hidden=true;
+const clock=new T.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);for(const w of spinning)w.rotation.x+=dt*.22;bullwheel.rotation.y+=dt*.015;controls.update();renderer.render(scene,camera);}animate();
+</script></body></html>

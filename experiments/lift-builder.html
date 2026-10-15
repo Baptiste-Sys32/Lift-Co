@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. — Lift workshop</title>
+<style>
+:root{color-scheme:light;font-family:Georgia,'Times New Roman',serif;color:#35463d;background:#e6e6dd;--paper:#f5f2e8;--ink:#354d3e;--line:#d3d7c9;--muted:#798171;--gold:#c98f3f}*{box-sizing:border-box}body{margin:0;overflow:hidden}button,input{font:inherit;color:inherit}button{cursor:pointer}button:disabled{opacity:.4;cursor:default}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}button{border:1px solid var(--line);background:#faf8f0;padding:8px 10px;border-radius:3px;font:11px/1.4 monospace}button:hover:not(:disabled){background:#e8eade}button.active,.primary{background:var(--ink);color:#fff9e8;border-color:var(--ink)}button.active:hover,.primary:hover:not(:disabled){background:#47614d}input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer}input[type=number]{border:1px solid var(--line);border-radius:3px;background:#fffdf6;padding:7px;width:75px;font:13px monospace}label{font:11px/1.5 sans-serif}h1{font-size:32px;letter-spacing:-1px;font-weight:400;margin:7px 0 8px}h2{font-size:20px;letter-spacing:-.4px;font-weight:400;margin:0}.eyebrow{font:9px/1.5 monospace;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}p{font:12px/1.65 sans-serif;color:#727b6c;margin:0}.sidebar{position:fixed;left:0;top:0;bottom:0;width:292px;overflow:auto;padding:24px 22px;background:var(--paper);border-right:1px solid var(--line);z-index:4}.intro{margin-bottom:23px}.section{border-top:1px solid var(--line);padding-top:17px;margin-top:17px}.tools{display:grid;gap:6px;margin-top:10px}.tool{text-align:left;display:flex;align-items:center;gap:11px;padding:11px}.step{border:1px solid currentColor;opacity:.7;width:20px;height:20px;text-align:center;line-height:18px;border-radius:50%;font-size:10px}.tool small{display:block;opacity:.6;font:9px monospace;margin-top:2px}.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.gap{margin-top:10px}.type{font:10px/1.5 monospace;color:#70866e;padding:5px 0}.type.hold{color:#aa6b45}.metric{font:11px monospace;color:#727d6e}.empty{padding:15px 0 0}.height-row{margin-top:12px}.height-row button{width:32px;padding:7px}.height-value{display:flex;align-items:center;gap:6px}.help{font-size:10px;margin-top:8px}.support-list{display:grid;gap:4px;max-height:155px;overflow:auto;margin-top:9px}.support-list button{display:flex;justify-content:space-between;align-items:center;font-size:10px;text-align:left}.support-list button.selected{border-color:var(--gold);background:#eee2cb}.support-list i{font-style:normal;color:#879080}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.checks{display:grid;gap:8px;margin-top:12px}.checks label{display:flex;align-items:center;gap:6px;color:#6b7566}.checks input{accent-color:#617b63}#viewport{position:fixed;left:292px;right:0;top:0;bottom:210px}canvas{display:block;touch-action:none}.toolbar{position:absolute;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;gap:10px;pointer-events:none}.toolbar>div{display:flex;gap:4px;pointer-events:auto}.toolbar button{background:#faf8f0e8}.toolbar button.active{background:var(--ink)}.map-hint{position:absolute;bottom:16px;left:18px;right:18px;font:10px/1.5 monospace;color:#6e7a68;pointer-events:none}.profile{position:fixed;left:292px;right:0;bottom:0;height:210px;padding:13px 22px 9px;background:#f8f6ed;border-top:1px solid var(--line)}.profile-header{display:flex;justify-content:space-between;align-items:center;gap:12px}.profile svg{display:block;width:100%;height:155px;touch-action:none;user-select:none}.profile circle[data-id]{cursor:ns-resize}.profile .status{font:10px/1.4 monospace;color:#677f63}.profile .status.warn{color:#aa7539}.profile .status.bad{color:#b7503b}#notice{position:absolute;top:67px;left:18px;max-width:430px;padding:9px 12px;background:#fcf5e6e8;color:#6c684f;border:1px solid #d9c8a8;font:11px/1.6 sans-serif;pointer-events:none;display:none}#notice.error{color:#a34835;border-color:#cfaa98}#boot{position:absolute;inset:45% 0 auto;text-align:center;font:12px monospace;color:#6c7968;pointer-events:none}.small-link{font:10px monospace;color:#75816f;text-decoration:none}.small-link:hover{color:#36523b}.bottom-note{font:10px/1.7 sans-serif;margin-top:17px;color:#86907d}#inspector[hidden],#positionControl[hidden],#emptyInspector[hidden]{display:none}
+@media(max-height:780px){.sidebar{padding:17px}.intro{margin-bottom:15px}.section{padding-top:12px;margin-top:12px}.support-list{max-height:95px}}@media(max-width:800px){.sidebar{width:245px;padding:17px}#viewport,.profile{left:245px}h1{font-size:28px}.profile-header .eyebrow{font-size:8px;letter-spacing:.4px}.profile{padding:12px;height:195px}#viewport{bottom:195px}.map-hint{font-size:9px}.toolbar{left:10px;right:10px;top:10px}}@media(max-width:580px){.sidebar{width:190px;padding:12px}#viewport,.profile{left:190px}h1{font-size:24px}.intro p{font-size:10px}.tool{padding:8px;gap:7px}.tool small{display:none}.profile-header{display:block}.profile svg{height:145px}.toolbar{flex-wrap:wrap}.profile{height:210px}#viewport{bottom:210px}.map-hint{font-size:8px}.section{padding-top:10px;margin-top:10px}.eyebrow{font-size:8px;letter-spacing:.8px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<aside class="sidebar">
+<div class="intro"><div class="eyebrow">Lift Co. / construction study</div><h1>Build a lift.</h1><p>Two stations. Your towers.<br>One continuous cable.</p></div>
+<div class="eyebrow">01 · Lay out the line</div>
+<div class="tools">
+<button class="tool active" id="toolStart"><span class="step">A</span><span>Place start station<small>click the snow</small></span></button>
+<button class="tool" id="toolEnd" disabled><span class="step">B</span><span>Place end station<small>choose the direction & length</small></span></button>
+<button class="tool" id="toolTower" disabled><span class="step">＋</span><span>Add a tower<small>click along the centre line</small></span></button>
+<button class="tool" id="toolSelect"><span class="step">↗</span><span>Select / adjust<small>click a station or tower</small></span></button>
+</div>
+<div class="section">
+<div class="eyebrow">02 · Shape the cable</div>
+<div id="emptyInspector" class="empty"><p>Select a tower to change its height and position. You can also drag its dot in the profile below.</p></div>
+<div id="inspector" hidden>
+<div class="row gap"><h2 id="selectionName">Tower</h2><span class="metric" id="selectionDistance"></span></div>
+<div id="selectionType" class="type"></div>
+<div class="row height-row"><label for="height">Rope height</label><div class="height-value"><button id="lower" title="Lower by half a metre">−</button><input id="heightNumber" type="number" min="3" max="40" step="0.25" aria-label="Rope height in metres"><span class="metric">m</span><button id="raise" title="Raise by half a metre">+</button></div></div>
+<input id="height" type="range" min="3" max="40" step="0.25" aria-label="Tower rope height">
+<div id="positionControl"><div class="row gap"><label for="position">Along the line</label><span class="metric" id="positionText"></span></div><input id="position" type="range" min="0" max="100" step="0.1"><button id="remove" class="gap">Remove tower</button></div>
+<p class="help">Drag the gold handle in 3D, or drag a dot in the profile. Heights are never adjusted automatically.</p>
+</div>
+</div>
+<div class="section"><div class="row"><span class="eyebrow">Line supports</span><span id="lineLength" class="metric">—</span></div><div class="support-list" id="supportList"></div></div>
+<div class="section"><div class="row"><label for="sag">Cable sag</label><span id="sagText" class="metric">0.55 m / 50 m</span></div><input id="sag" type="range" min="0" max="1.5" step="0.05" value="0.55">
+<div class="checks"><label><input type="checkbox" id="snap" checked> Snap stations to 1 m</label><label><input type="checkbox" id="roofs"> Show terminal roofs</label><label><input type="checkbox" id="cabins" checked> Moving cabin guides</label></div></div>
+<div class="section"><div class="actions"><button id="example">Load example</button><button id="undo" disabled>Undo</button><button id="reset">Clear</button><button id="export" disabled>Export JSON ↓</button></div><div class="bottom-note">Flat ground · metre scale<br>Cabin guides show size and clearance.<br><a class="small-link" href="../index.html">← Back to the resort</a></div></div>
+</aside>
+<main id="viewport"><div class="toolbar"><div><button data-view="orbit" class="active">3D</button><button data-view="side">Side</button><button data-view="top">Top</button></div><div><button id="frame">Frame lift</button></div></div><div id="notice" role="status"></div><div id="boot">Opening the workshop…</div><div class="map-hint" id="mapHint">Click the snow to place the start station · drag to orbit · right-drag to pan · scroll to zoom</div></main>
+<section class="profile"><div class="profile-header"><span class="eyebrow">Elevation profile · drag dots to resize</span><span class="status" id="clearance">Place two stations to begin</span></div><svg id="profile" viewBox="0 0 1000 170" role="img" aria-label="Interactive cable elevation profile"></svg></section>
+<script src="../src/builder/layout.js"></script><script src="../src/builder/view.js"></script>
+<script>
+window.addEventListener('error',e=>{const n=document.getElementById('notice');n.textContent=e.message;n.className='error';n.style.display='block';});
+window.addEventListener('unhandledrejection',e=>{const n=document.getElementById('notice');n.textContent=String(e.reason);n.className='error';n.style.display='block';});
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const $=id=>document.getElementById(id),viewport=$('viewport'),{LiftLayout,clamp}=window.LiftBuilderCore;
+const layout=new LiftLayout(),undoStack=[],redoStack=[];let selected=null,mode='start',viewMode='orbit',liveSnapshot=null,drag=null,down=null,lastWorld=null,noticeTimer;
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(viewport.clientWidth,viewport.clientHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;viewport.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xe2e6df);scene.fog=new THREE.Fog(0xe2e6df,400,1100);
+const camera=new THREE.PerspectiveCamera(45,viewport.clientWidth/viewport.clientHeight,.05,5000);camera.position.set(140,145,180);
+const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,0,0);controls.enableDamping=true;controls.dampingFactor=.08;controls.maxPolarAngle=Math.PI*.485;controls.minDistance=2;controls.maxDistance=Infinity;controls.zoomToCursor=true;controls.rotateSpeed=.65;
+scene.add(new THREE.HemisphereLight(0xf8f5e7,0x9cae9e,2));const sun=new THREE.DirectionalLight(0xffe1b1,2.6);sun.position.set(-110,160,100);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-220;sun.shadow.camera.right=220;sun.shadow.camera.top=220;sun.shadow.camera.bottom=-220;sun.shadow.camera.far=700;sun.shadow.normalBias=.08;sun.shadow.bias=-.0002;sun.shadow.radius=3;scene.add(sun);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(4000,4000),new THREE.MeshStandardMaterial({color:0xe6e8df,roughness:1}));ground.rotation.x=-Math.PI/2;ground.position.y=-.035;ground.receiveShadow=true;scene.add(ground);
+const grid=new THREE.GridHelper(1000,100,0xb5c0ad,0xcdd4c4);grid.material.transparent=true;grid.material.opacity=.42;grid.position.y=.005;scene.add(grid);
+const liftView=new window.LiftBuilderView(THREE,scene),raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
+const ghost=new THREE.Group();scene.add(ghost);const ghostM=new THREE.MeshBasicMaterial({color:0x81966c,transparent:true,opacity:.6,depthWrite:false});const ring=new THREE.Mesh(new THREE.RingGeometry(1.1,1.45,40),ghostM);ring.rotation.x=-Math.PI/2;ring.position.y=.06;ghost.add(ring);const poleGhost=new THREE.Mesh(new THREE.CylinderGeometry(.15,.15,8,8),ghostM);poleGhost.position.y=4;ghost.add(poleGhost);ghost.visible=false;
+const axis=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineDashedMaterial({color:0x809374,dashSize:2,gapSize:1,transparent:true,opacity:.7}));scene.add(axis);
+function notice(text,error=false){clearTimeout(noticeTimer);$('notice').textContent=text;$('notice').className=error?'error':'';$('notice').style.display='block';noticeTimer=setTimeout(()=>$('notice').style.display='none',4000);}
+function snapshot(){return layout.serialize();}
+function record(before){if(JSON.stringify(before)===JSON.stringify(snapshot()))return;undoStack.push(before);if(undoStack.length>50)undoStack.shift();redoStack.length=0;}
+function change(action){const before=snapshot();try{action();record(before);rebuild();}catch(e){layout.load(before);notice(e.message,true);rebuild();}}
+function beginLive(){if(!liveSnapshot)liveSnapshot=snapshot();}
+function commitLive(){if(liveSnapshot){record(liveSnapshot);liveSnapshot=null;renderUI();}}
+function selection(){return layout.nodes.find(n=>n.id===selected)||(selected==='start'&&layout.start?{id:'start',kind:'station',height:layout.start.height,distance:0}:selected==='end'&&layout.end?{id:'end',kind:'station',height:layout.end.height,distance:layout.length}:null);}
+function setMode(next){mode=next;ghost.visible=false;renderUI();}
+function renderUI(){
+ $('toolEnd').disabled=!layout.start;$('toolTower').disabled=!layout.ready;$('export').disabled=!layout.ready;$('undo').disabled=!undoStack.length;
+ for(const [key,id] of [['start','toolStart'],['end','toolEnd'],['tower','toolTower'],['select','toolSelect']]){$(id).classList.toggle('active',mode===key);$(id).setAttribute('aria-pressed',String(mode===key));}
+ $('lineLength').textContent=layout.ready?layout.length.toFixed(0)+' m':'';$('sag').value=layout.sag;$('sagText').textContent=layout.sag.toFixed(2)+' m / 50 m';
+ const node=selection();$('inspector').hidden=!node;$('emptyInspector').hidden=!!node;
+ if(node){
+  const index=layout.nodes.filter(n=>n.kind==='tower').findIndex(n=>n.id===selected);
+  $('selectionName').textContent=node.kind==='tower'?'Tower '+(index+1):selected==='start'?'Start station':'End station';
+  $('selectionDistance').textContent=node.kind==='tower'?node.distance.toFixed(0)+' m':'';
+  $('height').value=node.height;$('heightNumber').value=Number(node.height.toFixed(2));
+  $('selectionType').textContent=node.kind==='station'?'Terminal rope level':node.compression?'Hold-down · rope below wheels':'Support · rope above wheels';$('selectionType').classList.toggle('hold',!!node.compression);
+  $('positionControl').hidden=node.kind!=='tower';
+  if(node.kind==='tower'){$('position').value=node.fraction*100;$('positionText').textContent=(node.fraction*100).toFixed(1)+'%';}
+ }
+ $('supportList').replaceChildren();
+ for(const node of layout.nodes){const button=document.createElement('button');button.classList.toggle('selected',node.id===selected);const index=layout.nodes.filter(n=>n.kind==='tower').findIndex(n=>n.id===node.id);const title=node.kind==='tower'?'T'+(index+1):node.id==='start'?'A · Start':'B · End';button.innerHTML='<span>'+title+' <i>'+node.distance.toFixed(0)+' m</i></span><span>'+node.height.toFixed(1)+' m</span>';button.onclick=()=>{selected=node.id;mode='select';rebuild();};$('supportList').append(button);}
+ const status=$('clearance');status.className='status';
+ if(!layout.ready)status.textContent='Place two stations to begin';else if(layout.minimumClearance<0){status.textContent='Cabins clip the ground by '+Math.abs(layout.minimumClearance).toFixed(1)+' m';status.classList.add('bad');}else{status.textContent=layout.minimumClearance.toFixed(1)+' m minimum cabin clearance';if(layout.minimumClearance<.6)status.classList.add('warn');}
+ const hints={start:'Click the snow to '+(layout.start?'move':'place')+' the start station',end:'Click the snow to '+(layout.end?'move':'place')+' the end station',tower:'Click along the dashed centre line to add a tower',select:'Click a tower · drag its gold handle to change height'};
+ $('mapHint').textContent=hints[mode]+' · drag = orbit · right-drag = pan · scroll = zoom';renderer.domElement.style.cursor=mode==='select'?'grab':'crosshair';drawProfile();
+}
+function rebuild(){if(selected!==null&&!selection())selected=null;liftView.render(layout,selected);if(layout.ready){axis.geometry.dispose();axis.geometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(layout.start.x,.025,layout.start.z),new THREE.Vector3(layout.end.x,.025,layout.end.z)]);axis.computeLineDistances();axis.visible=true;}else axis.visible=false;renderUI();}
+function drawProfile(){
+ const svg=$('profile'),x=s=>48+s/Math.max(1,layout.length)*928,y=h=>135-h/40*119;let html='';
+ for(let h=0;h<=40;h+=10)html+='<path d="M48 '+y(h)+'H976" stroke="'+(h===0?'#a7b49e':'#e0e3d6')+'"/><text x="35" y="'+(y(h)+3)+'" text-anchor="end" font-family="monospace" font-size="9" fill="#85907c">'+h+' m</text>';
+ if(!layout.ready){html+='<text x="510" y="92" text-anchor="middle" font-family="Georgia" font-size="17" fill="#98a18e">Your cable profile will appear here.</text>';svg.innerHTML=html;return;}
+ let rope='',floor='';for(let i=0;i<=400;i++){const s=i/400*layout.length;rope+=(i?'L':'M')+x(s).toFixed(2)+','+y(layout.heightAt(s)).toFixed(2)+' ';floor+=(i?'L':'M')+x(s).toFixed(2)+','+y(layout.heightAt(s)-4.8).toFixed(2)+' ';}
+ html+='<path d="'+floor+'" fill="none" stroke="'+(layout.minimumClearance<0?'#b85c44':'#b9bba9')+'" stroke-dasharray="4 4" stroke-width="1"/><path d="'+rope+'" fill="none" stroke="#3f5545" stroke-width="2.5"/>';
+ for(let i=0;i<layout.nodes.length;i++){const node=layout.nodes[i],cx=x(node.distance),cy=y(node.height),index=layout.nodes.filter(n=>n.kind==='tower').findIndex(n=>n.id===node.id),label=node.kind==='tower'?'T'+(index+1):node.id==='start'?'A':'B',fill=selected===node.id?'#d9a04a':node.compression?'#b67b55':node.kind==='tower'?'#6c886d':'#637e8b';html+='<path d="M'+cx+' '+cy+'V135" stroke="#c5ccb9"/><circle data-id="'+node.id+'" cx="'+cx+'" cy="'+cy+'" r="7" stroke="#faf8f0" stroke-width="2" fill="'+fill+'"><title>'+label+' · '+node.height.toFixed(1)+' m · drag to resize</title></circle><text x="'+cx+'" y="'+(cy-12)+'" font-family="monospace" font-size="10" text-anchor="middle" fill="#6f7c67">'+label+'</text>';}
+ for(let i=0;i<=4;i++){const d=i/4*layout.length;html+='<text x="'+x(d)+'" y="154" text-anchor="middle" font-family="monospace" font-size="9" fill="#87917e">'+d.toFixed(0)+' m</text>';}
+ svg.innerHTML=html;
+}
+function pointerRay(e){const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(mouse,camera);}
+function groundPoint(e){pointerRay(e);return raycaster.ray.intersectPlane(plane,new THREE.Vector3());}
+function picked(e){pointerRay(e);for(const hit of raycaster.intersectObjects(liftView.picks,true)){let o=hit.object;while(o&&o!==liftView.root){if(o.userData.id!==undefined)return {id:o.userData.id,handle:!!o.userData.heightHandle};o=o.parent;}}return null;}
+function snap(point){return $('snap').checked?{x:Math.round(point.x),z:Math.round(point.z)}:{x:point.x,z:point.z};}
+function setView(next){viewMode=next;const middle=layout.ready?new THREE.Vector3((layout.start.x+layout.end.x)/2,5,(layout.start.z+layout.end.z)/2):new THREE.Vector3(0,4,0),size=Math.max(100,layout.length);controls.enableDamping=false;controls.update();controls.target.copy(middle);if(next==='top')camera.position.copy(middle).add(new THREE.Vector3(.01,size*1.45,.01));else if(next==='side'){const dx=layout.ready?layout.dz:1,dz=layout.ready?-layout.dx:0;camera.position.copy(middle).add(new THREE.Vector3(dx*size*1.35,size*.3,dz*size*1.35));}else camera.position.copy(middle).add(new THREE.Vector3(size*.72,size*.83,size*.92));controls.update();controls.enableDamping=true;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===next));}
+$('toolStart').onclick=()=>setMode('start');$('toolEnd').onclick=()=>setMode('end');$('toolTower').onclick=()=>setMode('tower');$('toolSelect').onclick=()=>setMode('select');
+$('height').oninput=e=>{if(!selection())return;beginLive();layout.setHeight(selected,+e.target.value);rebuild();};$('height').onchange=commitLive;
+$('heightNumber').onchange=e=>{if(selection())change(()=>layout.setHeight(selected,+e.target.value));};
+$('lower').onclick=()=>{const node=selection();if(node)change(()=>layout.setHeight(selected,node.height-.5));};$('raise').onclick=()=>{const node=selection();if(node)change(()=>layout.setHeight(selected,node.height+.5));};
+$('position').oninput=e=>{if(selection()?.kind!=='tower')return;beginLive();layout.moveTower(selected,+e.target.value/100*layout.length);rebuild();};$('position').onchange=commitLive;
+$('remove').onclick=()=>{if(selection()?.kind==='tower')change(()=>{layout.removeTower(selected);selected=null;});};
+$('sag').oninput=e=>{beginLive();layout.sag=+e.target.value;layout.rebuild();rebuild();};$('sag').onchange=commitLive;
+$('roofs').onchange=e=>{liftView.showRoofs=e.target.checked;rebuild();};$('cabins').onchange=e=>{liftView.showCabins=e.target.checked;rebuild();};
+$('undo').onclick=()=>{commitLive();if(!undoStack.length)return;redoStack.push(snapshot());layout.load(undoStack.pop());selected=null;mode=layout.ready?'select':layout.start?'end':'start';rebuild();};
+$('reset').onclick=()=>change(()=>{layout.load({});selected=null;mode='start';});
+$('example').onclick=()=>{change(()=>{layout.load({start:{x:-65,z:70,height:6},end:{x:60,z:-75,height:6},towers:[{id:1,fraction:.25,height:7.5},{id:2,fraction:.53,height:16},{id:3,fraction:.78,height:8}],nextId:4,sag:.55});selected=2;mode='select';});setView('orbit');notice('Example loaded. Drag a profile dot or the gold tower handle.');};
+$('export').onclick=()=>{const data={...snapshot(),units:'metres',heightReference:'rope centre above flat ground'},url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lift-layout.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('Layout exported with station positions, tower positions and heights.');};
+$('frame').onclick=()=>setView(viewMode);document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
+const canvas=renderer.domElement;
+canvas.addEventListener('pointerdown',e=>{
+ if(e.button!==0)return;const hit=picked(e);down={x:e.clientX,y:e.clientY};
+ if(hit?.handle){
+  e.stopImmediatePropagation();e.preventDefault();beginLive();selected=hit.id;const node=selection(),point=layout.pointAt(node.distance,0,node.height),normal=camera.getWorldDirection(new THREE.Vector3());normal.y=0;if(normal.lengthSq()<.01)normal.set(0,0,1);normal.normalize();const dragPlane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,new THREE.Vector3(point.x,point.y,point.z));pointerRay(e);const p=raycaster.ray.intersectPlane(dragPlane,new THREE.Vector3());if(!p)return;drag={kind:'world',id:e.pointerId,plane:dragPlane,offset:node.height-p.y};controls.enabled=false;canvas.setPointerCapture(e.pointerId);canvas.style.cursor='ns-resize';
+ }
+},{capture:true});
+canvas.addEventListener('pointermove',e=>{
+ if(drag?.kind==='world'&&drag.id===e.pointerId){e.preventDefault();pointerRay(e);const p=raycaster.ray.intersectPlane(drag.plane,new THREE.Vector3());if(p){layout.setHeight(selected,Math.round((p.y+drag.offset)*4)/4);rebuild();}return;}
+ const point=groundPoint(e);lastWorld=point;ghost.visible=false;if(!point||mode==='select')return;
+ if(mode==='tower'&&layout.ready){const projected=layout.project(point.x,point.z),valid=Math.abs(projected.lateral)<14&&projected.distance>=14&&projected.distance<=layout.length-14&&!layout.towers.some(t=>Math.abs(t.fraction*layout.length-projected.distance)<10);const p=layout.pointAt(clamp(projected.distance,0,layout.length),0,0);ghost.position.set(p.x,0,p.z);ghostM.color.set(valid?0x82976e:0xb87358);poleGhost.visible=true;}else{const p=snap(point);ghost.position.set(p.x,0,p.z);ghostM.color.set(0x82976e);poleGhost.visible=false;}ghost.visible=true;
+});
+canvas.addEventListener('pointerup',e=>{
+ if(drag?.kind==='world'&&drag.id===e.pointerId){drag=null;down=null;controls.enabled=true;if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);commitLive();renderUI();return;}
+ if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>5){down=null;return;}down=null;
+ const hit=picked(e);if(hit){selected=hit.id;mode='select';ghost.visible=false;rebuild();return;}
+ const point=groundPoint(e);if(!point)return;
+ if(mode==='start'||mode==='end'){const which=mode;change(()=>{layout.setStation(which,snap(point));selected=which;mode=which==='start'&&!layout.end?'end':layout.ready?'tower':'start';});ghost.visible=false;}
+ else if(mode==='tower'&&layout.ready){const projected=layout.project(point.x,point.z);if(Math.abs(projected.lateral)>14){notice('Click closer to the dashed centre line. Towers snap onto it.',true);return;}change(()=>{selected=layout.addTower(projected.distance,8);});}
+ else{selected=null;rebuild();}
+},{capture:true});
+function cancelDrag(){if(drag){drag=null;down=null;controls.enabled=true;commitLive();renderUI();}}
+canvas.addEventListener('pointercancel',cancelDrag);canvas.addEventListener('lostpointercapture',()=>{if(drag?.kind==='world')cancelDrag();});window.addEventListener('blur',cancelDrag);
+$('profile').addEventListener('pointerdown',e=>{const id=e.target.dataset.id;if(id===undefined)return;e.preventDefault();selected=id==='start'||id==='end'?id:Number(id);beginLive();drag={kind:'profile',id:e.pointerId};$('profile').setPointerCapture(e.pointerId);mode='select';rebuild();});
+$('profile').addEventListener('pointermove',e=>{if(drag?.kind!=='profile'||drag.id!==e.pointerId)return;const svgY=new DOMPoint(e.clientX,e.clientY).matrixTransform($('profile').getScreenCTM().inverse()).y,height=(135-svgY)/119*40;layout.setHeight(selected,Math.round(height*4)/4);rebuild();});
+$('profile').addEventListener('pointerup',e=>{if(drag?.kind==='profile'){drag=null;if($('profile').hasPointerCapture(e.pointerId))$('profile').releasePointerCapture(e.pointerId);commitLive();}});$('profile').addEventListener('pointercancel',cancelDrag);
+window.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement)return;if(e.key==='Escape'){cancelDrag();setMode('select');}if(e.key==='Delete'||e.key==='Backspace'){if(selection()?.kind==='tower'){e.preventDefault();$('remove').click();}}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();if(e.shiftKey){if(redoStack.length){undoStack.push(snapshot());layout.load(redoStack.pop());selected=null;rebuild();}}else $('undo').click();}});
+window.addEventListener('resize',()=>{camera.aspect=viewport.clientWidth/viewport.clientHeight;camera.updateProjectionMatrix();renderer.setSize(viewport.clientWidth,viewport.clientHeight);});
+rebuild();$('boot').hidden=true;const clock=new THREE.Clock();
+function animate(){requestAnimationFrame(animate);controls.update();liftView.update(Math.min(.05,clock.getDelta()));renderer.render(scene,camera);}animate();
+</script>
+</body>
+</html>

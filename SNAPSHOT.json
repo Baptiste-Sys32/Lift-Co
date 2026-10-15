@@ -1,0 +1,7 @@
+{
+  "snapshot": "Before Upper Snowfields V1 integration",
+  "created": "2026-10-15T20:20:00.191388+00:00",
+  "entry": "empty-map.html",
+  "legacySavePrefix": "lift-co-empty-map-v1:",
+  "note": "Browser save data is origin-scoped. V1 will retain legacy storage and use a separate save namespace. No connected browser was available for exporting a live save at snapshot time."
+}

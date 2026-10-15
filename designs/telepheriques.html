@@ -1,0 +1,172 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lift Co. — Téléphérique design studies</title><style>
+:root{--paper:#f5f2e8;--ink:#354d3e;--muted:#798171;--line:#d3d7c9;--gold:#c98f3f;--side:318px;font-family:Georgia,'Times New Roman',serif;color:var(--ink);background:#e8e8df;color-scheme:light}*{box-sizing:border-box}body{margin:0;overflow:hidden}button,input{font:inherit;color:inherit}button{border:1px solid var(--line);border-radius:3px;background:#faf8f0;padding:9px 12px;font:10px/1.5 monospace;cursor:pointer}button:hover{background:#e5e8da}button.active{background:var(--ink);border-color:var(--ink);color:#fff8e9}button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}input{accent-color:var(--gold)}input[type=range]{width:100%;margin:10px 0}.eyebrow{font:9px/1.5 monospace;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}h1,h2,p{margin:0}h1{font-size:37px;line-height:1.05;font-weight:400;letter-spacing:-1.6px;margin:12px 0}h2{font-size:28px;font-weight:400;letter-spacing:-.8px}.small{font:11px/1.8 sans-serif;color:#7c8573}.mono{font:10px/1.6 monospace;color:#7c8573}.sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);padding:26px 23px;background:var(--paper);border-right:1px solid var(--line);overflow:auto;z-index:5}.brand{display:flex;justify-content:space-between;align-items:center}.brand>a{font-size:21px;color:var(--ink);text-decoration:none;letter-spacing:-.5px}.brand>a span{color:var(--gold)}.intro{margin:27px 0 22px}.choices{display:grid;gap:7px}.choice{display:grid;grid-template-columns:25px 1fr 27px;align-items:center;gap:9px;text-align:left;padding:13px 11px;border-left:3px solid transparent}.choice.active{background:#e6e8da;color:var(--ink);border-color:#cbd1bf;border-left-color:var(--gold)}.choice .num{font-size:10px;opacity:.65}.choice strong{display:block;font:18px Georgia;font-weight:400;letter-spacing:-.3px}.choice small{font:9px/1.6 monospace;opacity:.65;display:block;margin-top:4px}.swatch{width:24px;height:12px;border:3px solid #b1b8ad;border-radius:6px}.section{border-top:1px solid var(--line);padding-top:17px;margin-top:22px}.section>.eyebrow{display:block;margin-bottom:12px}.check{display:flex;gap:8px;align-items:center;font:11px sans-serif;color:#6b7965;margin:11px 0}.row{display:flex;align-items:center;gap:6px}.spread{justify-content:space-between}.presets button{flex:1;padding:7px}.ref-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.ref-grid a{height:80px;display:block;overflow:hidden;border-radius:2px;border:1px solid #d6d9ca}.ref-grid img{width:100%;height:100%;object-fit:cover}.ref-grid a:last-child img{object-position:50% 45%}a.small-link{color:#7a866e;text-decoration:none;font:10px/1.8 monospace}.footer-note{font:10px/1.8 sans-serif;color:#89917f;margin-top:22px}#stage{position:fixed;inset:0 0 0 var(--side)}canvas{display:block;touch-action:none}.topbar{position:absolute;left:26px;right:26px;top:24px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none}.topbar>div:last-child{pointer-events:auto;display:flex;gap:5px}.caption{position:absolute;left:30px;bottom:31px;max-width:360px;pointer-events:none}.caption .eyebrow{margin-bottom:8px;display:block}.caption h2{font-size:44px;margin-bottom:7px}.caption p{font:12px/1.8 sans-serif;color:#7b8471}.specs{display:flex;gap:20px;margin-top:17px}.specs>div{display:grid;gap:3px}.specs b{font:20px Georgia;font-weight:400}.specs span{font:8px monospace;letter-spacing:.7px;text-transform:uppercase;color:#87917d}.lower-tools{position:absolute;right:25px;bottom:31px;display:grid;justify-items:end;gap:8px}.lower-tools .row{background:#f8f5eae8;padding:5px;border:1px solid var(--line);border-radius:4px}#hint{font:9px/1.6 monospace;color:#7b8671}.phase{position:absolute;left:50%;top:78px;transform:translateX(-50%);background:#f7f3e9ec;border:1px solid var(--line);padding:9px 18px;font:10px monospace;color:#66785e;display:none}.station-mode .phase{display:block}.station-mode .caption{max-width:300px}.station-mode .caption h2{font-size:30px}#load{position:absolute;inset:45% 0 auto;text-align:center;font:12px monospace;color:#7b8671}#error{position:fixed;bottom:20px;left:calc(var(--side) + 20px);right:20px;padding:12px;background:#fff0df;border:1px solid #c9a17e;color:#9a4a30;font:12px monospace;display:none;z-index:20}.compare-label{position:absolute;transform:translate(-50%,-50%);padding:8px 13px;background:#f8f5e8e8;border:1px solid var(--line);border-radius:2px;pointer-events:none;display:none;font:11px monospace}.compare-label b{font:17px Georgia;margin-left:8px}.compare-mode .caption{display:none}.compare-mode .compare-label{display:block}[hidden]{display:none!important}
+@media(max-height:850px){.sidebar{padding:19px}.intro{margin:20px 0 17px}h1{font-size:32px}.section{padding-top:13px;margin-top:17px}.choice{padding:10px}.choice strong{font-size:17px}.ref-grid a{height:65px}}
+@media(max-width:950px){:root{--side:255px}.sidebar{padding:20px 17px}h1{font-size:32px}.topbar{left:18px;right:18px;top:18px}.topbar .eyebrow{font-size:8px;letter-spacing:.7px}.caption{left:22px;bottom:90px}.caption h2{font-size:35px}.lower-tools{bottom:22px;left:22px;right:22px;justify-items:end}.choice{padding:10px 8px;gap:5px}.choice strong{font-size:17px}.phase{top:100px;font-size:9px;white-space:nowrap}}
+</style><style>
+.family-label{margin:19px 0 8px;font:9px/1.5 monospace;letter-spacing:1px;color:#8b8f7a}.choice{padding:10px 11px}.choice strong{font-size:17px}.choice small{font-size:8px}.intro{margin-bottom:17px}.intro h1{font-size:39px}.choice .swatch{border-radius:2px}.ref-grid{grid-template-columns:repeat(3,1fr)}.ref-grid a{height:65px}.caption{max-width:365px}.caption h2{font-size:39px}.specs{gap:19px}.topbar>div:last-child{flex-wrap:wrap;justify-content:flex-end}.compare-label{font-size:9px}.compare-label b{font-size:15px}.info-tag{position:absolute;right:26px;top:83px;padding:7px 10px;background:#f7f3e9dd;border:1px solid var(--line);font:9px monospace;color:#77816b;pointer-events:none}.travel-mode .phase{display:block}.travel-mode .caption h2{font-size:30px}.travel-mode .caption{max-width:300px}#loading{position:absolute;inset:45% 0 auto;text-align:center;font:12px monospace;color:#7b8671}.selection-note{margin-top:12px;padding:9px 10px;border-left:2px solid #c1a16b;font:10px/1.7 sans-serif;color:#7c8573}.sidebar>.section:last-child{margin-bottom:15px}.compare-mode .info-tag{display:none}@media(max-height:850px){.intro{margin-top:16px}.intro h1{font-size:31px}.choice{padding:8px}.family-label{margin-top:13px}.section{margin-top:15px}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script></head><body>
+<aside class="sidebar"><div class="brand"><a href="../index.html">Lift Co<span>.</span></a><span class="eyebrow">DESIGN ROOM / 03</span></div>
+<div class="intro"><span class="eyebrow">TWO SELECTED DESIGNS</span><h1>The big way up.</h1><p class="small">Heritage and Glacier: your selected compact and panoramic cabins, suspended lengthways along the cable.</p></div>
+<div id="choices"></div>
+<div class="selection-note">Short ends across the line. Long sides along it. Cabins reverse direction; they never turn around.</div>
+<section class="section"><span class="eyebrow">01 / INSPECT THE CABIN</span><div class="row presets"><button data-angle="side">Long side</button><button data-angle="end">Short end</button><button data-angle="trolley">Trolley</button></div><label class="check"><input id="passengers" type="checkbox"> Show standing passengers</label><div class="row spread"><label class="mono" for="doors">Side doors</label><span id="doorReadout" class="mono">Closed</span></div><input id="doors" type="range" min="0" max="1" step="0.01" value="0"><label class="check"><input id="guides" type="checkbox" checked> Show cable direction</label></section>
+<section class="section"><span class="eyebrow">02 / YOUR REFERENCES</span><div class="ref-grid"><a target="_blank" href="../assets/references/telepheriques/faron-close.webp"><img alt="Faron cabin close-up" src="../assets/references/telepheriques/faron-close.webp"></a><a target="_blank" href="../assets/references/telepheriques/faron-wide.webp"><img alt="Second angle of the Faron cabin" src="../assets/references/telepheriques/faron-wide.webp"></a><a target="_blank" href="../assets/references/telepheriques/panoramic.webp"><img alt="Long panoramic rectangular cabin reference" src="../assets/references/telepheriques/panoramic.webp"></a></div><p class="footer-note">Dimensions below are proposed game-model sizes.<br><a class="small-link" href="./chairlifts.html">← Classic & Ridge chairlifts</a><br><a class="small-link" href="../index.html">← Return to the resort</a></p></section>
+</aside>
+<main id="stage"><div class="topbar"><div><span class="eyebrow">LIFT CO. / TÉLÉPHÉRIQUE COLLECTION</span><p class="mono" style="margin-top:5px" id="viewName"></p></div><div><button data-mode="cabin" class="active">Cabin</button><button data-mode="compare">Compare both</button><button data-mode="travel">Shuttle ↔</button></div></div><div class="info-tag" id="orientation">LONG AXIS ∥ CABLE</div><div class="phase" id="phase"></div><div class="caption"><span class="eyebrow" id="modelTag"></span><h2 id="modelName"></h2><p id="modelDescription"></p><div class="specs"><div><b id="modelLength"></b><span>length / along cable</span></div><div><b id="modelWidth"></b><span>width / across</span></div><div><b id="modelHeight"></b><span>cabin height</span></div></div></div><div class="lower-tools"><div class="row"><button id="pause">Pause</button><button id="rotate">Auto orbit</button><button id="reset">Reset view ↗</button></div><span id="hint">drag = orbit · right-drag = pan · scroll = zoom</span></div><div id="loading">Opening the design room…</div><div id="labels"></div></main><div id="error"></div>
+<script type="module">
+import * as T from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const $=id=>document.getElementById(id);
+window.addEventListener('error',e=>{$('error').style.display='block';$('error').textContent=e.message;});window.addEventListener('unhandledrejection',e=>{$('error').style.display='block';$('error').textContent=String(e.reason);});
+const designs=[
+ {id:'A3',name:'Heritage',family:0,length:4.0,width:2.2,height:2.9,sill:1.13,chamfer:.16,color:0x853e35,roof:0xdad4be,trim:0x484a41,tint:0x52655a,style:'heritage',description:'A warm vintage interpretation: oxblood lower panels, ivory window framing, a ribbed skirt and smaller, carefully divided panes.'},
+ {id:'B2',name:'Glacier',family:1,length:7.2,width:2.9,height:3.2,sill:.56,chamfer:.47,color:0xe6e7dc,roof:0x788f92,trim:0x344c55,tint:0x6f9da7,style:'glacier',description:'A brighter panoramic cabin with ivory lower panels, glacier-blue corner caps and more pronounced bevels. Narrow mullions keep the side view open.'}
+];
+let selected=0,mode='cabin',activeGroup=null,cabins=[],guides=[],comparison=[],doorTarget=0,doorValue=0,paused=false,elapsed=0;
+const stage=$('stage'),renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(stage.clientWidth,stage.clientHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;stage.prepend(renderer.domElement);
+const scene=new T.Scene();scene.background=new T.Color(0xe8e8df);scene.fog=new T.Fog(0xe8e8df,140,420);
+const camera=new T.PerspectiveCamera(38,stage.clientWidth/stage.clientHeight,.05,1200),controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.08;controls.maxPolarAngle=Math.PI*.49;controls.minDistance=1;controls.maxDistance=400;controls.zoomToCursor=true;controls.autoRotateSpeed=.7;
+scene.add(new T.HemisphereLight(0xfff6e8,0x8fa6a2,2.1));const sun=new T.DirectionalLight(0xffdeb2,2.8);sun.position.set(-40,65,45);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);Object.assign(sun.shadow.camera,{left:-100,right:100,top:100,bottom:-100,far:240});sun.shadow.camera.updateProjectionMatrix();sun.shadow.normalBias=.03;sun.shadow.bias=-.00015;sun.shadow.radius=3;scene.add(sun);
+const materials={},geometries=new Map();function mat(key,color,roughness=.7,metalness=0){return materials[key]||(materials[key]=new T.MeshStandardMaterial({color,roughness,metalness}));}function geo(key,make){if(!geometries.has(key))geometries.set(key,make());return geometries.get(key);}
+const steel=mat('steel',0x8f9d9e,.43,.65),dark=mat('dark',0x303e42,.56,.35),rubber=mat('rubber',0x273235,.9),floorM=mat('floor',0x535e5b,.95),cream=mat('cream',0xeee8d8),snow=mat('snow',0xf1efe5),deck=mat('deck',0xb8bcae),wood=mat('wood',0x91735b),blue=mat('blue',0x59717a),gold=mat('gold',0xc59c58);
+const ground=new T.Mesh(new T.PlaneGeometry(1800,1800),mat('ground',0xe8e9e0,1));ground.rotation.x=-Math.PI/2;ground.position.y=-.17;ground.receiveShadow=true;scene.add(ground);
+function mesh(parent,geometry,material,x=0,y=0,z=0){const m=new T.Mesh(geometry,material);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;parent.add(m);return m;}
+function box(parent,w,h,d,x,y,z,material){return mesh(parent,geo('b'+[w,h,d],()=>new T.BoxGeometry(w,h,d)),material,x,y,z);}
+function bar(parent,a,b,r,material){const p=new T.Vector3(...a),q=new T.Vector3(...b),delta=q.clone().sub(p),m=mesh(parent,geo('c'+r+','+delta.length().toFixed(4),()=>new T.CylinderGeometry(r,r,delta.length(),8)),material);m.position.copy(p).add(q).multiplyScalar(.5);m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());return m;}
+function tube(parent,points,r,material){return mesh(parent,new T.TubeGeometry(new T.CatmullRomCurve3(points.map(p=>new T.Vector3(...p)),false,'centripetal'),60,r,8,false),material);}
+function face(parent,points,material){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(points.flat(),3));g.setIndex([0,1,2,0,2,3]);g.computeVertexNormals();return mesh(parent,g,material);}
+function outline(w,l,c,y){return[[-w/2+c,y,-l/2],[w/2-c,y,-l/2],[w/2,y,-l/2+c],[w/2,y,l/2-c],[w/2-c,y,l/2],[-w/2+c,y,l/2],[-w/2,y,l/2-c],[-w/2,y,-l/2+c]];}
+function shell(parent,rings,material,skipSides=false){const vertices=rings.flat(2),indices=[];for(let row=0;row<rings.length-1;row++)for(let k=0;k<8;k++){if(skipSides&&(k===2||k===6))continue;const a=row*8+k,b=row*8+(k+1)%8;indices.push(a,b,a+8,b,b+8,a+8);}const top=(rings.length-1)*8;for(let i=1;i<7;i++){indices.push(0,i+1,i);if(!skipSides)indices.push(top,top+i,top+i+1);}for(let i=0;i<indices.length;i+=3)[indices[i+1],indices[i+2]]=[indices[i+2],indices[i+1]];const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geometry.setIndex(indices);geometry.computeVertexNormals();return mesh(parent,geometry,material);}
+function textPlane(parent,text,w,h,x,y,z,angle,color='#eee9da',background=null){const canvas=document.createElement('canvas');canvas.width=768;canvas.height=128;const c=canvas.getContext('2d');if(background){c.fillStyle=background;c.fillRect(0,0,768,128);}c.fillStyle=color;c.textAlign='center';c.textBaseline='middle';c.font='46px Georgia';c.fillText(text,384,65,730);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:texture,transparent:!background,side:T.DoubleSide,depthWrite:false}));m.position.set(x,y,z);m.rotation.y=angle;parent.add(m);return m;}
+function passenger(g,x,z,i){const p=new T.Group();p.position.set(x,.18,z);g.add(p);const colors=[0xb7644b,0xd0a34d,0x627f75,0x60778b,0x91846d],coat=mat('coat'+i%5,colors[i%5]),pants=mat('pants',0x3b4952),skin=mat('skin',0xe0b997);
+ for(const side of [-1,1]){box(p,.14,.73,.17,side*.13,.47,0,pants);box(p,.18,.13,.3,side*.13,.08,.06,dark);bar(p,[side*.3,1.29,0],[side*.34,.85,.08],.085,coat);}box(p,.48,.62,.32,0,1.15,0,coat);mesh(p,geo('head',()=>new T.SphereGeometry(.17,12,8)),skin,0,1.65,0);mesh(p,geo('hat',()=>new T.SphereGeometry(.18,12,8,0,Math.PI*2,0,Math.PI*.53)),mat('hat'+i%5,colors[(i+2)%5]),0,1.7,0);return p;}
+function makeCabin(def,number=1){
+ const g=new T.Group(),body=new T.Group();g.add(body);const {width:w,length:l,height:h,sill,chamfer:c}=def,paint=mat('paint'+def.id,def.color,.46,.18),roofMat=mat('roof'+def.id,def.roof,.55,.25),trim=mat('trim'+def.id,def.trim,.5,.4),windowTrim=def.style==='heritage'?cream:trim;
+ const glass=new T.MeshStandardMaterial({color:def.tint,transparent:true,opacity:def.style==='glacier'?.62:def.family===1?.78:.68,roughness:.2,metalness:.12,side:T.DoubleSide,depthWrite:false});
+ const doorWidth=def.family?1.42:1.07,doorHalf=doorWidth/2;
+ const bottom=outline(w*.94,l*.97,c,.14),waist=outline(w,l,c,sill),top=outline(w*(def.family?.97:1),l*(def.style==='massif'?.945:.99),c,h-.18);
+ const paintDouble=paint.clone();paintDouble.side=T.DoubleSide;
+ shell(body,[bottom,waist],paintDouble,true);shell(body,[outline(w*.94,l*.97,c,.04),outline(w*.94,l*.97,c,.16)],trim);
+ box(body,w*.91,.1,l*.94,0,.13,0,floorM);
+ // Two long sides, each with an actual sliding-door aperture.
+ for(const side of [-1,1]){
+  const x=side*w/2,zLimit=l/2-c;
+  for(const [a,b]of [[-zLimit,-doorHalf],[doorHalf,zLimit]]){
+   face(body,[[side*w*.47,.15,a],[side*w*.47,.15,b],[x,sill,b],[x,sill,a]],paintDouble);
+   const divisions=def.style==='heritage'?2:def.family?Math.max(1,Math.round((b-a)/1.25)):1;
+   for(let i=0;i<divisions;i++){
+    const z0=a+(b-a)*i/divisions,z1=a+(b-a)*(i+1)/divisions,tx=side*w*(def.family?.485:.5);
+    face(body,[[x,sill,z0],[x,sill,z1],[tx,h-.18,z1],[tx,h-.18,z0]],glass);
+    bar(body,[x,sill,z0],[tx,h-.18,z0],def.style==='heritage'?.038:.025,windowTrim);
+   }
+   bar(body,[x,sill,a],[x,sill,b],.035,windowTrim);bar(body,[side*w*(def.family?.485:.5),h-.18,a],[side*w*(def.family?.485:.5),h-.18,b],.035,windowTrim);
+   bar(body,[x,sill,b],[side*w*(def.family?.485:.5),h-.18,b],.028,windowTrim);
+   if(def.style==='alpine')box(body,.025,.11,b-a,x+side*.012,sill-.16,(a+b)/2,cream);
+   if(def.style==='heritage')for(let z=a+.12;z<b-.08;z+=.18)box(body,.022,.37,.022,x+side*.01,.4,z,mat('rib',0xa76f55));
+  }
+ }
+ // The short ends and corner panes wrap around the long rectangular body.
+ for(const k of [0,1,3,4,5,7]){
+  const next=(k+1)%8,a=waist[k],b=waist[next],ta=top[k],tb=top[next];
+  const divisions=k===0||k===4?(def.family?2:def.style==='heritage'?3:2):1;
+  for(let i=0;i<divisions;i++){const mix=(a,b,t)=>a.map((v,j)=>v+(b[j]-v)*t),p=mix(a,b,i/divisions),q=mix(a,b,(i+1)/divisions),r=mix(ta,tb,(i+1)/divisions),s=mix(ta,tb,i/divisions);face(body,[p,q,r,s],glass);bar(body,p,s,def.family?.025:.033,windowTrim);}
+  bar(body,a,b,.032,windowTrim);bar(body,ta,tb,.035,windowTrim);bar(body,b,tb,.03,windowTrim);
+ }
+ // Coloured perimeter: more pronounced on the panoramic reference family.
+ for(let k=0;k<8;k++){const next=(k+1)%8;if(def.family&&[1,3,5,7].includes(k))bar(body,bottom[k],top[k],def.style==='glacier'?.07:.052,def.style==='glacier'?blue:paint);}
+ shell(body,[top,outline(w*.99,l*.985,c,h+.01),outline(w*.95,l*.96,c,h+.13)],roofMat);
+ if(def.style==='heritage')shell(body,[outline(w,l*.99,c,h-.24),outline(w,l*.99,c,h-.13)],cream);
+ if(def.family)for(let k=0;k<8;k++)bar(body,top[k],top[(k+1)%8],.045,def.style==='glacier'?blue:paint);
+ if(def.style==='massif')for(const side of [-1,1])for(const end of [-1,1])for(const offset of [-.055,.055])bar(body,[side*w/2,sill,end*l*.26+offset],[side*w*.485,h-.18,end*l*.26+offset],.032,trim);
+ const doors=[];
+ for(const side of [-1,1])for(const direction of [-1,1]){
+  const door=new T.Group();door.position.set(side*(w/2+.035),0,direction*doorWidth/4);body.add(door);const half=doorWidth/4;
+  box(door,.045,sill-.15,doorWidth/2-.025,0,(sill+.15)/2,0,paint);
+  face(door,[[0,sill,-half+.015],[0,sill,half-.015],[0,h-.2,half-.015],[0,h-.2,-half+.015]],glass);
+  for(const z of [-half,half])bar(door,[0,.16,z],[0,h-.2,z],.025,windowTrim);
+  bar(door,[0,sill,-half],[0,sill,half],.025,windowTrim);bar(door,[0,h-.2,-half],[0,h-.2,half],.026,windowTrim);bar(door,[side*.05,1.1,-direction*(half-.09)],[side*.05,1.35,-direction*(half-.09)],.019,steel);
+  doors.push({g:door,closed:direction*doorWidth/4,open:direction*(doorWidth*.75+.045)});
+ }
+ for(const side of [-1,1]){box(body,.08,.11,doorWidth*2.1,side*(w/2+.08),h-.11,0,trim);textPlane(body,def.style==='heritage'?'LIFT CO.':'LIFT CO.',Math.min(1.65,l*.32),.26,side*(w/2+.025),Math.max(.3,sill*.52),l*.31,side*Math.PI/2,def.style==='glacier'?'#3b5860':'#eee8d8');}
+ for(const end of [-1,1]){const bumper=outline(w*.98,l*.99,c,.08);bar(body,[-w*.38,.04,end*l*.49],[w*.38,.04,end*l*.49],.065,rubber);if(!def.family){mesh(body,geo('badge',()=>{const a=new T.CylinderGeometry(.085,.085,.015,20);a.rotateX(Math.PI/2);return a;}),cream,0,sill*.55,end*l*.498);}else{for(const side of [-1,1])box(body,.2,.055,.025,side*w*.31,.25,end*l*.495,cream);}}
+ // Roof equipment and the tall, bent suspension. The trolley always runs along Z.
+ box(body,w*.64,.16,l*.48,0,h+.18,0,dark);
+ const vents=def.family?7:4;for(let i=0;i<vents;i++)box(body,w*.43,.06,.09,0,h+.3,(i-(vents-1)/2)*.17,steel);
+ const suspension=new T.Group();g.add(suspension);const trolleyY=h+4.05;
+ const hanger=mat('hanger',0x38484b,.52,.5);
+ for(const side of [-1,1]){
+  tube(suspension,[[side*.32,h+.23,-.25],[side*.56,h+.75,.25],[side*.54,h+1.25,.67],[side*.27,h+2.5,.38],[side*.22,trolleyY-.2,0]],def.family?.095:.078,hanger);
+  bar(suspension,[side*.32,h+.23,-.75],[side*.54,h+1.25,.67],.052,hanger);
+ }
+ box(suspension,.95,.15,1.65,0,h+.27,0,hanger);
+ const trolley=new T.Group();trolley.position.y=trolleyY;suspension.add(trolley);
+ const trolleyLength=def.family?3.2:2.65;
+ const wheels=[];for(const side of [-1,1]){
+  box(trolley,.13,.2,trolleyLength,side*.33,-.11,0,steel);
+  const count=def.family?8:6;for(let i=0;i<count;i++){
+   const z=(i-(count-1)/2)*(trolleyLength-.3)/(count-1),wheel=mesh(trolley,geo('trackwheel',()=>{const a=new T.CylinderGeometry(.16,.16,.12,16);a.rotateZ(Math.PI/2);return a;}),rubber,side*.33,.03,z);
+   mesh(wheel,geo('wheelhub',()=>{const a=new T.CylinderGeometry(.085,.085,.14,12);a.rotateZ(Math.PI/2);return a;}),steel);wheels.push(wheel);
+  }
+ }
+ for(const z of [-trolleyLength*.36,trolleyLength*.36])bar(trolley,[-.43,-.13,z],[.43,-.13,z],.055,steel);
+ box(trolley,.18,.13,.6,0,-.26,0,dark);textPlane(trolley,String(number).padStart(2,'0'),.26,.15,.42,-.12,0,Math.PI/2,'#354d3e','#eae5d5');
+ // The interior remains visible through the glass and the real door opening.
+ for(const side of [-1,1]){bar(body,[side*w*.37,.18,-l*.36],[side*w*.37,1.3,-l*.36],.025,steel);bar(body,[side*w*.37,1.3,-l*.36],[side*w*.37,1.3,l*.36],.025,steel);}
+ for(const z of [-l*.3,l*.3])bar(body,[-w*.34,h-.33,z],[w*.34,h-.33,z],.025,steel);
+ const people=new T.Group();body.add(people);const rows=def.family?4:2;for(let i=0;i<rows;i++)for(const side of [-1,1])passenger(people,side*w*.21,(i-(rows-1)/2)*(def.family?.9:.95),(i*2+(side+1)/2));people.visible=$('passengers').checked;
+ return{g,body,trolleyY,doors,people,wheels,def};
+}
+function clear(){if(!activeGroup)return;scene.remove(activeGroup);const cachedG=new Set(geometries.values()),cachedM=new Set(Object.values(materials)),localG=new Set(),localM=new Set(),textures=new Set();activeGroup.traverse(o=>{if(o.geometry&&!cachedG.has(o.geometry))localG.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])if(!cachedM.has(m)){localM.add(m);if(m.map)textures.add(m.map);}});localG.forEach(g=>g.dispose());localM.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
+function cable(parent,x,y,z,length){for(const side of [-1,1])bar(parent,[x+side*.33,y+.19,z-length/2],[x+side*.33,y+.19,z+length/2],.033,dark);bar(parent,[x,y-.27,z-length/2],[x,y-.27,z+length/2],.022,steel);}
+function directionGuide(parent,x,z,length){const g=new T.Group();parent.add(g);const material=new T.LineBasicMaterial({color:0xaeb99f,transparent:true,opacity:.7}),line=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(x,-.07,z-length/2),new T.Vector3(x,-.07,z+length/2)]),material);g.add(line);for(const end of [-1,1]){const a=new T.ArrowHelper(new T.Vector3(0,0,end),new T.Vector3(x,-.05,z+end*(length/2-1)),.75,0xb8a070,.5,.25);g.add(a);}g.visible=$('guides').checked;guides.push(g);}
+function podium(parent,x,z,def){box(parent,def.width+2.3,.15,def.length+2,x,-.075,z,mat('podium',0xd9ded1));directionGuide(parent,x,z,def.length+4.7);}
+function label(index,text,x,z){const el=document.createElement('div');el.className='compare-label';el.innerHTML=designs[index].id+'<b>'+text+'</b>';el.dataset.x=x;el.dataset.z=z;$('labels').append(el);}
+function build(){
+ clear();activeGroup=new T.Group();scene.add(activeGroup);cabins=[];comparison=[];guides=[];$('labels').replaceChildren();
+ const d=designs[selected];
+ if(mode==='cabin'){
+  const c=makeCabin(d);c.g.position.y=1.5;activeGroup.add(c.g);cabins.push(c);podium(activeGroup,0,0,d);cable(activeGroup,0,c.trolleyY+1.5,0,Math.max(13,d.length+5));
+ }else if(mode==='compare'){
+  const ids=designs.map((_,i)=>i);
+  for(const [j,index]of ids.entries()){
+   const def=designs[index],x=(j-(ids.length-1)/2)*8.1,z=0,c=makeCabin(def,j+1);c.g.position.set(x,1.5,z);activeGroup.add(c.g);cabins.push(c);comparison.push(c);podium(activeGroup,x,z,def);cable(activeGroup,x,c.trolleyY+1.5,z,def.length+3);label(index,def.name,x,z+def.length/2+1.3);
+  }
+ }else{
+  for(const side of [-1,1]){const c=makeCabin(d,side===1?1:2);c.g.position.set(side*6.3,1.5,side*30);activeGroup.add(c.g);c.side=side;cabins.push(c);cable(activeGroup,side*6.3,c.trolleyY+1.5,0,78);directionGuide(activeGroup,side*6.3,0,72);}
+  // Twin straight docking lanes. There is no return wheel or station U-turn.
+  for(const end of [-1,1]){const z=end*35;box(activeGroup,25,.28,15,0,0,z,deck);box(activeGroup,8.2,1.5,15,0,.85,z,deck);for(const side of [-1,1])box(activeGroup,3,1.5,15,side*10.9,.85,z,deck);for(const x of [-11,0,11])for(const dz of [-6.5,6.5])box(activeGroup,.18,10,.18,x,5,z+dz,steel);box(activeGroup,25.5,.4,15.5,0,10.15,z,wood);box(activeGroup,25.8,.15,15.8,0,10.48,z,blue);box(activeGroup,25.5,.12,15.5,0,10.64,z,snow);textPlane(activeGroup,end===1?'VALLEY / TWO DOCKING LANES':'SUMMIT / TWO DOCKING LANES',11,.55,0,9.5,z-end*7.8,end===1?Math.PI:0,'#eee8d8');}
+ }
+ document.body.classList.toggle('compare-mode',mode==='compare');document.body.classList.toggle('travel-mode',mode==='travel');document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));$('doors').disabled=mode==='travel';$('doorReadout').textContent=mode==='travel'?'Automatic':doorTarget>.5?'Open':'Closed';$('orientation').hidden=mode==='travel';updateCaption();resetCamera();
+}
+function updateCaption(){const d=designs[selected];$('modelTag').textContent=d.id+' / '+(d.family?'PANORAMIC FAMILY':'COMPACT CLASSIC FAMILY');$('modelName').textContent=d.name;$('modelDescription').textContent=mode==='travel'?'One cabin in each lane. Opposite journeys, straight docking, doors only opening at the ends. Travel is compressed for this design study.':d.description;$('modelLength').textContent=d.length.toFixed(1)+' m';$('modelWidth').textContent=d.width.toFixed(2)+' m';$('modelHeight').textContent=d.height.toFixed(2)+' m';$('viewName').textContent=mode==='cabin'?'01 — Individual cabin study':mode==='compare'?'02 — Heritage & Glacier, same scale':'03 — Two cabins, back and forth';document.querySelectorAll('.choice').forEach((b,i)=>b.classList.toggle('active',i===selected));}
+function resetCamera(angle='default'){
+ controls.enableDamping=false;controls.update();controls.autoRotate=false;$('rotate').classList.remove('active');const d=designs[selected];
+ if(mode==='compare'){controls.target.set(0,4,0);camera.position.set(17,14,27);}
+ else if(mode==='travel'){controls.target.set(0,4,-7);camera.position.set(49,35,52);}
+ else{controls.target.set(0,4.5,0);if(angle==='side'){controls.target.set(0,3.8,0);camera.position.set(17+d.length*.45,6,0.01);}else if(angle==='end'){controls.target.set(0,4.1,0);camera.position.set(.01,5.8,17+d.length*.4);}else if(angle==='trolley'){controls.target.set(0,d.height+4.6,0);camera.position.set(6,d.height+7,8);}else camera.position.set(12+d.length*.3,10,15+d.length*.3);}
+ controls.update();controls.enableDamping=true;
+}
+for(let family=0;family<2;family++){
+ const title=document.createElement('div');title.className='family-label';title.textContent=family?'B / LONG PANORAMIC CABIN':'A / COMPACT CLASSIC CABIN';$('choices').append(title);
+ for(const [i,d]of designs.entries()){if(d.family!==family)continue;const b=document.createElement('button');b.className='choice';b.style.width='100%';b.style.marginBottom='5px';b.innerHTML='<span class="num">'+d.id+'</span><span><strong>'+d.name+'</strong><small>'+d.length.toFixed(1)+' m long / '+(d.style==='heritage'?'vintage oxblood':'ivory & glacier blue')+'</small></span><span class="swatch" style="background:#'+d.color.toString(16).padStart(6,'0')+';border-color:#'+d.trim.toString(16).padStart(6,'0')+'"></span>';b.onclick=()=>{selected=i;if(mode==='compare')mode='cabin';build();};$('choices').append(b);}
+}
+for(const b of document.querySelectorAll('[data-mode]'))b.onclick=()=>{mode=b.dataset.mode;build();};for(const b of document.querySelectorAll('[data-angle]'))b.onclick=()=>{if(mode!=='cabin'){mode='cabin';build();}resetCamera(b.dataset.angle);};
+$('doors').oninput=e=>{doorTarget=+e.target.value;$('doorReadout').textContent=doorTarget<.05?'Closed':doorTarget>.95?'Open':Math.round(doorTarget*100)+'%';};$('passengers').onchange=()=>cabins.forEach(c=>c.people.visible=$('passengers').checked);$('guides').onchange=()=>guides.forEach(g=>g.visible=$('guides').checked);$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'Resume':'Pause';$('pause').classList.toggle('active',paused);};$('rotate').onclick=()=>{controls.autoRotate=!controls.autoRotate;$('rotate').classList.toggle('active',controls.autoRotate);};$('reset').onclick=()=>resetCamera();
+window.addEventListener('resize',()=>{renderer.setSize(stage.clientWidth,stage.clientHeight);camera.aspect=stage.clientWidth/stage.clientHeight;camera.updateProjectionMatrix();});
+build();$('loading').hidden=true;const clock=new T.Clock();
+function animate(){
+ requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(!paused)elapsed+=dt;doorValue=T.MathUtils.damp(doorValue,doorTarget,5,dt);
+ for(const c of cabins){let opening=doorValue;if(mode==='travel'){
+   const period=36,t=(elapsed%period)/period,hold=.075,travel=.425;let position;
+   if(t<hold)position=0;else if(t<.5)position=T.MathUtils.smootherstep((t-hold)/travel,0,1);else if(t<.5+hold)position=1;else position=1-T.MathUtils.smootherstep((t-.5-hold)/travel,0,1);
+   c.g.position.z=c.side*(32-64*position);opening=t<hold||t>=.5&&t<.5+hold?1:0;
+   c.opening=T.MathUtils.damp(c.opening||0,opening,4,paused?0:dt);opening=c.opening;for(const wheel of c.wheels)if(!paused)wheel.rotation.x+=dt*(t<.5?1:-1)*c.side*8;
+   $('phase').textContent=(t<hold||t>=.5&&t<.5+hold)?'Docked · doors open · one cabin at each end':'Two lanes · opposite motion · no turnaround';
+  }
+  for(const door of c.doors)door.g.position.z=T.MathUtils.lerp(door.closed,door.open,opening);
+ }
+ controls.update();for(const el of $('labels').children){const p=new T.Vector3(+el.dataset.x,.2,+el.dataset.z).project(camera);el.style.left=(p.x*.5+.5)*stage.clientWidth+'px';el.style.top=(-p.y*.5+.5)*stage.clientHeight+'px';el.style.visibility=p.z>1?'hidden':'visible';}
+ renderer.render(scene,camera);
+}animate();
+</script></body></html>

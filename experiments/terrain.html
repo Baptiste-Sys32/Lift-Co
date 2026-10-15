@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lift Co. — Four small landscapes</title>
+<style>
+:root{font-family:Georgia,'Times New Roman',serif;color:#303831;background:#e5e3db;color-scheme:light}*{box-sizing:border-box}body{margin:0;overflow:hidden}canvas{display:block;touch-action:none}button{font:inherit;cursor:pointer;color:inherit}button:focus-visible,input:focus-visible{outline:2px solid #ac693f;outline-offset:3px}
+header{position:fixed;left:26px;top:24px;pointer-events:none}header small,.eyebrow{font:10px/1.5 monospace;letter-spacing:1.6px;text-transform:uppercase;color:#697168}h1{font-weight:400;font-size:32px;letter-spacing:-1.1px;margin:5px 0 8px}header p{font:12px/1.6 sans-serif;margin:0;color:#6b736c;max-width:270px}.toolbar{position:fixed;right:26px;top:25px;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.toolbar button{background:#f5f3ebdd;border:1px solid #c6c8bd;padding:8px 11px;font:11px monospace}.toolbar button[aria-pressed=true]{background:#384b40;border-color:#384b40;color:#fffdf4}.toolbar label{font:11px monospace;display:flex;align-items:center;gap:4px;padding:7px;background:#f5f3ebdd}
+.notes{position:fixed;left:26px;top:149px;width:252px;pointer-events:none}.number{font:10px monospace;color:#8a6752}.notes h2{font-weight:400;font-size:23px;letter-spacing:-.5px;margin:7px 0}.notes p{font:12px/1.7 sans-serif;color:#677066;margin:0}.metrics{display:flex;gap:25px;margin-top:16px;font:10px/1.8 monospace;color:#70766c}.metrics strong{display:block;color:#3b493d;font-size:15px;font-weight:400}
+.section{position:fixed;bottom:123px;left:26px;width:290px;background:#f4f2e9e8;padding:13px 15px 9px;border:1px solid #d0d0c4}.section .eyebrow{letter-spacing:.7px;font-size:9px}.section svg{width:100%;height:140px;display:block;overflow:visible}.section .axis{display:flex;justify-content:space-between;font:9px monospace;color:#72776e}.choices{position:fixed;bottom:24px;left:26px;right:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.choice{background:#f4f2eae8;border:1px solid #c7cabe;padding:13px 15px;text-align:left;transition:background .15s}.choice:hover{background:#fffdf4}.choice[aria-pressed=true]{background:#384b40;border-color:#384b40;color:#fcf7e9}.choice span{display:block;font:9px/1.5 monospace;letter-spacing:1px;opacity:.65}.choice strong{display:block;font-size:18px;font-weight:400;margin-top:4px}.hint{position:fixed;right:27px;bottom:126px;font:10px monospace;color:#687068;pointer-events:none}#error{display:none;position:fixed;left:26px;top:320px;background:#8c493d;color:white;padding:15px;max-width:400px;font:12px monospace}
+@media(max-width:700px){header{top:15px;left:15px}h1{font-size:25px}header p{display:none}.toolbar{top:79px;left:15px;right:auto;max-width:95%}.notes{top:130px;left:15px;width:200px}.notes p{font-size:11px}.notes h2{font-size:20px}.metrics{margin-top:8px;gap:12px}.choices{left:12px;right:12px;bottom:12px;gap:5px;grid-template-columns:repeat(2,1fr)}.choice{padding:9px}.choice strong{font-size:15px}.choice span{font-size:8px}.section{left:12px;bottom:161px;width:230px;padding:10px}.section svg{height:90px}.hint{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header><small>Lift Co. / terrain sketches</small><h1>Four compact mountains.</h1><p>Valley floors, ski faces and summit ridges. Sized around the 315 m lift.</p></header>
+<div class="toolbar" aria-label="Terrain view">
+<button data-view="overview" aria-pressed="true">Overview</button><button data-view="side" aria-pressed="false">Side</button><button data-view="valley" aria-pressed="false">Valley</button><button data-view="top" aria-pressed="false">Top</button>
+<label><input type="checkbox" id="contours" checked> Contours</label>
+</div>
+<aside class="notes"><div class="number" id="number"></div><h2 id="name"></h2><p id="description"></p><div class="metrics"><div>FOOTPRINT<strong>380 × 420 m</strong></div><div>RELIEF<strong id="relief"></strong></div></div></aside>
+<div class="section"><div class="eyebrow">Terrain section · through the middle</div><svg viewBox="0 0 260 144" role="img" aria-label="Actual terrain elevation from valley to upper slope"><path id="sectionFill" fill="#d4d6c7"></path><path id="sectionLine" fill="none" stroke="#5b6f5c" stroke-width="2"></path><path d="M0 127H260" stroke="#c2c7b8" stroke-width="1"></path><text id="sectionHeight" x="259" y="12" text-anchor="end" fill="#687263" font-family="monospace" font-size="9"></text></svg><div class="axis"><span>valley</span><span>330 m across →</span><span>upper slope</span></div></div>
+<nav class="choices" aria-label="Choose a landscape">
+<button class="choice" data-design="0" aria-pressed="true"><span>01 / BROAD FACES & SPURS</span><strong>Shoulder mountain</strong></button>
+<button class="choice" data-design="1" aria-pressed="false"><span>02 / TWO CRESTS & A BOWL</span><strong>Horseshoe bowl</strong></button>
+<button class="choice" data-design="2" aria-pressed="false"><span>03 / CURVED SUMMIT RIDGE</span><strong>Winding summit ridge</strong></button>
+<button class="choice" data-design="3" aria-pressed="false"><span>04 / LOWER HILL & UPPER SUMMIT</span><strong>Saddle & upper summit</strong></button>
+</nav>
+<div class="hint">drag to orbit · scroll to zoom · right-drag to pan · keys 1–4</div><div id="error" role="alert"></div>
+<script>
+function reportError(message){const el=document.getElementById('error');el.style.display='block';el.textContent=String(message);}
+window.addEventListener('error',e=>reportError(e.message));window.addEventListener('unhandledrejection',e=>reportError(e.reason));
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+// Small hand-shaped heightfields. Metres in all three axes; no vertical exaggeration.
+// A gradual base profile carries the entire hillside. Broad overlapping shoulders,
+// gullies and saddles modify that profile instead of piling a peak onto a flat plane.
+const W=380,D=420,NX=152,NZ=168;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t);};
+const hill=(x,z,cx,cz,rx,rz,h)=>h*Math.exp(-(((x-cx)/rx)**2+((z-cz)/rz)**2));
+// Monotone cubic interpolation keeps the overall climb continuous and gradual.
+function profile(z,knots){
+  const t=-z;
+  if(t<=knots[0][0])return knots[0][1];
+  if(t>=knots.at(-1)[0])return knots.at(-1)[1];
+  let i=0;while(t>knots[i+1][0])i++;
+  const [a,ya]=knots[i],[b,yb]=knots[i+1],d=(yb-ya)/(b-a),u=(t-a)/(b-a);
+  const tangent=k=>{if(k===0||k===knots.length-1)return 0;const l=(knots[k][1]-knots[k-1][1])/(knots[k][0]-knots[k-1][0]),r=(knots[k+1][1]-knots[k][1])/(knots[k+1][0]-knots[k][0]);return l*r<=0?0:2*l*r/(l+r);};
+  const limit=m=>d===0?0:Math.sign(d)*clamp(Math.sign(d)*m,0,3*Math.abs(d));
+  const m0=limit(tangent(i)),m1=limit(tangent(i+1));
+  return (2*u**3-3*u*u+1)*ya+(u**3-2*u*u+u)*(b-a)*m0+(-2*u**3+3*u*u)*yb+(u**3-u*u)*(b-a)*m1;
+}
+// A connected mountain: valley, sustained ski faces, crest, then a back slope.
+// Elevations and widths are real metres, matched to the 315 m lift corridor.
+const baseKnots=[[-210,2],[-145,3],[-105,18],[-45,49],[20,81],[85,114],[140,130],[210,83]];
+const mass=(x,z,center=0,width=185)=>2+(profile(z,baseKnots)-2)*Math.exp(-(((x-center)/width)**2));
+const designs=[
+  {
+    name:'Shoulder mountain',tag:'01 / BROAD FACES & SPURS',
+    description:'A broad summit with two downhill spurs and a hollow between them. The valley opens below sustained ski faces; the crest continues above a possible upper station.',
+    height(x,z){
+      const active=smooth(-150,-85,-z);
+      const spurs=hill(x,z,-100,5,62,100,28)+hill(x,z,105,-47,65,105,31);
+      const bowl=hill(x,z,3,-22,53,61,-14);
+      const summit=hill(x,z,-24,-139,80,52,23);
+      return mass(x,z)+active*(spurs+bowl+summit);
+    }
+  },
+  {
+    name:'Horseshoe bowl',tag:'02 / TWO CRESTS & AN OPEN BOWL',
+    description:'Two high shoulders wrap around a skiable bowl. Steeper flanks feed a gentler central descent, with a low saddle connecting the upper crests.',
+    height(x,z){
+      const active=smooth(-150,-85,-z);
+      const shoulders=hill(x,z,-99,-101,54,91,51)+hill(x,z,104,-121,60,91,57);
+      const bowl=hill(x,z,0,-49,64,73,-24);
+      const lowerSpur=hill(x,z,-91,48,55,61,16);
+      return mass(x,z,0,220)*.91+active*(shoulders+bowl+lowerSpur);
+    }
+  },
+  {
+    name:'Winding summit ridge',tag:'03 / CURVED RIDGE & SIDE FACES',
+    description:'A continuous ridge bends from the lower shoulder to an offset summit. Ski faces fall away on both sides, with smaller ridges dividing the gullies.',
+    height(x,z){
+      const active=smooth(-150,-85,-z),ridge=53*Math.sin((-z+14)/100)-14;
+      const spine=34*Math.exp(-(((x-ridge)/56)**2)-(((z+96)/143)**2));
+      const gullies=hill(x,z,-91,-36,33,89,-13)+hill(x,z,115,-67,37,100,-15);
+      const spur=hill(x,z,-69,42,54,75,21)+hill(x,z,123,-114,52,67,20);
+      return mass(x,z,ridge,175)*.94+active*(spine+gullies+spur);
+    }
+  },
+  {
+    name:'Saddle & upper summit',tag:'04 / LOWER HILL, DIP, UPPER FACE',
+    description:'A distinct lower hill drops into a saddle before the main summit climb. A lift can span the dip; descents curve around the lower hill or follow the upper face.',
+    height(x,z){
+      const active=smooth(-150,-85,-z);
+      const lower=hill(x,z,-23,53,71,38,25),saddle=hill(x,z,7,-1,65,29,-24);
+      const upper=hill(x,z,39,-131,72,62,34),spur=hill(x,z,-118,-69,52,99,27);
+      const elevation=mass(x,z,0,192)*.94+active*(lower+saddle+upper+spur);
+      return elevation*(1-.23*smooth(0,105,-z));
+    }
+  }
+];
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.13;document.body.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0xe5e3db);
+const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,1,2200);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;controls.minDistance=75;controls.maxDistance=1100;controls.maxPolarAngle=Math.PI*.485;controls.target.set(0,60,0);
+scene.add(new THREE.HemisphereLight(0xfffaf0,0x889383,1.05));const sun=new THREE.DirectionalLight(0xfff3db,3.1);sun.position.set(-180,270,170);scene.add(sun);
+const group=new THREE.Group();scene.add(group);
+const surfaceMaterial=new THREE.MeshStandardMaterial({color:0xb3b8a6,roughness:1,metalness:0,side:THREE.DoubleSide});
+const wallMaterial=new THREE.MeshStandardMaterial({color:0x8c9382,roughness:1,side:THREE.DoubleSide});
+let landscape=3,view='overview',contourLines;
+const $=id=>document.getElementById(id);
+function height(x,z){return designs[landscape].height(x,z);}
+function clearGeometry(){while(group.children.length){const mesh=group.children[0];group.remove(mesh);mesh.geometry.dispose();if(mesh.material!==surfaceMaterial&&mesh.material!==wallMaterial)mesh.material.dispose();}}
+function rebuild(){
+  clearGeometry();
+  const geometry=new THREE.PlaneGeometry(W,D,NX,NZ);geometry.rotateX(-Math.PI/2);const pos=geometry.attributes.position;
+  let low=Infinity,high=-Infinity;
+  for(let i=0;i<pos.count;i++){const y=height(pos.getX(i),pos.getZ(i));pos.setY(i,y);low=Math.min(low,y);high=Math.max(high,y);}
+  geometry.computeVertexNormals();group.add(new THREE.Mesh(geometry,surfaceMaterial));
+  // Exposed model edges are a cut through the hillside, never a flattened perimeter.
+  const edge=[];
+  for(let i=0;i<=NX;i++)edge.push([-W/2+i/NX*W,-D/2]);
+  for(let i=1;i<=NZ;i++)edge.push([W/2,-D/2+i/NZ*D]);
+  for(let i=1;i<=NX;i++)edge.push([W/2-i/NX*W,D/2]);
+  for(let i=1;i<NZ;i++)edge.push([-W/2,D/2-i/NZ*D]);
+  const vertices=[],indices=[];
+  for(let i=0;i<edge.length;i++){const [x,z]=edge[i];vertices.push(x,height(x,z),z,x,-7,z);const a=i*2,b=(i+1)%edge.length*2;indices.push(a,b,a+1,b,b+1,a+1);}
+  const wall=new THREE.BufferGeometry();wall.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));wall.setIndex(indices);wall.computeVertexNormals();group.add(new THREE.Mesh(wall,wallMaterial));
+  const bottom=new THREE.Mesh(new THREE.PlaneGeometry(W,D),wallMaterial);bottom.rotation.x=-Math.PI/2;bottom.position.y=-7;group.add(bottom);
+  // Marching triangles: 5 m contours show broad ridges and hollows without texture.
+  const segments=[],index=geometry.index,points=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];
+  for(let level=5;level<high;level+=5){
+    for(let i=0;i<index.count;i+=3){
+      for(let k=0;k<3;k++)points[k].fromBufferAttribute(pos,index.getX(i+k));
+      const hits=[];
+      for(let k=0;k<3;k++){const a=points[k],b=points[(k+1)%3];if((a.y<=level&&b.y>level)||(b.y<=level&&a.y>level)){const t=(level-a.y)/(b.y-a.y);hits.push(a.clone().lerp(b,t));}}
+      if(hits.length===2)for(const p of hits)segments.push(p.x,p.y+.06,p.z);
+    }
+  }
+  const lines=new THREE.BufferGeometry();lines.setAttribute('position',new THREE.Float32BufferAttribute(segments,3));contourLines=new THREE.LineSegments(lines,new THREE.LineBasicMaterial({color:0x626e59,transparent:true,opacity:.23,depthWrite:false}));contourLines.visible=$('contours').checked;group.add(contourLines);
+  $('name').textContent=designs[landscape].name;$('number').textContent=designs[landscape].tag;$('description').textContent=designs[landscape].description;$('relief').textContent=Math.round(high-low)+' m';
+  document.querySelectorAll('[data-design]').forEach(button=>button.setAttribute('aria-pressed',String(+button.dataset.design===landscape)));
+  drawSection();
+}
+function drawSection(){
+  // Same horizontal and vertical scale: the side profile is not stretched.
+  const samples=Array.from({length:133},(_,i)=>height(0,160-i/132*330)),scale=260/330;
+  const points=samples.map((y,i)=>[i/132*260,127-y*scale]);
+  const line=points.map(([x,y],i)=>(i?'L':'M')+x.toFixed(2)+','+y.toFixed(2)).join(' ');
+  $('sectionLine').setAttribute('d',line);$('sectionFill').setAttribute('d',line+' L260,127 L0,127 Z');$('sectionHeight').textContent=Math.round(samples.at(-1)-samples[0])+' m rise';
+}
+function setView(next){
+  view=next;
+  const positions={overview:[350,290,390],side:[510,175,4],valley:[55,150,450],top:[0,680,.1]};
+  camera.position.fromArray(positions[next]);controls.target.set(0,60,0);
+  // Leave room for the notes while keeping the terrain centered in the open canvas.
+  if(innerWidth>850)camera.setViewOffset(innerWidth,innerHeight,-innerWidth*.065,0,innerWidth,innerHeight);else camera.clearViewOffset();
+  controls.update();document.querySelectorAll('[data-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===view)));
+}
+document.querySelectorAll('[data-design]').forEach(button=>button.onclick=()=>{landscape=+button.dataset.design;rebuild();});
+document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>setView(button.dataset.view));
+$('contours').onchange=()=>{contourLines.visible=$('contours').checked;};
+window.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement||e.altKey||e.ctrlKey||e.metaKey)return;const i=Number(e.key)-1;if(i>=0&&i<designs.length){landscape=i;rebuild();}});
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;renderer.setSize(innerWidth,innerHeight);setView(view);camera.updateProjectionMatrix();});
+rebuild();setView('overview');
+function frame(){requestAnimationFrame(frame);controls.update();renderer.render(scene,camera);}frame();
+</script>
+</body>
+</html>
