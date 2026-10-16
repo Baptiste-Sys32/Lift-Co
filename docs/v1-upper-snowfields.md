@@ -2,11 +2,7 @@
 
 Open [the current game](../empty-map.html).
 
-## Current status — October 16
-
-Solo is on hold and is no longer loaded or buildable in the main game. Alpine, Ridge and Classic remain. See [the update notes](2026-10-16-lift-details.md) for the source snapshot, browser-save preservation, station wheel movement, tower lights and new lift-only construction behavior. The original V1 integration below is retained as history.
-
-## Original V1 integration
+## Included
 
 - The selected **Upper Snowfields** variation of **Twin Summit Pass**, 3.6 × 3.6 km, with summit terraces and distributed natural ski faces.
 - Alpine gondola, Ridge detachable chairlift, Classic fixed-grip chairlift and **Solo reversible téléphérique** construction.
