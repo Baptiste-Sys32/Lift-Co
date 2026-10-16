@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lift Co. — a mountain of your own</title>
+<title>Lift Co. V1 — Upper Snowfields</title>
 <link rel="stylesheet" href="./src/styles/resort.css">
 <style>
 .empty-network{padding:19px 15px 16px;border:1px solid var(--line);background:#ebece1;border-top:2px solid var(--gold)}.empty-network h2{font-size:25px;margin:9px 0}.empty-network p{font:11px/1.8 sans-serif;color:#7b8472}.empty-network button{width:100%;margin-top:16px;background:var(--ink);border-color:var(--ink);color:#fff8e8}.empty-network .empty-symbol{font:24px Georgia;color:#c49b57}.map-area{margin-top:14px;display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font:10px monospace;color:#7b8472}#btnAdd:disabled{opacity:.4}.place-title #viewTitle{max-width:430px}
@@ -18,7 +18,7 @@
 <body>
 <div id="app"></div>
 <aside id="hud">
-  <header class="brand"><span class="eyebrow">THE MOUNTAIN IS YOURS</span><h1>Lift Co<span>.</span></h1><p>An untouched mountain. Yours to build.</p></header>
+  <header class="brand"><span class="eyebrow">UPPER SNOWFIELDS / V1</span><h1>Lift Co<span>.</span></h1><p>Twin Summit Pass. Your high mountain resort.</p></header>
   <nav class="mode-tabs"><button id="tabResort" class="on">Your resort</button><button id="btnBuild">Build a lift <span>＋</span></button></nav>
   <section id="resortPanel">
     <div class="section-heading"><span class="eyebrow">01 / YOUR LIFT NETWORK</span><span id="networkCount" class="mono"></span></div>
@@ -26,11 +26,11 @@
     <div id="emptyResort" class="empty-network"><span class="empty-symbol">↗</span><h2>Your first line.</h2><p>Fresh snow, quiet woods and room to build. Choose your stations, place your towers and bring the mountain to life.</p><button id="firstLift">Build your first lift ＋</button></div>
     <div id="lineDetail" class="line-detail"></div>
     <div class="camera-actions"><button id="btnRide">Ride this lift ↗</button><button id="btnEdit">Edit towers</button><button id="btnStation">See machinery</button><button id="btnDeleteLift" aria-expanded="false" aria-controls="deleteLiftPanel">Remove lift</button></div>
-    <section id="deleteLiftPanel" class="lift-removal" hidden aria-label="Remove selected lift"><h2 id="deleteLiftTitle"></h2><p class="small">Remove this line’s stations, towers, carriers and return piste. You can undo the removal afterward.</p><div class="row"><button id="cancelDeleteLift">Keep lift</button><button id="confirmDeleteLift">Remove lift</button></div></section>
+    <section id="deleteLiftPanel" class="lift-removal" hidden aria-label="Remove selected lift"><h2 id="deleteLiftTitle"></h2><p class="small">Remove this line’s stations, towers and carriers. You can undo the removal afterward.</p><div class="row"><button id="cancelDeleteLift">Keep lift</button><button id="confirmDeleteLift">Remove lift</button></div></section>
     <button id="undoDeleteLift" hidden>Undo lift removal ↶</button><p id="liftRemovalMessage" class="small" role="status" hidden></p>
-    <section class="panel-section"><span class="eyebrow">02 / THE AFTERNOON</span><div class="row spread"><label for="tod">Light & atmosphere</label><span id="timeLabel" class="mono">Golden hour</span></div><input id="tod" type="range" min="0" max="1" step="0.001" value="0.62"><p class="small">A warm glow, a quiet mountain, one more run.</p></section>
-    <section class="panel-section"><span class="eyebrow">03 / THE LANDSCAPE</span><p class="small">2.16 × 2.16 km of snowy hills, woodland and open terrain.</p><p class="small" style="margin-top:9px"><a href="./experiments/mountain-maps.html" target="_blank" rel="noopener">Explore four new mountain maps ↗</a></p><div class="map-area"><span>Map footprint</span><span>4.67 km²</span></div><form id="seedForm"><label for="seed">Mountain seed</label><div class="row"><input id="seed" maxlength="32" aria-label="Mountain seed"><button type="submit">Regenerate ↗</button></div></form></section>
-    <p class="sidebar-note">This map has its own save, per seed.<br><a href="./index.html">Return to the original resort ↗</a></p>
+    <section class="panel-section"><span class="eyebrow">02 / THE AFTERNOON</span><div class="row spread"><label for="tod">Light & atmosphere</label><span id="timeLabel" class="mono">Golden hour</span></div><input id="tod" type="range" min="0" max="1" step="0.001" value="0.62"><p class="small">A warm glow, a quiet mountain, one more run.</p><label class="check" style="display:flex;align-items:center;gap:7px;margin-top:12px"><input id="softShadows" type="checkbox">Soft shadows</label><p class="small">Shadows are off by default to keep the mountain lighter to render.</p></section>
+    <section class="panel-section"><span class="eyebrow">03 / THE LANDSCAPE</span><p class="small">3.6 × 3.6 km of twin summits, upper snowfields, station terraces and natural ski faces.</p><p class="small" style="margin-top:9px"><a href="./experiments/twin-summit-options.html?map=snowfields" target="_blank" rel="noopener">Map design workshop ↗</a></p><div class="map-area"><span>Map footprint</span><span>12.96 km²</span></div><form id="seedForm"><label for="seed">Resort slot</label><div class="row"><input id="seed" maxlength="32" aria-label="Resort slot"><button type="submit">Open slot ↗</button></div></form></section>
+    <button id="exportResort" style="width:100%;margin-top:18px">Download resort backup ↧</button><p class="sidebar-note">Upper Snowfields V1 has its own save slots.<br><a href="./index.html">Return to the original resort ↗</a></p>
   </section>
   <section id="buildPanel" hidden>
     <div class="section-heading"><span id="buildHeading" class="eyebrow">01 / PLAN A NEW LINE</span><button id="cancelBuild" class="text-button">Close ×</button></div>
@@ -39,17 +39,20 @@
     <div class="panel-section"><div class="row spread"><h2 id="towerTitle">Your line</h2><span id="buildLength" class="mono"></span></div><p id="buildHelp" class="small">Place the valley station on the snow.</p>
     <div id="towerInspector" hidden><div class="row spread"><label for="towerHeight">Height above snow</label><div class="height-input"><input id="towerHeightNumber" type="number" min="3" max="40" step="0.25"><span class="mono">m</span></div></div><input id="towerHeight" type="range" min="3" max="40" step="0.25"><span id="towerType" class="small"></span><div class="row spread"><label for="towerPosition">Along the line</label><span id="towerDistance" class="mono"></span></div><input id="towerPosition" type="range" min="0" max="100" step="0.1"><div class="row"><button id="focusTower">Focus tower</button><button id="removeTower">Remove</button></div></div>
     <div id="builderSupports"></div></div>
-    <div class="panel-section"><div class="row spread"><label for="ropeSag">Cable sag</label><span id="ropeSagText" class="mono"></span></div><input id="ropeSag" type="range" min="0" max="1.5" step="0.05" value="0.55"><p id="buildClearance" class="small"></p><p id="buildMessage" role="status"></p><div class="row"><button id="buildUndo">Undo</button><button id="buildReset">Restart</button></div><button id="openLine" class="primary build-confirm">Build & open lift ↗</button><p class="small">Gondolas and Ridge chairs detach and slow for boarding. Classic chairs stay fixed to the cable at 1.8 m/s. Every station includes cable guide wheels.</p></div>
+    <div class="panel-section"><div class="row spread"><label for="ropeSag">Cable sag</label><span id="ropeSagText" class="mono"></span></div><input id="ropeSag" type="range" min="0" max="1.5" step="0.05" value="0.55"><p id="buildClearance" class="small"></p><p id="buildMessage" role="status"></p><div class="row"><button id="buildUndo">Undo</button><button id="buildReset">Restart</button></div><button id="openLine" class="primary build-confirm">Build & open lift ↗</button><p class="small">Gondolas and Ridge chairs detach and slow for boarding. Classic chairs stay fixed to the cable at 1.8 m/s. Every station includes cable guide wheels. New lines do not create ski slopes.</p></div>
   </section>
 </aside>
 <button id="toggleInterface" type="button" aria-label="Hide interface" title="Hide interface" aria-expanded="true" aria-controls="hud resortBar transport hint buildProfile">‹</button>
-<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">A mountain of your own</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
+<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">Upper Snowfields / V1</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
 <footer id="transport"><div class="row"><button id="btnPause" aria-label="Pause">Ⅱ</button><button id="btnPlay" class="on">1×</button><button id="btnFast">2×</button><span class="divider"></span><button id="btnAdd">＋ Skiers</button></div><div class="row"><button id="btnCam">Free camera</button><button id="btnHome">Overview ↗</button></div></footer>
-<div id="hint">WASD = fly · hold Space + mouse = look · Shift = faster · drag = orbit · scroll = zoom</div>
+<div id="hint">WASD = fly · right-drag / Space + mouse = look · Shift = faster · drag = orbit · scroll = zoom</div>
 <section id="buildProfile" hidden><div class="row spread"><span class="eyebrow">LINE PROFILE / DRAG A DOT TO SET TOWER HEIGHT</span><span id="profileLegend" class="mono">Snow — Rope — Cabin floor</span></div><svg id="mountainProfile" viewBox="0 0 1000 180" role="img" aria-label="Terrain and editable lift profile"></svg></section>
 <div id="saveNotice" role="status" hidden>Resort saved.</div>
 <div id="err"></div>
 <script src="./assets/generated/tree-pack.js"></script>
+<script src="./assets/data/terrain-heightmap.js"></script>
+<script src="./src/terrain/mountain-designs.js"></script>
+<script src="./src/terrain/twin-summit-variants.js"></script>
 <script src="./src/lifts/catalog.js"></script>
 <script src="./src/lifts/ridge-chair.js"></script>
 <script src="./src/lifts/classic-chair.js"></script>
@@ -73,9 +76,9 @@ window.addEventListener('unhandledrejection',e=>{errBox.style.display='block';er
 // ---------- basics ----------
 const app = document.getElementById('app');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setPixelRatio(1);
 renderer.setSize(app.clientWidth, app.clientHeight);
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = false;
 renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -86,9 +89,9 @@ scene.background = new THREE.Color(0x9fc8ee);
 scene.fog = new THREE.Fog(0xd8dee0, 230, 650);
 
 const camera = new THREE.PerspectiveCamera(55, app.clientWidth / app.clientHeight, 0.02, 2000);
-camera.position.set(560,450,730);
+camera.position.set(3400,2400,3600);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0,55,-40);
+controls.target.set(0,350,0);
 controls.minPolarAngle=0;
 controls.maxPolarAngle=Math.PI;
 controls.minDistance=0;
@@ -97,6 +100,8 @@ controls.zoomToCursor=true;
 controls.enableDamping=true;
 controls.dampingFactor=.08;
 controls.screenSpacePanning=true;
+controls.enablePan=false; // Right-drag turns in place rather than translating around a remote target.
+controls.mouseButtons.RIGHT=null;
 controls.rotateSpeed=.65;
 controls.panSpeed=.85;
 controls.zoomSpeed=1.1;
@@ -105,14 +110,40 @@ const hemi = new THREE.HemisphereLight(0xcfe6ff, 0x8fa3c7, 0.75);
 scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff2dd, 1.6);
 sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
-sun.shadow.camera.left = -1050; sun.shadow.camera.right = 1050;
-sun.shadow.camera.top = 1050; sun.shadow.camera.bottom = -1050;
-sun.shadow.camera.near=1;sun.shadow.camera.far=1800;
+sun.shadow.mapSize.set(1024, 1024);
+sun.shadow.camera.left = -1900; sun.shadow.camera.right = 1900;
+sun.shadow.camera.top = 1900; sun.shadow.camera.bottom = -1900;
+sun.shadow.camera.near=1;sun.shadow.camera.far=9000;
 sun.shadow.radius=3.5;
 sun.shadow.normalBias=.12;
 sun.shadow.bias = -0.00025;
 scene.add(sun); scene.add(sun.target);
+// A fixed pool avoids adding a shader light for every tower on a large network.
+const towerLightFixtures=[];
+let towerNight=0;
+const towerLightPool=Array.from({length:8},()=>{
+ const light=new THREE.SpotLight(0xffe6c0,0,72,.66,.75,2);
+ light.castShadow=false;scene.add(light,light.target);return light;
+});
+const floodPosition=new THREE.Vector3();
+function updateTowerFloodlights(){
+ const nearby=[];
+ if(towerNight>0)for(const fixture of towerLightFixtures){
+  if(!fixture.root.visible)continue;
+  floodPosition.setFromMatrixPosition(fixture.node.matrixWorld);
+  const distance=floodPosition.distanceToSquared(camera.position);
+  if(distance<320*320)nearby.push({fixture,distance});
+ }
+ nearby.sort((a,b)=>a.distance-b.distance);
+ towerLightPool.forEach((light,i)=>{
+  const entry=nearby[i];
+  if(!entry){light.intensity=0;return;}
+  light.position.setFromMatrixPosition(entry.fixture.node.matrixWorld);
+  light.target.position.setFromMatrixPosition(entry.fixture.target.matrixWorld);
+  const fade=1-smoothstep(220,320,Math.sqrt(entry.distance));
+  light.intensity=1600*towerNight*fade;
+ });
+}
 
 // ---------- resort plan: all positions are metres in the same world ----------
 const seed = new URLSearchParams(location.search).get('seed') || 'alpine-01';
@@ -124,9 +155,21 @@ function seededRandom(value) {
 const landscapeRandom = seededRandom(seed);
 const STATION={straight:26,brake:14,railX:3.1,crawl:.32,railLift:.16,bodyDrop:.84,cabinPitch:2.65};
 function stationSettings(def){const spec=window.LiftCoLiftTypes.find(t=>t.id===(def.type||'gondola'));return spec?.fixedGrip?{...STATION,straight:spec.stationStraight,railLift:0}:STATION;}
-const MAP={size:2160,half:1080,buildLimit:1000,maxLineLength:1800};
-const SAVE_KEY='lift-co-empty-map-v1:'+seed;
+const MAP={size:3600,half:1800,buildLimit:1700,maxLineLength:3000};
+const MAP_VERSION='upper-snowfields-v1';
+const mountainField=window.LiftCoTwinSummitVariants.create('snowfields');
+// New terrain gets its own save slot. Retain and snapshot legacy storage in place.
+const SAVE_KEY='lift-co-upper-snowfields-v1:'+seed;
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-empty-map-v1:'))){const backup='lift-co-pre-v1-backup:'+key;if(!localStorage.getItem(backup))localStorage.setItem(backup,localStorage.getItem(key));}}catch{console.warn('Legacy saves remain in their original slots.');}
 const DELETE_UNDO_KEY=SAVE_KEY+':deleted-lift';
+let navigationSavePending=false;
+// Preserve every existing V1 slot before Solo is set aside or progress is saved.
+const SOLO_HOLD_BACKUP_PREFIX='lift-co-pre-solo-hold-20261016:';
+let soloHoldBackupReady=true;
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){
+ const backup=SOLO_HOLD_BACKUP_PREFIX+key;
+ if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));
+}}catch{soloHoldBackupReady=false;console.warn('Pre-change resort backup unavailable; automatic saving is disabled.');}
 let savedResort=null;
 try{savedResort=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');}catch(error){console.warn('Resort save unavailable.');}
 function validLiftDefinition(d){return d&&(d.type===undefined||window.LiftCoLiftTypes.some(t=>t.id===d.type))&&typeof d.id==='string'&&typeof d.name==='string'&&[d.base,d.top].every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)&&p.every(v=>Math.abs(v)<=MAP.buildLimit))&&Math.hypot(d.base[0]-d.top[0],d.base[1]-d.top[1])>=60&&Math.hypot(d.base[0]-d.top[0],d.base[1]-d.top[1])<=MAP.maxLineLength&&Array.isArray(d.towers)&&d.towers.length<=60&&d.towers.every(t=>Number.isFinite(t.fraction)&&t.fraction>0&&t.fraction<1&&Number.isFinite(t.height)&&t.height>=3&&t.height<=40)&&Number.isFinite(d.sag)&&d.sag>=0&&d.sag<=1.5;}
@@ -146,6 +189,7 @@ function planPoint(def, x, z) {
 }
 const routes = [];
 for (const [i, def] of RESORT.lifts.entries()) {
+  if(def.autoPiste===false)continue;
   const f=liftFrame(def),half = f.length / 2;
   const variants = def.manual?[1]:i === 0 ? [-1, 1] : [i === 1 ? -1 : 1];
   for (const side of variants) {
@@ -177,35 +221,12 @@ function routeDistance(x,z,route) {
   return nearest;
 }
 function smoothstep(a,b,x) { const t=Math.min(1,Math.max(0,(x-a)/(b-a))); return t*t*(3-2*t); }
-// Saddle & upper summit, broadened horizontally without increasing its height.
-const landscapeKnots=[[-210,2],[-145,3],[-105,18],[-45,49],[20,81],[85,114],[140,130],[210,83]];
-function landscapeProfile(z,knots){
-  const t=-z;
-  if(t<=knots[0][0])return knots[0][1];
-  if(t>=knots.at(-1)[0])return knots.at(-1)[1];
-  let i=0;while(t>knots[i+1][0])i++;
-  const [a,ya]=knots[i],[b,yb]=knots[i+1],d=(yb-ya)/(b-a),u=(t-a)/(b-a);
-  const tangent=k=>{if(k===0||k===knots.length-1)return 0;const l=(knots[k][1]-knots[k-1][1])/(knots[k][0]-knots[k-1][0]),r=(knots[k+1][1]-knots[k][1])/(knots[k+1][0]-knots[k][0]);return l*r<=0?0:2*l*r/(l+r);};
-  const limit=m=>d===0?0:Math.sign(d)*THREE.MathUtils.clamp(Math.sign(d)*m,0,3*Math.abs(d));
-  const m0=limit(tangent(i)),m1=limit(tangent(i+1));
-  return (2*u**3-3*u*u+1)*ya+(u**3-2*u*u+u)*(b-a)*m0+(-2*u**3+3*u*u)*yb+(u**3-u*u)*(b-a)*m1;
-}
-
-function landscapeHill(x,z,cx,cz,rx,rz,h){return h*Math.exp(-(((x-cx)/rx)**2+((z-cz)/rz)**2));}
+// Exact selected Upper Snowfields V1 heightfield, cached at 10 m spacing for guests and construction.
+const terrainGridSize=361,terrainGrid=new Float32Array(terrainGridSize*terrainGridSize);
+for(let j=0;j<terrainGridSize;j++)for(let i=0;i<terrainGridSize;i++)terrainGrid[j*terrainGridSize+i]=mountainField.height(-MAP.half+i*10,-MAP.half+j*10);
 const noisePhase=landscapeRandom()*100;
 function noise2(x,z){return Math.sin(x*.11+z*.05+noisePhase)*Math.cos(z*.09-x*.03-noisePhase);}
-function rawTerrainY(x,z){
-  x/=2.4;z/=2.05;
-  const active=smoothstep(-150,-85,-z);
-  const mountain=2+(landscapeProfile(z,landscapeKnots)-2)*Math.exp(-((x/192)**2));
-  const lower=landscapeHill(x,z,-23,53,71,38,25);
-  const saddle=landscapeHill(x,z,7,-1,65,29,-24);
-  const upper=landscapeHill(x,z,39,-131,72,62,34);
-  const spur=landscapeHill(x,z,-118,-69,52,99,27);
-  const elevation=mountain*.94+active*(lower+saddle+upper+spur);
-  // Compress the upper climb progressively; keep the lower hill and saddle intact.
-  return elevation*(1-.23*smoothstep(0,105,-z))*1.4;
-}
+function rawTerrainY(x,z){const gx=THREE.MathUtils.clamp((x+MAP.half)/10,0,360),gz=THREE.MathUtils.clamp((z+MAP.half)/10,0,360),i=Math.min(359,Math.floor(gx)),j=Math.min(359,Math.floor(gz)),u=gx-i,v=gz-j,k=j*terrainGridSize+i;return terrainGrid[k]*(1-u)*(1-v)+terrainGrid[k+1]*u*(1-v)+terrainGrid[k+terrainGridSize]*(1-u)*v+terrainGrid[k+terrainGridSize+1]*u*v;}
 // Small station platforms follow the local shoulder. No flattening of the lift corridor
 // or piste profile: hills, saddle and upper face remain the chosen landscape.
 function prepareStationGround(def){
@@ -251,7 +272,7 @@ snowBump.wrapS=snowBump.wrapT=THREE.RepeatWrapping;snowBump.repeat.set(46,46);
 snowBump.magFilter=THREE.LinearFilter;snowBump.minFilter=THREE.LinearMipmapLinearFilter;snowBump.generateMipmaps=true;snowBump.needsUpdate=true;
 // ---------- sculpted snow, groomed pistes and summit aprons ----------
 {
-  const g=new THREE.PlaneGeometry(MAP.size,MAP.size,540,540); g.rotateX(-Math.PI/2);
+  const g=new THREE.PlaneGeometry(MAP.size,MAP.size,240,240); g.rotateX(-Math.PI/2);
   const pos=g.attributes.position, colors=[], snowColor=new THREE.Color(0xf3eee5), rockColor=new THREE.Color(0x55575a), c=new THREE.Color();
   for(let i=0;i<pos.count;i++) {
     const x=pos.getX(i),z=pos.getZ(i),y=terrainY(x,z);
@@ -261,28 +282,44 @@ snowBump.magFilter=THREE.LinearFilter;snowBump.minFilter=THREE.LinearMipmapLinea
     c.copy(snowColor).lerp(rockColor,rock*.85).multiplyScalar(.96+noise2(x,z)*.035);
     colors.push(c.r,c.g,c.b);
   }
+  // Keep the large map light, but refine cells around terminal channels for floor-level boarding.
+  if(RESORT.lifts.length){
+   const count=240,positions=Array.from(pos.array),uvs=Array.from(g.attributes.uv.array),indices=[],frames=RESORT.lifts.map(def=>({def,f:liftFrame(def),station:stationSettings(def)}));
+   for(let j=0;j<count;j++)for(let i=0;i<count;i++){
+    const a=j*(count+1)+i,b=a+count+1,x=-MAP.half+(i+.5)*15,z=-MAP.half+(j+.5)*15;
+    const dense=frames.some(({f,station})=>{const dx=x-f.x,dz=z-f.z,lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;return Math.abs(lx)<25&&Math.min(Math.abs(lz-f.length/2),Math.abs(lz+f.length/2))<station.straight+25;});
+    if(!dense){indices.push(a,b,a+1,a+1,b,b+1);continue;}
+    const first=positions.length/3,n=12;
+    for(let v=0;v<=n;v++)for(let u=0;u<=n;u++){
+     const px=-MAP.half+(i+u/n)*15,pz=-MAP.half+(j+v/n)*15,y=terrainY(px,pz);positions.push(px,y-.08,pz);uvs.push((px+MAP.half)/MAP.size,1-(pz+MAP.half)/MAP.size);
+     const slope=Math.hypot(terrainY(px+1,pz)-y,terrainY(px,pz+1)-y),rock=smoothstep(.8,1.8,slope)*smoothstep(24,55,y);c.copy(snowColor).lerp(rockColor,rock*.85);colors.push(c.r,c.g,c.b);
+     if(u<n&&v<n){const k=first+v*(n+1)+u,q=k+n+1;indices.push(k,q,k+1,k+1,q,q+1);}
+    }
+   }
+   g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));g.deleteAttribute('normal');g.setIndex(indices);
+  }
   g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3)); g.computeVertexNormals();
   const ground=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.97,bumpMap:snowBump,bumpScale:.055})); ground.receiveShadow=true; ground.userData.terrain=true; scene.add(ground);
 }
 // Continue the snow beyond the detailed resort so its square mesh edge disappears
 // into a broad, quiet valley and atmospheric haze.
 {
- const geometry=new THREE.PlaneGeometry(7200,7200,240,240);geometry.rotateX(-Math.PI/2);
+ const geometry=new THREE.PlaneGeometry(7200,7200,120,120);geometry.rotateX(-Math.PI/2);
  const position=geometry.attributes.position,uv=geometry.attributes.uv,colors=[],color=new THREE.Color();
  for(let i=0;i<position.count;i++){
-  const x=position.getX(i),z=position.getZ(i),blend=1-smoothstep(MAP.half,1900,Math.max(Math.abs(x),Math.abs(z)));
+  const x=position.getX(i),z=position.getZ(i),blend=1-smoothstep(MAP.half,3500,Math.max(Math.abs(x),Math.abs(z)));
   position.setY(i,terrainY(x,z)*blend-.08);uv.setXY(i,x/540+.5,z/540+.5);
   color.set(0xf3eee5).multiplyScalar(.96+noise2(x,z)*.035);colors.push(color.r,color.g,color.b);
  }
  const indices=[];
- for(let j=0;j<240;j++)for(let i=0;i<240;i++){
-  const x=-3600+i*30,z=-3600+j*30;
-  if(x>=-MAP.half&&x+30<=MAP.half&&z>=-MAP.half&&z+30<=MAP.half)continue;
-  const a=j*241+i,b=a+241;indices.push(a,b,a+1,a+1,b,b+1);
+ for(let j=0;j<120;j++)for(let i=0;i<120;i++){
+  const x=-3600+i*60,z=-3600+j*60;
+  if(x>=-MAP.half&&x+60<=MAP.half&&z>=-MAP.half&&z+60<=MAP.half)continue;
+  const a=j*121+i,b=a+121;indices.push(a,b,a+1,a+1,b,b+1);
  }
  geometry.setIndex(indices);geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.computeVertexNormals();
  const contextSnow=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.97,bumpMap:snowBump,bumpScale:.055,transparent:true,depthWrite:false});
- contextSnow.onBeforeCompile=shader=>{shader.vertexShader='varying vec2 vSnowXZ;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSnowXZ=(modelMatrix*vec4(position,1.0)).xz;');shader.fragmentShader='varying vec2 vSnowXZ;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.a*=1.0-smoothstep(1900.0,3500.0,max(abs(vSnowXZ.x),abs(vSnowXZ.y)));');};
+ contextSnow.onBeforeCompile=shader=>{shader.vertexShader='varying vec2 vSnowXZ;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSnowXZ=(modelMatrix*vec4(position,1.0)).xz;');shader.fragmentShader='varying vec2 vSnowXZ;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.a*=1.0-smoothstep(3000.0,3600.0,max(abs(vSnowXZ.x),abs(vSnowXZ.y)));');};
  const ground=new THREE.Mesh(geometry,contextSnow);ground.receiveShadow=true;ground.renderOrder=-1;ground.userData.terrain=true;scene.add(ground);
 }
 function signAt(text,x,z,color=0x234c60) {
@@ -429,17 +466,19 @@ const forestPlacements=[],forestPrototypes=[];
  const groves=[[-139,74],[-79,81],[70,81],[151,35],[-163,0],[-131,-59],[141,-63],[-110,-121],[113,-135],[-58,122],[57,142],[-275,145],[270,125],[-290,-55],[285,-110],[-185,-240],[182,-260],[-100,280],[160,290],[-350,-180],[355,-220],[-435,270],[431,245],[-420,-330],[420,-330],[-175,430],[170,420]];
  const buckets=pack.variants.map(()=>[]),forestRandom=seededRandom(seed+'-woodland');
  const occupied=new Map();
- for(let tries=0;forestPlacements.length<1200&&tries<18000;tries++){
+ for(let tries=0;forestPlacements.length<800&&tries<16000;tries++){
   const centre=groves[Math.floor(forestRandom()*groves.length)],angle=forestRandom()*Math.PI*2,r=Math.sqrt(forestRandom());
-  const x=centre[0]*1.95+Math.cos(angle)*r*92,z=centre[1]*1.9+Math.sin(angle)*r*89,y=terrainY(x,z);
+  const x=(forestRandom()-.5)*3400,z=(forestRandom()-.5)*3400,y=terrainY(x,z);
+  if(Math.sin(x/170+Math.sin(z/310))*Math.sin(z/230)<-.05)continue;
+  if(mountainField.faces.some(face=>Math.hypot((x-face.x)/(face.rx*1.15),(z-face.z)/(face.rz*1.15))<1))continue;
   const clearance=corridorClearance(x,z);
-  if(clearance<4.5||nearBuilding(x,z,4)||y>118||forestRandom()<smoothstep(82,120,y)*.75)continue;
+  if(clearance<4.5||nearBuilding(x,z,4)||y>760||forestRandom()<smoothstep(570,780,y)*.85)continue;
   if(Math.hypot(terrainY(x+1,z)-y,terrainY(x,z+1)-y)>1.05)continue;
   if(rockClearings.some(b=>Math.hypot((x-b.x)/(b.rx+2),(z-b.z)/(b.rz+2))<1))continue;
   const cellX=Math.floor(x/3.1),cellZ=Math.floor(z/3.1);let crowded=false;
   for(let dx=-1;dx<=1;dx++)for(let dz=-1;dz<=1;dz++)for(const p of occupied.get((cellX+dx)+','+(cellZ+dz))||[])if(Math.hypot(x-p.x,z-p.z)<2.7)crowded=true;
   if(crowded)continue;
-  const variant=Math.floor(forestRandom()*pack.variants.length),height=4.3+forestRandom()*6.4;
+  const variant=Math.floor(forestRandom()*pack.variants.length),height=8+forestRandom()*10;
   const tree={x,z,y,height,width:.83+forestRandom()*.32,angle:forestRandom()*Math.PI*2,variant};
   buckets[variant].push(tree);forestPlacements.push(tree);
   const key=cellX+','+cellZ;if(!occupied.has(key))occupied.set(key,[]);occupied.get(key).push(tree);
@@ -611,7 +650,8 @@ const cableTransitions=def.manual?[]:supports.slice(1,-1).map(support=>{
     m1:(freeSpanY(hi+.01)-freeSpanY(hi-.01))/.02};
 });
 const stationGuides=manualLayout?window.LiftCoStationGuides.create(THREE,{root,layout:manualLayout,half,railX:STATION.railX,fixedGrip:isClassic}):null;
-const towerWheels = []; // spinning sheave wheels, animated at cable speed
+const towerWheels = []; // spinning sheaves; hold-down bearings yield to passing grips
+const holdDownPairs = [];
 const stationRoofs=[],stationTyres=[];let conveyorMeshes=null;
 // Cabin running tracks stay aligned from the rope into each terminal.
 const LOOP=(()=>{
@@ -819,7 +859,7 @@ if(isClassic){
     for(const side of [-1,1])bar([side*.37,floorY,.12],[side*.37,headY+.2,.12],.045);
     for(let y=floorY+.3;y<headY;y+=.32)bar([-.37,y,.12],[.37,y,.12],.04);
     for(const side of [1,-1]){
-      const count=support.long?8:6,frameOffset=-side*.38,sx=side*LIFT.sideX,beamPoints=[],axlePoints=[];
+      const count=support.long?8:6,frameOffset=-side*.38,sx=side*LIFT.sideX,beamPoints=[],axlePoints=[],wheelStates=[];
       const frame=new THREE.Group();frame.position.set(sx,0,0);tower.add(frame);
       for(let k=0;k<count;k++){
         const contactZ=z+(k-(count-1)/2)*.84;
@@ -838,7 +878,9 @@ if(isClassic){
         const delta=beamPoint.clone().sub(axlePoint);
         const mount=new THREE.Mesh(new THREE.BoxGeometry(.1,delta.length(),.14),towerM);
         mount.position.copy(axlePoint).add(beamPoint).multiplyScalar(.5);mount.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());frame.add(mount);
-        towerWheels.push({m:wheel,dir:(side>0?-1:1)*(compression?-1:1)});
+        const state={m:wheel,dir:(side>0?-1:1)*(compression?-1:1),compression,side,contactZ,
+          restY:cy,axle,mount,beamPoint,axlePoint,mountLength:mount.geometry.parameters.height};
+        towerWheels.push(state);wheelStates.push(state);
       }
       // Long, box-section bogie beams and articulated pairs, as in the reference.
       for(let k=1;k<count;k++){
@@ -850,11 +892,24 @@ if(isClassic){
         const a=axlePoints[k],b=axlePoints[k+1],delta=b.clone().sub(a);
         const pair=new THREE.Mesh(new THREE.BoxGeometry(.13,.15,delta.length()+.15),platformM);
         pair.position.copy(a).add(b).multiplyScalar(.5);pair.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),delta.normalize());frame.add(pair);
+        if(compression)holdDownPairs.push({mesh:pair,a:wheelStates[k],b:wheelStates[k+1],length:pair.geometry.parameters.depth});
         const pivot=new THREE.Mesh(hubG,rimM);pivot.scale.set(.65,.65,.65);pivot.position.copy(beamPoints[k]).add(beamPoints[k+1]).multiplyScalar(.5);frame.add(pivot);
       }
       const linkX=sx+frameOffset,linkY=ropeY-bottom-.75;
       girder([linkX,linkY,0],[linkX,headY,0],.14,.18);
       for(const zz of [-.65,.65])bar([linkX,linkY,0],[linkX,headY-.4,zz],.07);
+    }
+    // Two downward floodlights, one on each side of the pylon crosshead.
+    for(const side of [-1,1]){
+      const x=side*4.05,y=headY-.28;
+      bar([x,headY,0],[x,y,.45],.065);
+      const lamp=new THREE.Group();lamp.position.set(x,y,.45);tower.add(lamp);
+      const target=new THREE.Object3D();target.position.set(side*4.8,terrainY(side*4.8,z+2)-bottom+.1,2);tower.add(target);
+      lamp.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),target.position.clone().sub(lamp.position).normalize());
+      const housing=new THREE.Mesh(new THREE.BoxGeometry(.66,.36,.2),darkM);housing.castShadow=true;lamp.add(housing);
+      const lensMaterial=new THREE.MeshStandardMaterial({color:0xf0e8d5,emissive:0xffdf9f,emissiveIntensity:towerNight*3,roughness:.35});
+      const lens=new THREE.Mesh(new THREE.BoxGeometry(.54,.25,.025),lensMaterial);lens.position.z=.112;lamp.add(lens);
+      if(!def.preview)towerLightFixtures.push({node:lamp,target,root,lensMaterial});
     }
     root.add(tower);
   }
@@ -1035,6 +1090,22 @@ if(!def.preview&&isChair){
   }
 }
 
+  // Pitch only the rope grip. The hanger articulates about its transverse pin,
+  // leaving the suspended cabin/chair vertical apart from its existing sway.
+  const hingeGeometry=new THREE.CylinderGeometry(.105,.105,.42,12);
+  hingeGeometry.rotateZ(Math.PI/2);
+  const hingeMaterial=new THREE.MeshStandardMaterial({color:0x879497,metalness:.7,roughness:.4});
+  for(const c of cabins){
+    c.gripPivot=new THREE.Group();
+    for(const part of [...c.g.children])if(part!==c.suspension)c.gripPivot.add(part);
+    const hinge=new THREE.Mesh(hingeGeometry,hingeMaterial);hinge.position.y=-.18;c.gripPivot.add(hinge);
+    c.g.add(c.gripPivot);
+  }
+  function alignGrip(c,tangent){
+    const pitch=-Math.atan2(tangent.y,Math.hypot(tangent.x,tangent.z));
+    c.gripPivot.rotation.x=pitch;
+    c.suspension.position.set(0,-.18*Math.cos(pitch),-.18*Math.sin(pitch));
+  }
   const worldPoint=(x,z)=>{const p=planPoint(def,x,z);p.y=worldTerrainY(p.x,p.z,def.preview?def:null);return p;};
   const queuePoint=i=>worldPoint(5.65,half+STATION.straight-S_LOAD+1.4-i*1.12);
   const queueSlots=Array.from({length:18},(_,i)=>queuePoint(i));
@@ -1042,6 +1113,31 @@ if(!def.preview&&isChair){
   const load=worldPoint(STATION.railX+1.25,half+STATION.straight-S_LOAD),unload=worldPoint(STATION.railX+1.25,-half-STATION.straight+(isClassic?6:10)),exit=worldPoint(6,-half+7);
   let phaseTime=0;
   const wheelObject=new THREE.Object3D(),yawQ=new THREE.Quaternion(),spinQ=new THREE.Quaternion(),upAxis=new THREE.Vector3(0,1,0),axle=new THREE.Vector3(1,0,0),direction=new THREE.Vector3();
+  const bearingDelta=new THREE.Vector3(),bearingUp=new THREE.Vector3(0,1,0),pairAxis=new THREE.Vector3(0,0,1);
+  function updateHoldDownWheels(){
+    for(const w of towerWheels){
+      if(!w.compression)continue;
+      let lift=0;
+      for(const c of cabins){
+        if(Math.abs(c.g.position.x-w.side*LIFT.sideX)>.65)continue;
+        const distance=Math.abs(c.g.position.z-w.contactZ);
+        lift=Math.max(lift,.14*(1-smoothstep(.28,1.25,distance)));
+      }
+      w.m.position.y=w.axle.position.y=w.axlePoint.y=w.restY+lift;
+      // Sliding bearing supports and the equaliser pair stay joined to the axle.
+      bearingDelta.subVectors(w.beamPoint,w.axlePoint);
+      w.mount.position.copy(w.axlePoint).add(w.beamPoint).multiplyScalar(.5);
+      w.mount.scale.y=bearingDelta.length()/w.mountLength;
+      w.mount.quaternion.setFromUnitVectors(bearingUp,bearingDelta.normalize());
+    }
+    for(const pair of holdDownPairs){
+      const a=pair.a.axlePoint,b=pair.b.axlePoint;
+      bearingDelta.subVectors(b,a);
+      pair.mesh.position.copy(a).add(b).multiplyScalar(.5);
+      pair.mesh.scale.z=(bearingDelta.length()+.15)/pair.length;
+      pair.mesh.quaternion.setFromUnitVectors(pairAxis,bearingDelta.normalize());
+    }
+  }
   function update(dt){
     phaseTime+=dt;
     for(let i=0;i<stationTyres.length;i++){
@@ -1062,7 +1158,8 @@ if(!def.preview&&isChair){
         const d=c.g.position.z-support.z,envelope=Math.exp(-Math.pow(d/(approachZ.some(a=>a.z===support.z)?2.6:1.8),4));
         vibration+=envelope*Math.sin(d*Math.PI*2/.9);
       }
-      c.suspension.position.y=-.18+vibration*.004;
+      alignGrip(c,direction);
+      c.suspension.position.y+=vibration*.004;
       c.suspension.rotation.x=c.sway+vibration*.0015;
       c.suspension.rotation.z=vibration*.001;
       const want=isChair?barOpenAt(c.s):doorsOpenAt(c.s)&&c.speed<1.15?1:0;c.door=THREE.MathUtils.damp(c.door,want,isChair?5:3,dt);if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.barOpen*1.83;}
@@ -1071,9 +1168,11 @@ if(!def.preview&&isChair){
       for(const wheel of c.runningWheels)wheel.rotation.x+=c.detached*c.speed*dt/.09;
       for(let seat=0;seat<c.rackSkis.length;seat++)c.rackSkis[seat].visible=c.riders[seat]!==null&&(c.riders[seat].state==='ride'||(c.riders[seat].state==='board'&&c.riders[seat].t>=.32));
     }
+    updateHoldDownWheels();
+    stationGuides?.update(cabins);
     root.updateMatrixWorld(true);
   }
-  for(const c of cabins){c.s=positionAtTime(c.phase);c.speed=targetSpeedAt(c.s);LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);c.yaw=Math.atan2(direction.x,direction.z);c.g.rotation.y=c.yaw;c.door=isChair?barOpenAt(c.s):doorsOpenAt(c.s)?1:0;if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.door*1.83;}for(const d of c.doors)d.m.position.z=THREE.MathUtils.lerp(d.closed,d.open,c.door);}
+  for(const c of cabins){c.s=positionAtTime(c.phase);c.speed=targetSpeedAt(c.s);LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);c.yaw=Math.atan2(direction.x,direction.z);c.g.rotation.y=c.yaw;alignGrip(c,direction);c.door=isChair?barOpenAt(c.s):doorsOpenAt(c.s)?1:0;if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.door*1.83;}for(const d of c.doors)d.m.position.z=THREE.MathUtils.lerp(d.closed,d.open,c.door);}
   // The first update runs after shared sway constants have been initialized.
   root.updateMatrixWorld(true);
   return{index,def,root,LIFT,LOOP,cableHeight:cableY,cabins,towerWheels,stationGuides,supports,S_LOAD,S_UNLOAD,wrapDist,inStation,targetSpeedAt,doorsOpenAt,stationInfo,timetable,stationTyres,stationRoofs,update,
@@ -1223,7 +1322,7 @@ function makeSkier() {
 function spawnSkier() {
   if(!lifts.length)return;
   const s = makeSkier();
-  const arrival=lifts[s.liftIndex].worldPoint(24+Math.random()*8,liftFrame(lifts[s.liftIndex].def).length/2+8+Math.random()*6);s.x=arrival.x;s.z=arrival.z;
+  const arrival=lifts[s.liftIndex].LIFT.reversible?lifts[s.liftIndex].queuePoint(skiers.length+2):lifts[s.liftIndex].worldPoint(24+Math.random()*8,liftFrame(lifts[s.liftIndex].def).length/2+8+Math.random()*6);s.x=arrival.x;s.z=arrival.z;
   const lift=lifts[s.liftIndex],half=liftFrame(lift.def).length/2;
   s.approach=lift.worldPoint(9.8+(skiers.length%3)*1.05,half-7+(skiers.length%3)*1.2);
   skiers.push(s);
@@ -1232,6 +1331,7 @@ for (let i = 0; i < Math.max(9,Math.min(120,Number(savedResort?.skierCount)||9))
 const _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3(), _v3 = new THREE.Vector3();
 function cabinInterior(chair, seat, out) {
   // standing passengers inside the box cabin, torso/head framed by the glass band
+  if(chair.isSolo)return out.set((seat%2?1:-1)*.42,.2,(Math.floor(seat/2)-2.5)*.58).applyMatrix4(chair.body.matrixWorld);
   if(chair.isChair)return out.set((seat-(chair.riders.length-1)/2)*chair.seatPitch,chair.seatY-.95*chair.seatScale,.03).applyMatrix4(chair.suspension.matrixWorld);
   out.set(((seat % 2) ? 0.45 : -0.45), -4.46, (seat < 2 ? 0.4 : -0.4)).applyMatrix4(chair.suspension.matrixWorld);
   return out;
@@ -1240,7 +1340,7 @@ const seatWorld = cabinInterior;
 // Skiers follow the deck surface inside each terminal and the snow outside it.
 function skierSurfaceY(x,z){
   let ground=terrainY(x,z);
-  for(const lift of lifts){const STATION=stationSettings(lift.def),f=liftFrame(lift.def),dx=x-f.x,dz=z-f.z,lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
+  for(const lift of lifts){if(lift.LIFT.reversible){const level=lift.platformY(x,z);if(level!==null)ground=level;continue;}const STATION=stationSettings(lift.def),f=liftFrame(lift.def),dx=x-f.x,dz=z-f.z,lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
     for(const end of [-1,1]){const out=end*(lz-end*f.length/2),edge=(1-smoothstep(7.4,8,Math.abs(lx)))*smoothstep(3.6,4.3,Math.abs(lx))*(1-smoothstep(STATION.straight-3,STATION.straight+2,out))*smoothstep(-7,3,out),level=(end===1?lift.LIFT.base.y:lift.LIFT.top.y)-5+.52;ground=THREE.MathUtils.lerp(ground,level,edge);}
   }
   return ground;
@@ -1307,17 +1407,17 @@ function updateSkier(s,dt){
         const c=lift.cabins[ci];
         if(c.cameraOnly)continue;
         const seat=c.riders.findIndex(r=>r===null);
-        if(c.s>lift.S_LOAD-(chairlift?5.5:3.1)&&c.s<lift.S_LOAD-.5&&seat>=0){
+        if((lift.LIFT.reversible?c.station==='base'&&c.door>.8&&c.dwellRemaining>2:c.s>lift.S_LOAD-(chairlift?5.5:3.1)&&c.s<lift.S_LOAD-.5)&&seat>=0){
           c.riders[seat]=s;s.state='load';s.chair=ci;s.seat=seat;break;
         }
       }
     }
   }else if(s.state==='load'){
     const c=lift.cabins[s.chair];
-    const boardingPoint=lift.boardingPoint?lift.boardingPoint(s.seat):lift.load;walkTo(s,boardingPoint,dt,3.1);
+    const boardingPoint=lift.boardingPoint?lift.boardingPoint(s.seat,c):lift.load;walkTo(s,boardingPoint,dt,3.1);
     const near=Math.hypot(s.x-boardingPoint.x,s.z-boardingPoint.z)<.35;
-    if(near&&Math.abs(c.s-lift.S_LOAD)<1.2&&c.door>.8){s.state='board';s.t=0;s.boardFrom=g.position.clone();}
-    else if(c.s>lift.S_LOAD+2.5){releaseSeat(s,lift);s.state='queue';}
+    if(near&&(lift.LIFT.reversible?c.station==='base':Math.abs(c.s-lift.S_LOAD)<1.2)&&c.door>.8){s.state='board';s.t=0;s.boardFrom=g.position.clone();}
+    else if(lift.LIFT.reversible?(c.station!=='base'||c.dwellRemaining<1):c.s>lift.S_LOAD+2.5){if(lift.LIFT.reversible){s.state='board';s.t=0;s.boardFrom=g.position.clone();}else{releaseSeat(s,lift);s.state='queue';}}
   }else if(s.state==='board'){
     const c=lift.cabins[s.chair],t=smoothstep(0,.65,s.t);
     cabinInterior(c,s.seat,_v1);g.position.copy(s.boardFrom).lerp(_v1,t);g.rotation.set(c.sway*t,c.yaw+lift.root.rotation.y,0,'YXZ');
@@ -1325,18 +1425,20 @@ function updateSkier(s,dt){
     if(t>=1)s.state='ride';
   }else if(s.state==='ride'){
     const c=lift.cabins[s.chair];cabinInterior(c,s.seat,_v1);g.position.copy(_v1);g.rotation.set(c.sway,c.yaw+lift.root.rotation.y,0,'YXZ');
-    if(lift.wrapDist(c.s,lift.S_UNLOAD)<1.1){
+    if(lift.LIFT.reversible?c.station==='top'&&c.door>.8:lift.wrapDist(c.s,lift.S_UNLOAD)<1.1){
+      s.unloadTarget=lift.unloadPoint?lift.unloadPoint(c):null;
       s.exitFrom=g.position.clone();s.exitPitch=g.rotation.x;releaseSeat(s,lift);s.state='unload';s.t=0;
-      s.route=lift.routes[Math.floor(Math.random()*lift.routes.length)];s.distance=0;
+      s.route=lift.routes.length?lift.routes[Math.floor(Math.random()*lift.routes.length)]:null;s.distance=0;
     }
   }else if(s.state==='unload'){
-    const t=smoothstep(0,.85,s.t),target=lift.unload.clone();target.y=skierSurfaceY(target.x,target.z)+.04;
+    const t=smoothstep(0,.85,s.t),target=(s.unloadTarget||lift.unload).clone();target.y=skierSurfaceY(target.x,target.z)+.04;
     g.position.copy(s.exitFrom).lerp(target,t);g.scale.setScalar(.75+t*.25);g.rotation.x=(s.exitPitch||0)*(1-t);
     if(t>=1){g.rotation.set(0,g.rotation.y,0,'XYZ');s.state='exitWalk';s.exitStage=0;s.x=target.x;s.z=target.z;}
   }else if(s.state==='exitWalk'){
-    const target=s.exitStage===0?lift.exit:s.route.samples[3];
+    const target=s.exitStage===0||!s.route?lift.exit:s.route.samples[3];
     if(walkTo(s,target,dt,2.8)){
-      if(s.exitStage===0)s.exitStage=1;
+      if(!s.route){s.state=lift.LIFT.isChair?'takeOff':'apres';s.afterSkiOff='apres';s.t=0;}
+      else if(s.exitStage===0)s.exitStage=1;
       else{s.state=lift.LIFT.isChair?'ski':'putOn';s.t=0;s.distance=s.route.distances[3];}
     }
   }else if(s.state==='putOn'){
@@ -1366,10 +1468,10 @@ function updateSkier(s,dt){
 // ---------- snow + stars ----------
 let snow,snowVel,snowGround;
 {
- const count=2500,positions=new Float32Array(count*3);snowVel=new Float32Array(count);snowGround=new Float32Array(count);
+ const count=1100,positions=new Float32Array(count*3);snowVel=new Float32Array(count);snowGround=new Float32Array(count);
  const random=seededRandom(seed+'-snowfall');
  for(let i=0;i<count;i++){
-  const x=(random()-.5)*2050,z=1025-random()*2050,floor=terrainY(x,z);
+  const x=(random()-.5)*3500,z=1750-random()*3500,floor=terrainY(x,z);
   positions[i*3]=x;positions[i*3+1]=floor+random()*85;positions[i*3+2]=z;snowGround[i]=floor;snowVel[i]=.55+random()*.6;
  }
  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(positions,3));
@@ -1430,11 +1532,13 @@ function applyTimeOfDay(t){
  scene.background.copy(skyUniforms.zenith.value);scene.fog.color.copy(skyUniforms.horizon.value).lerp(skyUniforms.zenith.value,.22);
  const elevation=value('elevation'),azimuth=value('azimuth');
  const direction=new THREE.Vector3(Math.sin(azimuth)*Math.cos(elevation),Math.sin(elevation),Math.cos(azimuth)*Math.cos(elevation));
- sun.target.position.set(0,48,-10);sun.position.copy(sun.target.position).addScaledVector(direction,950);
+ sun.target.position.set(0,350,-10);sun.position.copy(sun.target.position).addScaledVector(direction,4500);
  sun.color.copy(color('color'));sun.intensity=value('intensity');
  hemi.color.set(0xc6d6e5);hemi.groundColor.set(0x7d746c);hemi.intensity=value('fill');
  skyUniforms.sunDirection.value.copy(direction);skyUniforms.sunColor.value.copy(sun.color);skyUniforms.sunStrength.value=smoothstep(-.12,.04,elevation);
  const evening=smoothstep(.45,.73,t);
+ towerNight=(1-smoothstep(.03,.22,t))+smoothstep(.73,.88,t);
+ for(const fixture of towerLightFixtures)fixture.lensMaterial.emissiveIntensity=towerNight*3;
  stars.material.opacity=smoothstep(.75,.9,t)*.9;
  windowMat.emissiveIntensity=.8+evening*1.7;chaletWindowM.emissiveIntensity=.5+evening*1.9;
  villageLampM.emissiveIntensity=1+evening*2.2;
@@ -1446,43 +1550,49 @@ function applyTimeOfDay(t){
 // ---------- UI ----------
 let speed = 1, rideMode = false, rideChair = 0, reservedRideCabin=cabins[0]||null;
 // Keep one empty camera cabin available even when every passenger cabin is full.
-for(const line of lifts){line.cameraCabin=line.cabins[0];if(line.cameraCabin)line.cameraCabin.cameraOnly=true;}
+for(const line of lifts){line.cameraCabin=line.cabins[line.LIFT.reversible?1:0];if(line.cameraCabin)line.cameraCabin.cameraOnly=true;}
 const $ = id => document.getElementById(id);
 const rideLook={yaw:0,pitch:0,pointer:null,x:0,y:0};
 const freeCameraHint=$('hint').textContent;
 const cameraCanvas=renderer.domElement;
 // Flight uses real frame time so the camera remains usable while the resort is paused.
-const flight={keys:new Set(),looking:false,distance:24,euler:new THREE.Euler(0,0,0,'YXZ')};
+const flight={keys:new Set(),looking:false,source:null,pointer:null,distance:24,euler:new THREE.Euler(0,0,0,'YXZ')};
 const flightForward=new THREE.Vector3(),flightRight=new THREE.Vector3(),flightMove=new THREE.Vector3(),flightUp=new THREE.Vector3(0,1,0);
 cameraCanvas.tabIndex=0;
-cameraCanvas.setAttribute('aria-label','Mountain camera. WASD to fly; hold Space and move the mouse to look around.');
+cameraCanvas.setAttribute('aria-label','Mountain camera. WASD to fly; right-drag or hold Space and move the mouse to look around.');
 const editingText=target=>target instanceof Element&&!!target.closest('input,textarea,select,[contenteditable]:not([contenteditable="false"])');
 function endFlightLook(){
  if(!flight.looking)return;
- flight.looking=false;
+ flight.looking=false;flight.source=null;
+ const pointer=flight.pointer;flight.pointer=null;
+ if(pointer!==null&&cameraCanvas.hasPointerCapture(pointer))cameraCanvas.releasePointerCapture(pointer);
  if(document.pointerLockElement===cameraCanvas)document.exitPointerLock();
  if(!rideMode){controls.enabled=true;controls.enableDamping=false;controls.update();controls.enableDamping=true;}
  cameraCanvas.style.cursor=rideMode?'grab':'';
 }
 function stopFlight(){flight.keys.clear();endFlightLook();}
-function startFlightLook(){
+function startFlightLook(source='space'){
  if(flight.looking||rideMode||!controls.enabled)return;
+ // Flush orbit momentum without moving the camera at the start of a look.
+ const position=camera.position.clone(),orientation=camera.quaternion.clone();
  controls.enableDamping=false;controls.update();controls.enableDamping=true;
- flight.distance=Math.max(1,camera.position.distanceTo(controls.target));
+ camera.position.copy(position);camera.quaternion.copy(orientation);
+ flight.distance=24;
+ controls.target.copy(camera.position).addScaledVector(camera.getWorldDirection(flightForward),flight.distance);
  flight.euler.setFromQuaternion(camera.quaternion,'YXZ');
- flight.looking=true;controls.enabled=false;cameraCanvas.style.cursor='none';
+ flight.looking=true;flight.source=source;controls.enabled=false;cameraCanvas.style.cursor=source==='right'?'grabbing':'none';
  // Mouse movement still works over the canvas if pointer lock is unavailable.
- try{const pending=cameraCanvas.requestPointerLock?.();pending?.catch(()=>{});}catch{}
+ if(source==='space')try{const pending=cameraCanvas.requestPointerLock?.();pending?.catch(()=>{});}catch{}
 }
 addEventListener('keydown',e=>{
  if(rideMode||editingText(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;
  if(['KeyW','KeyA','KeyS','KeyD','ShiftLeft','ShiftRight'].includes(e.code)){flight.keys.add(e.code);e.preventDefault();}
  if(e.code==='Space'&&!(e.target instanceof Element&&e.target.closest('button,a'))){e.preventDefault();if(!e.repeat)startFlightLook();}
 });
-addEventListener('keyup',e=>{flight.keys.delete(e.code);if(e.code==='Space')endFlightLook();});
+addEventListener('keyup',e=>{flight.keys.delete(e.code);if(e.code==='Space'&&flight.source==='space')endFlightLook();});
 addEventListener('blur',stopFlight);
 addEventListener('visibilitychange',()=>{if(document.hidden)stopFlight();});
-document.addEventListener('pointerlockchange',()=>{if(flight.looking&&document.pointerLockElement!==cameraCanvas)stopFlight();else if(document.pointerLockElement===cameraCanvas&&!flight.looking)document.exitPointerLock();});
+document.addEventListener('pointerlockchange',()=>{if(flight.looking&&flight.source==='space'&&document.pointerLockElement!==cameraCanvas)stopFlight();else if(document.pointerLockElement===cameraCanvas&&!flight.looking)document.exitPointerLock();});
 document.addEventListener('mousemove',e=>{
  if(!flight.looking||rideMode)return;
  if(document.pointerLockElement!==cameraCanvas&&e.target!==cameraCanvas)return;
@@ -1491,7 +1601,16 @@ document.addEventListener('mousemove',e=>{
  flight.euler.z=0;camera.quaternion.setFromEuler(flight.euler);
  controls.target.copy(camera.position).addScaledVector(camera.getWorldDirection(flightForward),flight.distance);
 });
-cameraCanvas.addEventListener('pointerdown',()=>cameraCanvas.focus({preventScroll:true}),true);
+cameraCanvas.addEventListener('pointerdown',e=>{
+ cameraCanvas.focus({preventScroll:true});
+ if(e.button!==2||rideMode)return;
+ e.preventDefault();e.stopImmediatePropagation();startFlightLook('right');
+ if(flight.looking&&flight.source==='right'){flight.pointer=e.pointerId;cameraCanvas.setPointerCapture(e.pointerId);}
+},true);
+cameraCanvas.addEventListener('contextmenu',e=>e.preventDefault());
+for(const event of ['pointerup','pointercancel','lostpointercapture'])cameraCanvas.addEventListener(event,e=>{
+ if(flight.source==='right'&&e.pointerId===flight.pointer)endFlightLook();
+},true);
 function updateFlight(dt){
  if(rideMode||editingText(document.activeElement))return;
  const forward=Number(flight.keys.has('KeyW'))-Number(flight.keys.has('KeyS')),side=Number(flight.keys.has('KeyD'))-Number(flight.keys.has('KeyA'));
@@ -1562,11 +1681,11 @@ $('btnHome').onclick=()=>{
   enterFreeCamera();
   // Clear orbit momentum before restoring the overview.
   controls.enableDamping=false;controls.update();
-  camera.position.set(560,450,730);controls.target.set(0,55,-40);
+  camera.position.set(3400,2400,3600);controls.target.set(0,350,0);
   controls.update();controls.enableDamping=true;
 };
 $('btnStation').onclick = () => {
-  const lift=lifts[selectedLiftIndex];if(!lift)return;const visible=lift.stationRoofs[0].visible;
+  const lift=lifts[selectedLiftIndex];if(!lift)return;const visible=lift.stationRoofs[0]?.visible??false;
   for(const roof of lift.stationRoofs) roof.visible=!visible;
   $('btnStation').classList.toggle('on',visible);
   enterFreeCamera();
@@ -1611,17 +1730,17 @@ function selectResortLift(index){
  selectedLiftIndex=index;const lift=lifts[index],empty=!lift;
  $('emptyResort').hidden=!empty;$('btnRide').parentElement.hidden=empty;for(const id of ['btnRide','btnEdit','btnStation','btnDeleteLift','btnAdd'])$(id).disabled=empty;
  $('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');
- if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='A mountain of your own';return;}
+ if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='Upper Snowfields / V1';return;}
  const f=liftFrame(lift.def);$('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');liftStatNodes.forEach((n,i)=>n.classList.toggle('selected',i===index));$('lineDetail').textContent=Math.round(f.length)+' m line · '+(lift.supports.length-2)+' towers · '+lift.cabins.length+' '+lift.LIFT.carrierName+' · '+lift.LIFT.capacity+(lift.LIFT.isChair?' seats':' places');$('viewTitle').textContent=lift.def.name;}
 selectResortLift(Math.max(0,lifts.findIndex(l=>l.def.id===savedResort?.selectedLineId)));
 const construction=window.createResortBuilder({THREE,scene,camera,controls,renderer,app,lifts,skiers,RESORT,terrainY,rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,STATION,seed,SAVE_KEY,selectResortLift,getSelectedLift:()=>selectedLiftIndex,enterFreeCamera,
- getSimulation:()=>({speed,time:+$('tod').value,served,skierCount:skiers.length}),setSpeed:value=>{speed=value;syncSpeed();},save:data=>{localStorage.setItem(SAVE_KEY,JSON.stringify(data));sessionStorage.removeItem(DELETE_UNDO_KEY);},getSaved:()=>savedResort,liftTypes:window.LiftCoLiftTypes,mapLimits:{buildLimit:MAP.buildLimit,maxLineLength:MAP.maxLineLength},noticeKey:'lift-co-empty-notice',terminalGuides:true,stationSettings,freeCameraHint,isCameraLooking:()=>flight.looking});
+ getSimulation:()=>({speed,time:+$('tod').value,served,skierCount:skiers.length}),setSpeed:value=>{speed=value;syncSpeed();},save:data=>{if(!soloHoldBackupReady)throw Error('Could not create the pre-change save backup. Free browser storage and reload before saving.');localStorage.setItem(SAVE_KEY,JSON.stringify({...data,mapVersion:MAP_VERSION,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden')}));navigationSavePending=true;sessionStorage.removeItem(DELETE_UNDO_KEY);},getSaved:()=>savedResort,liftTypes:window.LiftCoLiftTypes,mapLimits:{buildLimit:MAP.buildLimit,maxLineLength:MAP.maxLineLength},noticeKey:'lift-co-empty-notice',terminalGuides:true,autoPistes:false,rightDragLook:true,stationSettings,freeCameraHint,isCameraLooking:()=>flight.looking});
 $('btnBuild').onclick=()=>construction.begin();$('firstLift').onclick=()=>construction.begin();$('btnEdit').onclick=()=>{if(lifts[selectedLiftIndex])construction.begin(lifts[selectedLiftIndex]);};$('tabResort').onclick=()=>construction.cancel();
 // Persist line changes through the same reload path as construction so terrain,
-// clearings, return runs and guest assignments are rebuilt from the remaining network.
+// clearings and guest assignments are rebuilt from the remaining network.
 function serializeLift(def){
  return {id:def.id,type:def.type||'gondola',name:def.name,base:[...def.base],top:[...def.top],
-  towers:def.towers.map(t=>({fraction:t.fraction,height:t.height})),sag:def.sag,color:def.color,cabins:0,manual:true};
+  towers:def.towers.map(t=>({fraction:t.fraction,height:t.height})),sag:def.sag,color:def.color,autoPiste:def.autoPiste!==false,cabins:0,manual:true};
 }
 function closeLiftRemoval(){
  pendingDeleteId=null;$('deleteLiftPanel').hidden=true;$('btnDeleteLift').setAttribute('aria-expanded','false');
@@ -1636,10 +1755,12 @@ function readRemovedLift(){
  }catch{return null;}
 }
 function saveLiftNetwork(definitions,selectedLineId,message){
+ if(!soloHoldBackupReady)throw Error('Browser backup storage unavailable.');
  enterFreeCamera();
- localStorage.setItem(SAVE_KEY,JSON.stringify({version:1,lifts:definitions,selectedLineId,
+ localStorage.setItem(SAVE_KEY,JSON.stringify({version:1,mapVersion:MAP_VERSION,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),lifts:definitions,selectedLineId,
   served,skierCount:skiers.length,time:+$('tod').value,speed,
   camera:{position:camera.position.toArray(),target:controls.target.toArray()}}));
+ navigationSavePending=true;
  sessionStorage.setItem('lift-co-empty-notice',message);
  location.reload();
 }
@@ -1693,6 +1814,16 @@ addEventListener('resize', () => {
   renderer.setSize(app.clientWidth, app.clientHeight);
 });
 
+// Preserve live V1 progress without overwriting a construction/removal save during reload.
+function resortSnapshot(){return{version:1,mapVersion:MAP_VERSION,lifts:RESORT.lifts.map(serializeLift),selectedLineId:lifts[selectedLiftIndex]?.def.id||null,served,skierCount:skiers.length,time:+$('tod').value,speed:construction.active?lastRunningSpeed:speed,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),camera:{position:camera.position.toArray(),target:(rideMode?camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),24):controls.target).toArray()}};}
+function persistResort(){if(navigationSavePending||!soloHoldBackupReady)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(resortSnapshot()));}catch{console.warn('Resort could not be saved.');}}
+addEventListener('pagehide',persistResort);addEventListener('beforeunload',persistResort);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)persistResort();});
+$('softShadows').onchange=()=>{renderer.shadowMap.enabled=$('softShadows').checked;renderer.shadowMap.needsUpdate=true;};
+if(savedResort?.softShadows){$('softShadows').checked=true;$('softShadows').onchange();}
+$('exportResort').onclick=()=>{const legacy={};for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-empty-map-v1:')||k.startsWith('lift-co-pre-v1-backup:')||k.startsWith(SOLO_HOLD_BACKUP_PREFIX))){try{legacy[key]=JSON.parse(localStorage.getItem(key));}catch{legacy[key]=localStorage.getItem(key);}}const payload={format:'lift-co-backup',created:new Date().toISOString(),slot:seed,current:resortSnapshot(),legacy};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='lift-co-upper-snowfields-v1-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+if(savedResort?.uiHidden)requestAnimationFrame(()=>$('toggleInterface').click());
+
 // ---------- main loop ----------
 const clock = new THREE.Clock();
 let spawnT = 0;
@@ -1730,7 +1861,7 @@ function animate() {
     const c=cabins[rideChair%cabins.length];
     // Cabin-local eye level: 1.43 m above the interior floor, between passengers.
     // Attach to the suspended body so turns and sway cannot leave the camera outside.
-    const eye=c.isChair?c.eye:_v3.set(0,-3.03,.12);camera.position.copy(_v1.copy(eye).applyMatrix4(c.suspension.matrixWorld));
+    const eye=c.isChair||c.isSolo?c.eye:_v3.set(0,-3.03,.12);camera.position.copy(_v1.copy(eye).applyMatrix4(c.suspension.matrixWorld));
     const lookHorizontal=Math.cos(rideLook.pitch);
     _v2.set(eye.x+Math.sin(rideLook.yaw)*lookHorizontal*5,
       eye.y+Math.sin(rideLook.pitch)*5,eye.z+Math.cos(rideLook.yaw)*lookHorizontal*5)
@@ -1740,21 +1871,24 @@ function animate() {
   } else {
     updateFlight(rawDt);controls.update();
   }
+  for(const c of cabins){c.g.getWorldPosition(_v1);c.g.visible=(rideMode&&c===reservedRideCabin)||_v1.distanceToSquared(camera.position)<2250000;}
+  for(const s of skiers)s.g.visible=!construction.active&&s.g.position.distanceToSquared(camera.position)<1440000;
   // Let the scene remain visible at any zoom distance. Keep close-up clipping
   // small and expand the far plane and atmospheric range as the camera retreats.
   const viewDistance=rideMode?24:camera.position.distanceTo(controls.target);
-  const near=Math.max(.02,viewDistance*.00001),far=Math.max(2000,viewDistance*4+2000);
+  const near=Math.max(.02,viewDistance*.00001),far=Math.max(9000,viewDistance*4+3000);
   if(Math.abs(camera.near-near)>near*.05||Math.abs(camera.far-far)>far*.05){
     camera.near=near;camera.far=far;camera.updateProjectionMatrix();
   }
-  scene.fog.near=Math.max(400,viewDistance*1.15);
-  scene.fog.far=Math.max(1800,viewDistance*3.8);
+  scene.fog.near=Math.max(900,viewDistance*1.15);
+  scene.fog.far=Math.max(5500,viewDistance*3.8);
   // hud
   document.getElementById('stSkiers').textContent = skiers.length;
   document.getElementById('stRiding').textContent = riding;
   document.getElementById('stServed').textContent = served;
   lifts.forEach((lift,i)=>{const waiting=skiers.filter(s=>s.liftIndex===i&&(s.state==='queue'||s.state==='load')).length;liftStatNodes[i].textContent=lift.def.name+'\n'+((window.LiftCoLiftTypes.find(t=>t.id===lift.LIFT.type)?.shortName||'Gondola')+' · '+lift.LIFT.capacity+(lift.LIFT.isChair?' seats':' places'))+' · '+waiting+' waiting';});
   skyDome.position.copy(camera.position);
+  updateTowerFloodlights();
   renderer.render(scene, camera);
 }
 animate();

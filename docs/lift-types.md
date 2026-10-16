@@ -7,8 +7,9 @@ Open `empty-map.html`, choose **Build a lift**, then select the lift type before
 | `gondola` | Alpine enclosed gondola | 4 standing passengers | Buildable |
 | `ridge` | Ridge open chairlift | 6 seated passengers | Buildable |
 | `classic` | Classic fixed-grip chairlift | 4 seated passengers | Buildable |
+| `solo` | Solo reversible téléphérique | 12 standing passengers | On hold; study retained |
 
-Classic is integrated into the game with its approved compact white/glass canopy, green supports and permanent rope clamps. The original `experiments/classic-chairlift.html` study remains available. Heritage/Glacier/Solo téléphériques remain design studies.
+Classic is integrated into the game with its approved compact white/glass canopy, green supports and permanent rope clamps. The original `experiments/classic-chairlift.html` study remains available. Heritage and Glacier remain design studies. Solo is on hold in the current game; its implementation and studies are retained.
 
 ## Shared operation
 
@@ -26,6 +27,14 @@ For a steep approach, place ordinary towers outside the terminal and adjust thei
 
 Construction previews show stations, towers and cable only. Carrier geometry and dispatch allocation are deferred until the lift is built and opened, including when editing an existing line.
 
+## Current aesthetic work
+
+Station hold-down receptors lift individually by up to 0.14 m as a grip passes beneath. Their axles and sliding bearing links follow the movement; support sheaves below the rope stay fixed. The same behavior is present on normal pylons. Rope grips pitch with the cable tangent while the hanger and body retain their upright suspension and existing sway.
+
+Every pylon has a downward floodlight on each side. Fixtures glow after dusk and before sunrise; eight shadow-free spotlights are assigned to the nearest fixtures within 320 m of the camera to limit laptop rendering cost. The fade begins at 220 m. No new station or cabin lights are added.
+
+New lines store `autoPiste:false` and generate no return piste, markers, grooming or preset ski tracks. Existing lines retain their previous routes. The flag survives editing, saving, removal and undo. Guests on a line without a route unload and pause at the summit before using the existing walking transfer behavior; no ski run is credited.
+
 ## Implementation
 
 - `src/lifts/catalog.js`: buildable model names, capacities, speeds, station pitch and clearance footprints.
@@ -36,13 +45,13 @@ Construction previews show stations, towers and cable only. Carrier geometry and
 - `src/builder/resort-editor.js`: optional type selector, type-aware clearance/profile and serialization. Pages without a catalog retain their gondola defaults.
 - `empty-map.html`: shared station/tower factory, choice of carrier factory, bar animation, six-seat boarding, seated skier equipment and ride camera.
 
-The existing empty-map save key and version are preserved. Each line now stores `type`; older lines without it load as `gondola`. Saving or editing one line preserves the types of the other lines. The original `index.html` resort remains gondola-only.
+V1 retains the save schema version and uses a separate `lift-co-upper-snowfields-v1:` slot namespace, leaving legacy `lift-co-empty-map-v1:` saves intact. Each line now stores `type`; older lines without it load as `gondola`. Saving or editing one line preserves the types of the other lines. The original `index.html` resort remains gondola-only.
 
-## Solo design study — pending integration
+## Solo cabin reference
 
 `designs/single-arm.html` retains the approved 4.5 m cabin and single curved hanger. The longer carriage has eight running wheels, with one additional axle at each end of the original six-wheel arrangement and the original wheel spacing retained. Its side beams extend to support the new end wheels; the central arm and haul-clamp anchors stay in place. It has one fixed support cable beneath a single central row of grooved running wheels mounted below the frame. A separate thinner central haul cable passes through a clamp bolted to the carriage cross-brace. The curved hanger stays outboard of the support rope and attaches to a lug on one side of the carriage beam; it does not connect centrally from underneath. Wheel rotation in the shuttle preview follows the cabin’s actual distance traveled.
 
-Use **Trolley** or **Cable layout / end-on** to inspect the arrangement. Custom Solo tower and station references are still to come; Heritage and Glacier integration is deferred.
+Use **Trolley** or **Cable layout / end-on** to inspect the arrangement. The approved Heavy Portal pylons and compact inclined cage stations remain in the Solo studies and paused runtime; Heritage and Glacier integration is deferred.
 
 ## Solo structure studies
 
@@ -69,3 +78,13 @@ Cable geometry in the full Solo rig is defined span by span. Unsupported spans u
 The complete-line terminal cage is shortened from 36 m to 19 m, with 16 m of lower guide wheels instead of the previous full-length bank. Cable entry transitions are contained in the outer six metres of these compact guides. The cliff location, fixed cage angles and floor-level stop positions are unchanged.
 
 Upper haul-rope hold-down banks use seven 0.26 m radius wheels at each terminal receptor. Tower heads choose an upper hold-down bank when the outgoing grade exceeds the incoming grade; otherwise the existing lower guide plate remains. Each upper wheel is offset above the rope along its actual local normal, so the blue cable passes under the groove. Sliding bearing blocks lift 0.15 m near a passing haul clamp to provide clearance without sideways rope motion. This is a proposed clearance mechanism for the visual prototype, not a manufacturer-validated assembly. The lower fixed support rope and Solo running wheels keep their existing path.
+
+## Solo integration (on hold since October 16, 2026)
+
+The main game no longer loads the Solo runtime or offers it in the builder. Existing browser saves are snapshotted before saved Solo lines are filtered out; see [the update notes](2026-10-16-lift-details.md). The following describes the retained implementation.
+
+`src/lifts/solo-runtime.js` supplies the live line and the builder's elevation profile. Construction creates infrastructure only; opening the saved line creates exactly two Solo carriers. Both cabins use one common rope displacement, alternate between the two terminals, slow to 7 m/s when either crosses a pylon, and cruise at 10.25 m/s where the span permits. Stops last eight seconds, with doors closing before departure. The original eight-wheel single-arm carriage and compact station guides are reused.
+
+Solo starts with 25 m pylons; tower height remains player-controlled from 3 to 40 m. Its larger stations require 24 m between a pylon and terminal. Endpoint cages use the approved inclined arrangement (12° base / 20° top); a top terminal on a broad shelf interior can fail clearance if its incoming cabin would hit the mountain. Place it at a suitable edge or revise the line. Station foundations have local boarding channels, with refined terrain geometry under their footprints.
+
+Guests queue on the central deck, reserve places in the docked valley cabin, board before departure and unload at the summit. Actual skier meshes stand in the cabin; display passengers remain hidden. One carrier remains empty for ride-camera use, consistent with other lift types. Solo supports construction previews, saving/reloading, tower editing, cabin camera, deletion and undo through the shared resort editor.

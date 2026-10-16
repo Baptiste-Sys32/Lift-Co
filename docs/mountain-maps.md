@@ -41,3 +41,5 @@ Twin Summit Pass is the approved map direction. The original gallery now opens o
 `src/terrain/twin-summit-variants.js` starts with `LiftCoMountainMaps.create('saddle')`. All alternatives preserve the 3.6 km footprint, original lower layout and saddle. Changes are localized to the high areas and five or six distributed ski faces. Summit tips are cut toward gently sloping planes, with limited fill on their lower aprons. Bowl alternatives add broad depressions; ski faces ease local roughness into wide fall lines with gentle rolls. These are landforms, not prebuilt pistes, lifts or buildings.
 
 The new viewer includes West/East summit presets, named high-altitude sites, ski-face inspection buttons, optional amber shelf and blue face outlines, flight controls and the same laptop presets. Outlines conform to the displayed terrain triangles. Variants retain a common whole-map camera so differences are easier to compare; keys 1–4 switch alternatives.
+
+**V1 selection:** Upper Snowfields is approved and integrated into `empty-map.html`; the refinement viewer now opens on that variation. See [V1 release and backup notes](v1-upper-snowfields.md).

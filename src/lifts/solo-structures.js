@@ -41,7 +41,7 @@ function createTower({z,groundY,route,groundAt=()=>groundY}){
  const track=u=>route(z+u)-groundY,H=track(0),lane=5.1,half=5.1,d={height:H,base:8.4,depth:6.6,neck:4.2,head:10.2,levels:7,chord:.3,style:1};
  const needsHoldDown=((track(4.48)-track(3.98))/.5-(track(-3.98)-track(-4.48))/.5)>.002;
  const haulGap=rig.haulY-rig.trackY,haulTrack=u=>{const m=(track(u+.01)-track(u-.01))/.02;return track(u)+haulGap*Math.hypot(1,m);};
- function leg(y,sx,sz){const t=d.style===1?1-smooth(0,H*.3,y):1-smooth(0,H*.82,y);return[sx*(d.neck/2+(d.base-d.neck)/2*t),y+(groundAt(z+sz*d.depth/2)-groundY)*(1-smooth(0,H*.25,y)),sz*(d.neck*.42+(d.depth-d.neck*.84)/2*t)];}
+ function leg(y,sx,sz){const t=d.style===1?1-smooth(0,H*.3,y):1-smooth(0,H*.82,y);return[sx*(d.neck/2+(d.base-d.neck)/2*t),y+(groundAt(z+sz*d.depth/2,sx*d.base/2)-groundY)*(1-smooth(0,H*.25,y)),sz*(d.neck*.42+(d.depth-d.neck*.84)/2*t)];}
  for(const sx of [-1,1])for(const sz of [-1,1]){const foot=leg(0,sx,sz);box(frame,2,.7,2,foot[0],foot[1]+.15,foot[2],M.concrete);box(frame,1.1,.15,1.1,foot[0],foot[1]+.58,foot[2],M.edge);for(let i=0;i<d.levels;i++){const a=(H-1.6)*i/d.levels,b=(H-1.6)*(i+1)/d.levels;beam(frame,leg(a,sx,sz),leg(b,sx,sz),d.chord,d.chord,M.steel);}}
  for(let i=0;i<d.levels;i++){const a=.65+(H-2.25)*i/d.levels,b=.65+(H-2.25)*(i+1)/d.levels;for(const side of [-1,1]){for(const axis of [0,1]){const p=(s,y)=>axis===0?leg(y,s,side):leg(y,side,s);beam(frame,p(-1,a),p(1,a),.11,.12);beam(frame,p(-1,a),p(1,b),d.style===1?.1:.085,.1);beam(frame,p(1,a),p(-1,b),d.style===1?.1:.085,.1);}}}
  // Low crosshead: two transverse girders carry longitudinal saddle/roller beams.

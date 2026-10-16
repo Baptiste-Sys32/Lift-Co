@@ -45,5 +45,5 @@ window.LiftCoTwinSummitVariants=(()=>{
   for(const s of base.sites.filter(s=>s.name!=='Summit shoulder'))sites.push({...s,y:height(s.x,s.z),high:false});
   return{design,height,sites,faces,bowls,size:source.size,half:source.half,baseId:'saddle',baseHeight:raw};
  }
- return{designs,create,size:source.size,half:source.half,preferred:'terraces',baseId:'saddle'};
+ return{designs,create,size:source.size,half:source.half,preferred:'snowfields',baseId:'saddle'};
 })();

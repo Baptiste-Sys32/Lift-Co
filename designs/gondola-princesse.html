@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. — Princesse cabin studies</title>
+<link rel="stylesheet" href="../src/styles/cabin-study.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
+<p style="padding:30px;font:13px Georgia">Opening the Princesse cabin atelier…</p>
+<noscript>This 3D cabin study needs JavaScript.</noscript>
+<script src="../src/lifts/gondola-studies.js"></script>
+<script src="../src/lifts/cabin-study-viewer.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+try{window.LiftCoCabinStudyViewer.start(THREE,OrbitControls,RoomEnvironment,"princesse");}
+catch(error){const p=document.createElement('pre');p.className='error';p.textContent=String(error.stack||error);document.body.appendChild(p);}
+</script>
+</body></html>

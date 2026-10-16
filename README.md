@@ -1,4 +1,4 @@
-# Lift Co.
+# Lift Co. — V1
 
 A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser; there is no build step. The Three.js CDN needs an internet connection.
 
@@ -6,10 +6,12 @@ A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser;
 
 | Page | Purpose |
 | --- | --- |
-| [empty-map.html](empty-map.html) | Current blank-map starting point: larger terrain, scenery, lift construction and removal with undo; no prebuilt lifts. |
+| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V1, 3.6 km terrain, three buildable lift types, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
 | [index.html](index.html) | Original working resort with Summit Express, skiers and the construction UI. |
 
-These two pages stay at the project root to preserve their browser addresses. Each uses its own browser save, scoped by mountain seed.
+These two pages stay at the project root to preserve their browser addresses. V1 uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
+
+The pre-change build is preserved in `archive/releases/pre-solo-hold-20261016/`. See [the October 16 update](docs/2026-10-16-lift-details.md) for save backups and the next cabin studies.
 
 ## Approved lift designs
 
@@ -19,11 +21,23 @@ These two pages stay at the project root to preserve their browser addresses. Ea
 | [Téléphériques](designs/telepheriques.html) | **Heritage** — compact; **Glacier** — panoramic. |
 | [Single-arm téléphérique](designs/single-arm.html) | **Solo** — the longer 4.5 m version. |
 
-Design studies include model inspection and animation previews. **Alpine gondola, Ridge and Classic are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Téléphériques are still design studies. All buildable lifts have automatic station cable-entry guides.
+Design studies include model inspection and animation previews. **Alpine gondola, Ridge and Classic are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is on hold; its model, runtime and complete-line study remain available for later work. All buildable lifts have station cable-entry guides, with yielding hold-down wheels, and night floodlights on their pylons. New lines no longer generate ski slopes automatically.
+
+## Megève gondola cabin studies
+
+Selected cabins: Arbois A, Jaillet C / Full shoulder, and Princesse A/C. The studies include comparison and single-model views, opening controls, colour controls and enlarged supplied reference photos.
+
+| Reference | Page | Variants |
+| --- | --- | --- |
+| Mont d’Arbois | [Cabin 1](designs/gondola-mont-arbois.html) | **A Lantern — selected**, reversed hanger, door ski pockets |
+| Jaillet | [Cabin 2](designs/gondola-jaillet.html) | **C Full shoulder — selected**, compact front/rear grilles |
+| Princesse | [Cabin 3](designs/gondola-princesse.html) | **A Panorama + C Touring — selected**, reversed hangers |
+
+Jaillet V4 has a round footprint, a smaller base, fuller sides and curved shoulders that close over the roof. Shell and glazing share the same egg-shaped profile. The newest station photo and POMA patent drawing are included in the reference gallery. Its complete end shells slide around the fixed interior. Use **Slide the shell open** to inspect the proposal. These are shape studies awaiting selection; the original Alpine cabin remains in the game. [Reference and implementation notes](docs/gondola-megeve-studies.md).
 
 ## Experiments
 
-**Selected map direction: Twin Summit Pass.** Its summit areas and natural ski faces are being refined in the separate study below.
+**Selected map: Upper Snowfields V1**, based on Twin Summit Pass. It is now the main game terrain; earlier map studies remain available below.
 
 | Page | Purpose |
 | --- | --- |
@@ -66,6 +80,8 @@ ski-lift/
 - **Construction rules:** [src/builder/layout.js](src/builder/layout.js) handles the cable profile; [src/builder/resort-editor.js](src/builder/resort-editor.js) handles placement in the resort.
 - **Flat workshop geometry:** [src/builder/view.js](src/builder/view.js).
 - **Buildable lift catalog / carrier models:** [src/lifts/catalog.js](src/lifts/catalog.js), [src/lifts/ridge-chair.js](src/lifts/ridge-chair.js) and [src/lifts/classic-chair.js](src/lifts/classic-chair.js).
+- **Solo reversible lift:** [src/lifts/solo-runtime.js](src/lifts/solo-runtime.js), [solo.js](src/lifts/solo.js) and [solo-structures.js](src/lifts/solo-structures.js).
+- **V1 mountain:** [src/terrain/twin-summit-variants.js](src/terrain/twin-summit-variants.js), layered on the approved Twin Summit Pass.
 - **Approved detachable station housing:** [src/lifts/detachable-station.js](src/lifts/detachable-station.js), shared by the game and housing study.
 - **Station models:** [src/lifts/classic-station.js](src/lifts/classic-station.js) and [src/lifts/station-guides.js](src/lifts/station-guides.js).
 - **Scale-study lift model:** [src/lifts/gondola.js](src/lifts/gondola.js). The root resort pages currently retain their own inline lift factory.
