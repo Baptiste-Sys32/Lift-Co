@@ -12,7 +12,7 @@ window.LiftCoGondolaStudies={
    {id:'C',name:'Touring',description:'A taller, less swept glasshouse with straighter end panes and a fuller lower tub.',w:2.12,d:1.83,h:2.28,sill:.67,corner:.29,segments:6,bottom:.86,top:.89,belly:1.02,waist:1.02,roof:.08}
   ]}
  },
- createFactory(T){
+ createFactory(T,{ropeHeight=null,runtime=false}={}){
   const geometries=new Map();
   function cached(key,make){if(!geometries.has(key))geometries.set(key,make());return geometries.get(key);}
   function material(color,roughness=.55,metalness=0){return new T.MeshStandardMaterial({color,roughness,metalness});}
@@ -48,7 +48,7 @@ window.LiftCoGondolaStudies={
   }
   function makeGear(root,gear,v,flip=false){
    // Roof anchor, bent plate hanger, transverse articulation pin and detachable grip.
-   const ropeY=v.h+1.92;
+   const ropeY=ropeHeight??v.h+1.92;
    box(gear,v.w*(v.crown?.25:.60),.12,v.d*(v.crown?.25:.52),0,v.h+.06,0,dark);
    for(const x of [-1,1])box(gear,v.crown?.07:.13,.06,v.d*(v.crown?.23:.46),x*v.w*(v.crown?.085:.23),v.h+.145,0,silver);
    const armPoints=[[0,v.h+.16],[.35,v.h+.32],[.52,v.h+.56],[.53,ropeY-.35],[.27,ropeY-.16],[0,ropeY-.16]];
@@ -57,12 +57,12 @@ window.LiftCoGondolaStudies={
    const shape=new T.Shape();shape.moveTo(left[0].x,left[0].y);for(const p of left.slice(1))shape.lineTo(p.x,p.y);for(const p of right.reverse())shape.lineTo(p.x,p.y);shape.closePath();
    const armGeometry=new T.ExtrudeGeometry(shape,{depth:.12,bevelEnabled:true,bevelSize:.015,bevelThickness:.015,bevelSegments:2,curveSegments:12});armGeometry.translate(0,0,-.06);mesh(gear,armGeometry,silver);
    for(const t of [.11,.34,.57,.80]){const p=path.getPoint(t);const bolt=mesh(gear,cached('bolt',()=>{const g=new T.CylinderGeometry(.031,.031,.16,6);g.rotateX(Math.PI/2);return g;}),dark);bolt.position.copy(p);}
-   const gripPivot=new T.Group();gripPivot.position.y=ropeY;gear.add(gripPivot);
+   const gripPivot=new T.Group();gripPivot.name='cabin-grip';gripPivot.position.y=ropeY;gear.add(gripPivot);
    box(gripPivot,.26,.15,.70,0,-.045,0,dark);
-   for(const x of [-.16,.16])box(gripPivot,.06,.13,.35,x,-.04,0,silver);
+   for(const x of [-.16,.16]){const jaw=box(gripPivot,.06,.13,.35,x,-.04,0,silver);jaw.name=x<0?'grip-jaw-left':'grip-jaw-right';}
    box(gripPivot,.47,.06,.22,0,.10,0,silver);
    for(const z of [-.31,.31]){
-    const wheel=mesh(gripPivot,cached('grip-wheel',()=>{const g=new T.CylinderGeometry(.10,.10,.085,14);g.rotateZ(Math.PI/2);return g;}),rubber);wheel.position.set(-.20,.08,z);
+    const wheel=mesh(gripPivot,cached('grip-wheel',()=>{const g=new T.CylinderGeometry(.10,.10,.085,14);g.rotateZ(Math.PI/2);return g;}),rubber);wheel.position.set(-.20,.08,z);wheel.name=z<0?'grip-running-wheel-front':'grip-running-wheel-rear';
     const hub=mesh(wheel,cached('wheel-hub',()=>{const g=new T.CylinderGeometry(.042,.042,.095,10);g.rotateZ(Math.PI/2);return g;}),silver);
    }
    for(let k=0;k<7;k++)box(gripPivot,.18,.021,.16,0,.12+k*.025,-.06,silver);
@@ -102,7 +102,7 @@ window.LiftCoGondolaStudies={
     return new T.Vector3(Math.sign(a)*radius,y,spine*(1-2*u));
    }
    function patch(parent,left,right,bottom,top,m,offset=0){
-    const rows=Math.max(4,Math.ceil((top-bottom)/.055)),cols=typeof left==='number'&&typeof right==='number'?Math.max(24,Math.ceil((right-left)*20)):24,vertices=[],indices=[];
+    const rows=Math.max(4,Math.ceil((top-bottom)/(runtime?.085:.055))),cols=typeof left==='number'&&typeof right==='number'?Math.max(runtime?16:24,Math.ceil((right-left)*(runtime?12:20))):(runtime?16:24),vertices=[],indices=[];
     for(let j=0;j<=rows;j++){
      const y=T.MathUtils.lerp(bottom,top,j/rows),a=typeof left==='function'?left(y):left,b=typeof right==='function'?right(y):right;
      for(let i=0;i<=cols;i++){const p=point(T.MathUtils.lerp(a,b,i/cols),y,offset);vertices.push(p.x,p.y,p.z);}
@@ -150,6 +150,7 @@ window.LiftCoGondolaStudies={
     for(const edge of [-alpha,alpha])patch(shell,edge-.012,edge+.012,.14,v.h-.06,rubber,-.014);
     const axis=new T.Vector3(0,1,-end*.045).normalize();
     const rest=new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),end===1?0:Math.PI);
+    pivot.name='cabin-shell-'+end;pivot.userData.cabinMotion={kind:'shell',end,angle:v.opening,axis:axis.toArray(),restYaw:end===1?0:Math.PI};
     shells.push({group:pivot,end,axis,rest});
    }
    // The upper shell continues over a curved shoulder into a small roof cap.
@@ -183,7 +184,7 @@ window.LiftCoGondolaStudies={
     tube(body,[[-w*.43,.48,z+end*.11],[0,.52,z+end*.12],[w*.43,.48,z+end*.11]],.027,silver);
     bar(body,[0,.17,z+end*.12],[0,.51,z+end*.12],.025,dark);
    }
-   for(const side of [-1,1]){
+   for(const side of runtime?[]:[-1,1]){
     const person=new T.Group();person.position.set(side*v.w*.18,.66,-.22);person.rotation.y=Math.PI;passengers.add(person);
     const coat=material(side<0?0xb47955:0x657f7b,.9);
     box(person,.33,.46,.25,0,.27,0,coat);
@@ -282,6 +283,7 @@ window.LiftCoGondolaStudies={
     for(const i of boundaries){const ps=[];for(let k=0;k<=12;k++)ps.push(point(i,.14+(windowTop-.14)*k/12,.02).toArray());tube(panel,ps,isEgg?.04:.022,isEgg?paint:rubber);}
     const sign=isWide?-1:di===0?-1:1;
     if(!isEgg){const handleX=-v.w*.5*scaleAt(1.07)-.035,handleZ=isWide?.25:sign*.12;bar(panel,[handleX,1.02,handleZ],[handleX,1.24,handleZ],.017,silver);}
+    panel.name='cabin-door-'+di;panel.userData.cabinMotion={kind:isWide?'parallel':'split',sign};
     doors.push({group:panel,sign,egg:isEgg,wide:isWide});
    }
    for(const {rib,sign} of shellRibs)doors[sign<0?0:1].group.add(rib);
@@ -294,7 +296,7 @@ window.LiftCoGondolaStudies={
     for(let j=1;j<seats;j++)box(body,.014,.01,.30,-v.w*.355+v.w*.71*j/seats,.681,end*v.d*.27,rubber);
     for(const side of [-1,1])bar(body,[side*v.w*.28,.17,end*v.d*.27],[side*v.w*.28,.56,end*v.d*.27],.023,silver);
    }
-   for(let i=0;i<(isWide?4:2);i++){
+   for(let i=0;i<(runtime?0:isWide?4:2);i++){
     const p=new T.Group();p.position.set((i%2?1:-1)*v.w*.20,.65,(i<2?-1:1)*v.d*.22);if(i<2)p.rotation.y=Math.PI;passengers.add(p);
     const coat=material([0xb66a44,0x5d7775,0xc4a455,0x586b87][i],.9);
     const torso=box(p,.34,.46,.24,0,.30,0,coat);torso.rotation.x=.05;
@@ -322,7 +324,7 @@ window.LiftCoGondolaStudies={
      for(const end of [-1,1])box(pocket,.26,.27,.025,x,y,z+end*.18,paint);
      for(const end of [-1,1])bar(pocket,[shellX-.28,.435,z+end*.18],[shellX-.01,.435,z+end*.18],.016,rubber);
      for(const xx of [shellX-.28,shellX-.01])bar(pocket,[xx,.435,z-.18],[xx,.435,z+.18],.016,rubber);
-     const skis=new T.Group();pocket.add(skis);skiGroups.push(skis);
+     const skis=new T.Group();skis.name='cabin-ski-placeholder-'+door.sign;skis.userData.cabinSkiPlaceholder=true;pocket.add(skis);skiGroups.push(skis);
      for(const offset of [-.065,.065]){
       const blade=box(skis,.045,1.56,.073,x,.97,z+offset,door.sign>0?dark:cream);blade.rotation.x=-.025;
       box(skis,.065,.17,.09,x-.023,.84,z+offset,rubber);

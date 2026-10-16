@@ -1,9 +1,1 @@
-.env*
-*.pem
-*.key
-*secret*
-*token*
-auth.json
-credentials
-*.keystore
 archive/

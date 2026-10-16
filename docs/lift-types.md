@@ -4,12 +4,18 @@ Open `empty-map.html`, choose **Build a lift**, then select the lift type before
 
 | Type ID | Model | Capacity | Status |
 | --- | --- | --- | --- |
-| `gondola` | Alpine enclosed gondola | 4 standing passengers | Buildable |
-| `ridge` | Ridge open chairlift | 6 seated passengers | Buildable |
-| `classic` | Classic fixed-grip chairlift | 4 seated passengers | Buildable |
+| `gondola` | Gondola / Classic (original Alpine) | 4 standing passengers | Buildable |
+| `ridge` | Chair Lift / 6-Seater | 6 seated passengers | Buildable |
+| `classic` | Chair Lift / Classic (fixed grip) | 4 seated passengers | Buildable |
+| `princesse-panorama` | Gondola / Panorama | 4 seated passengers | Buildable |
+| `princesse-touring` | Gondola / Touring | 4 seated passengers | Buildable |
+| `arbois` | Gondola / Sigma Arbois | 4 seated passengers | Buildable |
+| `jaillet` | Gondola / Sigma SP77 | 4 seated passengers | Buildable |
 | `solo` | Solo reversible téléphérique | 12 standing passengers | On hold; study retained |
 
 Classic is integrated into the game with its approved compact white/glass canopy, green supports and permanent rope clamps. The original `experiments/classic-chairlift.html` study remains available. Heritage and Glacier remain design studies. Solo is on hold in the current game; its implementation and studies are retained.
+
+The dropdown groups Chair Lift before Gondola. Ski Lift is reserved for future types and is hidden while empty. Internal IDs stay unchanged when display names change. Sigma Arbois is a descriptive game label, not a confirmed factory model designation. Sigma SP77 is the user-selected name for the rounded Jaillet model. See [cabin integration notes](gondola-integration.md).
 
 ## Shared operation
 

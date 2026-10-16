@@ -7,7 +7,18 @@ const liftTypes=ctx.liftTypes||[{id:'gondola',label:'Alpine gondola',shortName:'
 const carrierSpec=()=>liftTypes.find(t=>t.id===(draft?.type||'gondola'))||liftTypes[0];
 const buildLimit=ctx.mapLimits?.buildLimit??470,maxLineLength=ctx.mapLimits?.maxLineLength??900,noticeKey=ctx.noticeKey??'lift-co-notice';
 const $=id=>document.getElementById(id),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const typeSelector=document.getElementById('liftType');if(typeSelector)for(const type of liftTypes){const option=document.createElement('option');option.value=type.id;option.textContent=type.label;typeSelector.append(option);}
+const typeSelector=document.getElementById('liftType');
+if(typeSelector){
+ const categories=ctx.liftGroups||window.LiftCoLiftGroups||[{id:'chairlift',label:'Chair Lift'},{id:'gondola',label:'Gondola'},{id:'skilift',label:'Ski Lift'}];
+ const assigned=new Set();
+ for(const category of categories){
+  const types=liftTypes.filter(t=>(t.group||(t.isChair?'chairlift':'gondola'))===category.id).sort((a,b)=>(a.order||0)-(b.order||0));
+  if(!types.length)continue;const group=document.createElement('optgroup');group.label=category.label;
+  for(const type of types){const option=document.createElement('option');option.value=type.id;option.textContent=type.label;group.append(option);assigned.add(type.id);}typeSelector.append(group);
+ }
+ for(const type of liftTypes)if(!assigned.has(type.id)){const option=document.createElement('option');option.value=type.id;option.textContent=type.label;typeSelector.append(option);}
+}
+function suggestedName(type){const spec=liftTypes.find(t=>t.id===type)||liftTypes[0];return 'New '+spec.label+' '+(spec.group==='chairlift'||spec.isChair?'chairlift':'gondola')+' '+(lifts.length+1);}
 let uiHidden=false;
 let active=false,draft=null,editing=null,preview=null,selected=null,tool='base',nextId=1,oldSpeed=1,history=[],liveBefore=null,drag=null,down=null,rebuildTimer=null,profileTransform=null,minimum=Infinity,invalidReason='',lastHover=null;
 const ray=new T.Raycaster(),pointer=new T.Vector2(),groundMeshes=scene.children.filter(o=>o.userData.terrain);
@@ -103,7 +114,7 @@ function drawProfile(layout){
 function setTool(value){tool=value;ghost.visible=false;refreshUI();}
 function begin(line=null){
  if(active)cancel();enterFreeCamera();oldSpeed=ctx.getSimulation().speed;ctx.setSpeed(0);editing=line;selected=null;history=[];liveBefore=null;nextId=1;
- if(line){const f=liftFrame(line.def);draft=JSON.parse(JSON.stringify({...line.def,manual:true,sag:line.def.sag??.55,towers:line.def.manual?line.def.towers:line.supports.slice(1,-1).map(s=>{const p=planPoint(line.def,0,s.z);return{fraction:(f.length/2-s.z)/f.length,height:line.cableHeight(s.z)-terrainY(p.x,p.z)};})}));draft.towers.forEach(t=>{t.id=nextId++;});line.root.visible=false;tool='select';}else{draft={id:'line-'+Date.now().toString(36),type:'gondola',name:'New gondola '+(lifts.length+1),base:null,top:null,towers:[],sag:.55,color:0xd94f4f,autoPiste:ctx.autoPistes!==false,cabins:0,manual:true};tool='base';}
+ if(line){const f=liftFrame(line.def);draft=JSON.parse(JSON.stringify({...line.def,manual:true,sag:line.def.sag??.55,towers:line.def.manual?line.def.towers:line.supports.slice(1,-1).map(s=>{const p=planPoint(line.def,0,s.z);return{fraction:(f.length/2-s.z)/f.length,height:line.cableHeight(s.z)-terrainY(p.x,p.z)};})}));draft.towers.forEach(t=>{t.id=nextId++;});line.root.visible=false;tool='select';}else{draft={id:'line-'+Date.now().toString(36),type:'gondola',name:suggestedName('gondola'),base:null,top:null,towers:[],sag:.55,color:0xd94f4f,autoPiste:ctx.autoPistes!==false,cabins:0,manual:true};tool='base';}
  draft.type=draft.type||'gondola';active=true;for(const s of skiers)s.g.visible=false;for(const id of ['btnPause','btnPlay','btnFast','btnAdd'])$(id).disabled=true;$('lineName').value=draft.name;$('buildHeading').textContent=line?'01 / EDIT '+line.def.name.toUpperCase():'01 / PLAN A NEW LINE';$('buildPanel').hidden=false;$('resortPanel').hidden=true;$('buildProfile').hidden=false;document.body.classList.add('building');$('btnBuild').classList.add('on');$('tabResort').classList.remove('on');resize();message('');refresh();
 }
 function cancel(){
@@ -136,7 +147,13 @@ $('mountainProfile').addEventListener('pointerdown',e=>{if(!active||e.target.dat
 $('mountainProfile').addEventListener('pointermove',e=>{if(drag?.kind!=='profile'||drag.pointer!==e.pointerId)return;const y=new DOMPoint(e.clientX,e.clientY).matrixTransform($('mountainProfile').getScreenCTM().inverse()).y,absolute=drag.scale.low+(145-y)/122*(drag.scale.high-drag.scale.low),f=frame(),tower=selectedTower(),p=planPoint(draft,0,f.length/2-tower.fraction*f.length);setHeight(absolute-localGround(p.x,p.z));});
 $('mountainProfile').addEventListener('pointerup',finishDrag);$('mountainProfile').addEventListener('pointercancel',finishDrag);
 $('placeBase').onclick=()=>setTool('base');$('placeTop').onclick=()=>setTool('top');$('placeTower').onclick=()=>setTool('tower');$('selectTower').onclick=()=>setTool('select');$('cancelBuild').onclick=cancel;
-if(typeSelector)typeSelector.onchange=e=>{if(!active)return;change(()=>{const oldName='New '+(draft.type==='gondola'?'gondola':carrierSpec().label)+' '+(lifts.length+1);draft.type=e.target.value;if(draft.towers.length&&carrierSpec().reversible){const length=frame()?.length||Infinity;if(draft.towers.some(t=>Math.min(t.fraction,1-t.fraction)*length<24))throw Error('Solo needs 24 m between pylons and terminals. Move the end pylons first.');}if(draft.name===oldName)draft.name='New '+(draft.type==='gondola'?'gondola':carrierSpec().label)+' '+(lifts.length+1);});};
+if(typeSelector)typeSelector.onchange=e=>{if(!active)return;change(()=>{
+ const previous=carrierSpec(),autoNamed=draft.name===suggestedName(draft.type)||draft.name==='New gondola '+(lifts.length+1);
+ draft.type=e.target.value;const next=carrierSpec();
+ if(draft.towers.length&&next.reversible){const length=frame()?.length||Infinity;if(draft.towers.some(t=>Math.min(t.fraction,1-t.fraction)*length<24))throw Error('Solo needs 24 m between pylons and terminals. Move the end pylons first.');}
+ if(autoNamed)draft.name=suggestedName(draft.type);
+ if(draft.color===(previous.defaultColor??0xd94f4f))draft.color=next.defaultColor??0xd94f4f;
+});};
 $('lineName').onchange=e=>{if(active)change(()=>draft.name=e.target.value.trim().slice(0,32)||'New gondola');};
 $('towerHeight').oninput=e=>{startLive();setHeight(e.target.value);};$('towerHeight').onchange=()=>{finishLive();refresh();};$('towerHeightNumber').onchange=e=>change(()=>{selectedTower().height=clamp(+e.target.value||3,3,40);});
 $('towerPosition').oninput=e=>{if(!selectedTower())return;startLive();const f=frame(),tower=selectedTower(),d=tower.fraction*f.length,others=ordered().filter(t=>t.id!==selected).map(t=>t.fraction*f.length),lo=Math.max(carrierSpec().terminalSpacing||14,...others.filter(v=>v<d).map(v=>v+10)),hi=Math.min(f.length-(carrierSpec().terminalSpacing||14),...others.filter(v=>v>d).map(v=>v-10));tower.fraction=clamp(+e.target.value/100*f.length,lo,hi)/f.length;refresh(false);};$('towerPosition').onchange=()=>{finishLive();refresh();};
@@ -147,7 +164,7 @@ $('buildUndo').onclick=()=>{finishLive();if(history.length){draft=JSON.parse(his
 $('buildReset').onclick=()=>change(()=>{draft.base=null;draft.top=null;draft.towers=[];selected=null;tool='base';});
 $('openLine').onclick=()=>{
  finishLive();const layout=buildLayout();clearance(layout);if(!layout||invalidReason){message(invalidReason||'Place both stations first.',true);refreshUI(layout);return;}
- draft.name=$('lineName').value.trim().slice(0,32)||'New gondola';const definition={id:draft.id,type:draft.type||'gondola',name:draft.name,base:draft.base,top:draft.top,towers:ordered().map(t=>({fraction:t.fraction,height:t.height})),sag:draft.sag,color:0xd94f4f,autoPiste:draft.autoPiste!==false,cabins:0,manual:true};
+ draft.name=$('lineName').value.trim().slice(0,32)||'New gondola';const definition={id:draft.id,type:draft.type||'gondola',name:draft.name,base:draft.base,top:draft.top,towers:ordered().map(t=>({fraction:t.fraction,height:t.height})),sag:draft.sag,color:draft.color??carrierSpec().defaultColor??0xd94f4f,autoPiste:draft.autoPiste!==false,cabins:0,manual:true};
  const saved=RESORT.lifts.filter(d=>d.manual&&d.id!==definition.id).map(d=>({id:d.id,type:d.type||'gondola',name:d.name,base:d.base,top:d.top,towers:d.towers,sag:d.sag,color:d.color,autoPiste:d.autoPiste!==false,cabins:0,manual:true}));saved.push(definition);
  try{const state=ctx.getSimulation();ctx.save({version:1,lifts:saved,selectedLineId:definition.id,served:state.served,skierCount:state.skierCount,time:state.time,speed:oldSpeed,camera:{position:camera.position.toArray(),target:controls.target.toArray()}});sessionStorage.setItem(noticeKey,definition.name+' is open.');$('openLine').disabled=true;$('openLine').textContent='Opening your lift…';location.reload();}catch(e){message('Could not save this lift in your browser. '+e.message,true);}
 };

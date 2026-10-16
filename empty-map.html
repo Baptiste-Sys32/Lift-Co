@@ -39,7 +39,7 @@
     <div class="panel-section"><div class="row spread"><h2 id="towerTitle">Your line</h2><span id="buildLength" class="mono"></span></div><p id="buildHelp" class="small">Place the valley station on the snow.</p>
     <div id="towerInspector" hidden><div class="row spread"><label for="towerHeight">Height above snow</label><div class="height-input"><input id="towerHeightNumber" type="number" min="3" max="40" step="0.25"><span class="mono">m</span></div></div><input id="towerHeight" type="range" min="3" max="40" step="0.25"><span id="towerType" class="small"></span><div class="row spread"><label for="towerPosition">Along the line</label><span id="towerDistance" class="mono"></span></div><input id="towerPosition" type="range" min="0" max="100" step="0.1"><div class="row"><button id="focusTower">Focus tower</button><button id="removeTower">Remove</button></div></div>
     <div id="builderSupports"></div></div>
-    <div class="panel-section"><div class="row spread"><label for="ropeSag">Cable sag</label><span id="ropeSagText" class="mono"></span></div><input id="ropeSag" type="range" min="0" max="1.5" step="0.05" value="0.55"><p id="buildClearance" class="small"></p><p id="buildMessage" role="status"></p><div class="row"><button id="buildUndo">Undo</button><button id="buildReset">Restart</button></div><button id="openLine" class="primary build-confirm">Build & open lift ↗</button><p class="small">Gondolas and Ridge chairs detach and slow for boarding. Classic chairs stay fixed to the cable at 1.8 m/s. Every station includes cable guide wheels. New lines do not create ski slopes.</p></div>
+    <div class="panel-section"><div class="row spread"><label for="ropeSag">Cable sag</label><span id="ropeSagText" class="mono"></span></div><input id="ropeSag" type="range" min="0" max="1.5" step="0.05" value="0.55"><p id="buildClearance" class="small"></p><p id="buildMessage" role="status"></p><div class="row"><button id="buildUndo">Undo</button><button id="buildReset">Restart</button></div><button id="openLine" class="primary build-confirm">Build & open lift ↗</button><p class="small">Gondolas and 6-Seater chairs detach and slow for boarding. Classic chairs stay fixed to the cable at 1.8 m/s. Every station includes cable guide wheels. New lines do not create ski slopes.</p></div>
   </section>
 </aside>
 <button id="toggleInterface" type="button" aria-label="Hide interface" title="Hide interface" aria-expanded="true" aria-controls="hud resortBar transport hint buildProfile">‹</button>
@@ -53,6 +53,8 @@
 <script src="./assets/data/terrain-heightmap.js"></script>
 <script src="./src/terrain/mountain-designs.js"></script>
 <script src="./src/terrain/twin-summit-variants.js"></script>
+<script src="./src/lifts/gondola-studies.js"></script>
+<script src="./src/lifts/gondola-runtime.js"></script>
 <script src="./src/lifts/catalog.js"></script>
 <script src="./src/lifts/ridge-chair.js"></script>
 <script src="./src/lifts/classic-chair.js"></script>
@@ -621,7 +623,7 @@ function createLift(def,index) {
   const terrainY=(x,z)=>{const p=planPoint(def,x,z);return worldTerrainY(p.x,p.z,def.preview?def:null);};
 const LIFT = {
   base: new THREE.Vector3(0, 0, half), top: new THREE.Vector3(0, 0, -half),
-  sideX: STATION.railX, cabins: def.cabins, capacity:spec.capacity,type:spec.id,isChair,fixedGrip:isClassic,carrierName:spec.carrierName,
+  halfWidth:spec.halfWidth,halfLength:spec.halfLength,sideX: STATION.railX, cabins: def.cabins, capacity:spec.capacity,type:spec.id,isChair,fixedGrip:isClassic,carrierName:spec.carrierName,
   cableSpeed:spec.cableSpeed,stationSpeed:spec.stationSpeed,stationStraight:STATION.straight,railX:STATION.railX,
 };
 LIFT.base.y = terrainY(0, half) + 5.0;
@@ -939,8 +941,14 @@ function cableY(z,side){
   return freeSpanY(z);
 }
 // Alpine cabins: tapered eight-sided shell, framed panes and true sliding door openings.
-const cabins=[];
-if(!def.preview&&isChair){
+const cabins=[];let cabinFactory=null;
+if(!def.preview&&spec.cabinFamily){
+ cabinFactory=window.LiftCoGondolaRuntime.createFactory(THREE,spec,{color:def.color??spec.defaultColor});
+ for(let i=0;i<carrierPhases.length;i++){
+  const carrier=cabinFactory.create();root.add(carrier.g);
+  cabins.push({...carrier,phase:carrierPhases[i],sway:0,swayVelocity:0,s:i/LIFT.cabins*LOOP.total,yaw:0,speed:LIFT.cableSpeed});
+ }
+}else if(!def.preview&&isChair){
  const ridgeFactory=(isClassic?window.LiftCoClassic:window.LiftCoRidge).createFactory(THREE);
  for(let i=0;i<carrierPhases.length;i++){
   const carrier=ridgeFactory.create(i+1);root.add(carrier.g);
@@ -1164,6 +1172,7 @@ if(!def.preview&&isChair){
       c.suspension.rotation.z=vibration*.001;
       const want=isChair?barOpenAt(c.s):doorsOpenAt(c.s)&&c.speed<1.15?1:0;c.door=THREE.MathUtils.damp(c.door,want,isChair?5:3,dt);if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.barOpen*1.83;}
       for(const door of c.doors)door.m.position.z=THREE.MathUtils.lerp(door.closed,door.open,c.door);
+      c.updateModel?.(c.door);
       c.detached=releasedAt(c.s);c.gripJaws.forEach((jaw,i)=>jaw.position.x=(i?1:-1)*(.15+c.detached*.16));
       for(const wheel of c.runningWheels)wheel.rotation.x+=c.detached*c.speed*dt/.09;
       for(let seat=0;seat<c.rackSkis.length;seat++)c.rackSkis[seat].visible=c.riders[seat]!==null&&(c.riders[seat].state==='ride'||(c.riders[seat].state==='board'&&c.riders[seat].t>=.32));
@@ -1171,10 +1180,12 @@ if(!def.preview&&isChair){
     updateHoldDownWheels();
     stationGuides?.update(cabins);
     root.updateMatrixWorld(true);
+    cabinFactory?.updateInstances();
   }
-  for(const c of cabins){c.s=positionAtTime(c.phase);c.speed=targetSpeedAt(c.s);LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);c.yaw=Math.atan2(direction.x,direction.z);c.g.rotation.y=c.yaw;alignGrip(c,direction);c.door=isChair?barOpenAt(c.s):doorsOpenAt(c.s)?1:0;if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.door*1.83;}for(const d of c.doors)d.m.position.z=THREE.MathUtils.lerp(d.closed,d.open,c.door);}
+  for(const c of cabins){c.s=positionAtTime(c.phase);c.speed=targetSpeedAt(c.s);LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);c.yaw=Math.atan2(direction.x,direction.z);c.g.rotation.y=c.yaw;alignGrip(c,direction);c.door=isChair?barOpenAt(c.s):doorsOpenAt(c.s)?1:0;if(c.isChair){c.barOpen=c.door;c.safety.rotation.x=-c.door*1.83;}for(const d of c.doors)d.m.position.z=THREE.MathUtils.lerp(d.closed,d.open,c.door);c.updateModel?.(c.door);}
   // The first update runs after shared sway constants have been initialized.
   root.updateMatrixWorld(true);
+  cabinFactory?.bindInstances(root,cabins);
   return{index,def,root,LIFT,LOOP,cableHeight:cableY,cabins,towerWheels,stationGuides,supports,S_LOAD,S_UNLOAD,wrapDist,inStation,targetSpeedAt,doorsOpenAt,stationInfo,timetable,stationTyres,stationRoofs,update,
     queueSlots,queuePoint,skiOff,load,boardingPoint:isChair?(seat=>worldPoint(5.0+Math.floor(seat/3)*.62,half+STATION.straight-S_LOAD-(seat%3)*.8)):null,unload,exit,worldPoint,routes:routes.filter(r=>r.liftIndex===index)};
 }
@@ -1200,13 +1211,13 @@ const lifts=RESORT.lifts.map(createLift);
   let localX;
   if(side===0){
    // Slender trees between the two lines make the cabin pass through the grove.
-   height=Math.min(height,(lift.LIFT.sideX-(lift.LIFT.isChair?1.95:1.1)-.35)/(radialExtent*width));
+   height=Math.min(height,(lift.LIFT.sideX-(lift.LIFT.halfWidth??1.1)-.35)/(radialExtent*width));
    if(height<4.5)return false;
    localX=(random()-.5)*.25;
   }else{
    const crownReach=inwardExtent*height*width;
    const windowGap=.22+random()*.52;
-   localX=side*(lift.LIFT.sideX+(lift.LIFT.isChair?1.95:1.12)+crownReach+windowGap+(layer?2.3+random()*3.4:0));
+   localX=side*(lift.LIFT.sideX+(lift.LIFT.halfWidth??1.12)+crownReach+windowGap+(layer?2.3+random()*3.4:0));
   }
   const point=planPoint(lift.def,localX,localZ),radius=radialExtent*height*width;
   if(lift.supports.some(s=>s.number&&Math.abs(localZ-s.z)<(s.long?7.5:6.5)+radius*.35))return false;
@@ -1332,6 +1343,7 @@ const _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3(), _v3 = new THREE.Vect
 function cabinInterior(chair, seat, out) {
   // standing passengers inside the box cabin, torso/head framed by the glass band
   if(chair.isSolo)return out.set((seat%2?1:-1)*.42,.2,(Math.floor(seat/2)-2.5)*.58).applyMatrix4(chair.body.matrixWorld);
+  if(chair.interiorFrame)return out.copy(chair.seatAnchors[seat]).applyMatrix4(chair.interiorFrame.matrixWorld);
   if(chair.isChair)return out.set((seat-(chair.riders.length-1)/2)*chair.seatPitch,chair.seatY-.95*chair.seatScale,.03).applyMatrix4(chair.suspension.matrixWorld);
   out.set(((seat % 2) ? 0.45 : -0.45), -4.46, (seat < 2 ? 0.4 : -0.4)).applyMatrix4(chair.suspension.matrixWorld);
   return out;
@@ -1359,8 +1371,8 @@ function releaseSeat(s,lift) {
 }
 function joinQueue(s){s.ticket=nextTicket++;s.state='queue';s.t=0;}
 function updateSkierEquipment(s){
-  const chairlift=lifts[s.liftIndex].LIFT.isChair,takingOff=s.state==='takeOff',puttingOn=s.state==='putOn';
-  const sitting=chairlift?(s.state==='ride'?1:s.state==='board'?smoothstep(0,.65,s.t):s.state==='unload'?1-smoothstep(0,.85,s.t):0):0;
+  const chairlift=lifts[s.liftIndex].LIFT.isChair,seated=chairlift||s.seatedCabin,takingOff=s.state==='takeOff',puttingOn=s.state==='putOn';
+  const sitting=seated?(s.state==='ride'?1:s.state==='board'?smoothstep(0,.65,s.t):s.state==='unload'?1-smoothstep(0,.85,s.t):0):0;
   s.seatedLegs.visible=sitting>.05;s.legs.visible=sitting<.5;
   let carried=['queue','load','board','ride','unload','exitWalk','apres','transfer'].includes(s.state)?1:0;
   if(takingOff)carried=smoothstep(.22,.85,s.t/1.15);
@@ -1408,7 +1420,7 @@ function updateSkier(s,dt){
         if(c.cameraOnly)continue;
         const seat=c.riders.findIndex(r=>r===null);
         if((lift.LIFT.reversible?c.station==='base'&&c.door>.8&&c.dwellRemaining>2:c.s>lift.S_LOAD-(chairlift?5.5:3.1)&&c.s<lift.S_LOAD-.5)&&seat>=0){
-          c.riders[seat]=s;s.state='load';s.chair=ci;s.seat=seat;break;
+          c.riders[seat]=s;s.seatedCabin=!!c.seatedCabin;s.state='load';s.chair=ci;s.seat=seat;break;
         }
       }
     }
@@ -1420,11 +1432,11 @@ function updateSkier(s,dt){
     else if(lift.LIFT.reversible?(c.station!=='base'||c.dwellRemaining<1):c.s>lift.S_LOAD+2.5){if(lift.LIFT.reversible){s.state='board';s.t=0;s.boardFrom=g.position.clone();}else{releaseSeat(s,lift);s.state='queue';}}
   }else if(s.state==='board'){
     const c=lift.cabins[s.chair],t=smoothstep(0,.65,s.t);
-    cabinInterior(c,s.seat,_v1);g.position.copy(s.boardFrom).lerp(_v1,t);g.rotation.set(c.sway*t,c.yaw+lift.root.rotation.y,0,'YXZ');
+    cabinInterior(c,s.seat,_v1);g.position.copy(s.boardFrom).lerp(_v1,t);g.rotation.set(c.sway*t,c.yaw+lift.root.rotation.y+(c.seatYaw?.[s.seat]||0)*t,0,'YXZ');
     g.scale.setScalar(1-t*.25);
     if(t>=1)s.state='ride';
   }else if(s.state==='ride'){
-    const c=lift.cabins[s.chair];cabinInterior(c,s.seat,_v1);g.position.copy(_v1);g.rotation.set(c.sway,c.yaw+lift.root.rotation.y,0,'YXZ');
+    const c=lift.cabins[s.chair];cabinInterior(c,s.seat,_v1);g.position.copy(_v1);g.rotation.set(c.sway,c.yaw+lift.root.rotation.y+(c.seatYaw?.[s.seat]||0),0,'YXZ');
     if(lift.LIFT.reversible?c.station==='top'&&c.door>.8:lift.wrapDist(c.s,lift.S_UNLOAD)<1.1){
       s.unloadTarget=lift.unloadPoint?lift.unloadPoint(c):null;
       s.exitFrom=g.position.clone();s.exitPitch=g.rotation.x;releaseSeat(s,lift);s.state='unload';s.t=0;
@@ -1861,7 +1873,7 @@ function animate() {
     const c=cabins[rideChair%cabins.length];
     // Cabin-local eye level: 1.43 m above the interior floor, between passengers.
     // Attach to the suspended body so turns and sway cannot leave the camera outside.
-    const eye=c.isChair||c.isSolo?c.eye:_v3.set(0,-3.03,.12);camera.position.copy(_v1.copy(eye).applyMatrix4(c.suspension.matrixWorld));
+    const eye=c.eye||_v3.set(0,-3.03,.12);camera.position.copy(_v1.copy(eye).applyMatrix4(c.suspension.matrixWorld));
     const lookHorizontal=Math.cos(rideLook.pitch);
     _v2.set(eye.x+Math.sin(rideLook.yaw)*lookHorizontal*5,
       eye.y+Math.sin(rideLook.pitch)*5,eye.z+Math.cos(rideLook.yaw)*lookHorizontal*5)

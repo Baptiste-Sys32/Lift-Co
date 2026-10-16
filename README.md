@@ -6,7 +6,7 @@ A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser;
 
 | Page | Purpose |
 | --- | --- |
-| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V1, 3.6 km terrain, three buildable lift types, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
+| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V1, 3.6 km terrain, seven buildable lift styles, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
 | [index.html](index.html) | Original working resort with Summit Express, skiers and the construction UI. |
 
 These two pages stay at the project root to preserve their browser addresses. V1 uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
@@ -17,11 +17,12 @@ The pre-change build is preserved in `archive/releases/pre-solo-hold-20261016/`.
 
 | Study | Selected models |
 | --- | --- |
+| [Rocharbois funitel](designs/funitel-rocharbois.html) | **Cabin A / Sotelem selected** — three tower and station proposals, moving-load cables and three independently supported cabin sections. [Notes](docs/funitel-rocharbois.md). |
 | [Chairlifts](designs/chairlifts.html) | **Classic** — four seats; **Ridge** — six seats. |
 | [Téléphériques](designs/telepheriques.html) | **Heritage** — compact; **Glacier** — panoramic. |
 | [Single-arm téléphérique](designs/single-arm.html) | **Solo** — the longer 4.5 m version. |
 
-Design studies include model inspection and animation previews. **Alpine gondola, Ridge and Classic are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is on hold; its model, runtime and complete-line study remain available for later work. All buildable lifts have station cable-entry guides, with yielding hold-down wheels, and night floodlights on their pylons. New lines no longer generate ski slopes automatically.
+Design studies include model inspection and animation previews. **Chair Lift: Classic and 6-Seater. Gondola: Classic, Panorama, Touring, Sigma Arbois and Sigma SP77. All seven are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is on hold; its model, runtime and complete-line study remain available for later work. All buildable lifts have station cable-entry guides, with yielding hold-down wheels, and night floodlights on their pylons. New lines no longer generate ski slopes automatically.
 
 ## Megève gondola cabin studies
 
@@ -33,7 +34,7 @@ Selected cabins: Arbois A, Jaillet C / Full shoulder, and Princesse A/C. The stu
 | Jaillet | [Cabin 2](designs/gondola-jaillet.html) | **C Full shoulder — selected**, compact front/rear grilles |
 | Princesse | [Cabin 3](designs/gondola-princesse.html) | **A Panorama + C Touring — selected**, reversed hangers |
 
-Jaillet V4 has a round footprint, a smaller base, fuller sides and curved shoulders that close over the roof. Shell and glazing share the same egg-shaped profile. The newest station photo and POMA patent drawing are included in the reference gallery. Its complete end shells slide around the fixed interior. Use **Slide the shell open** to inspect the proposal. These are shape studies awaiting selection; the original Alpine cabin remains in the game. [Reference and implementation notes](docs/gondola-megeve-studies.md).
+Jaillet V4 has a round footprint, a smaller base, fuller sides and curved shoulders that close over the roof. Shell and glazing share the same egg-shaped profile. The newest station photo and POMA patent drawing are included in the reference gallery. Its complete end shells slide around the fixed interior. Use **Slide the shell open** to inspect the proposal. The four selected cabins are now additional build options; the original Alpine cabin remains available as Classic. See [integration notes](docs/gondola-integration.md). [Reference and implementation notes](docs/gondola-megeve-studies.md).
 
 ## Experiments
 

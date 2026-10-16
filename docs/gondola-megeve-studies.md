@@ -1,6 +1,6 @@
 # Megève cabin studies
 
-Three separate HTML studies. Arbois A and Princesse A/C are selected; Jaillet C / Full shoulder is selected. The live resort's original Alpine gondola is unchanged.
+Three separate HTML studies. Arbois A and Princesse A/C are selected; Jaillet C / Full shoulder is selected. The four selected cabins are now additional build options in `empty-map.html`; the original Alpine remains available as Classic. Arbois A is Sigma Arbois, Jaillet C is Sigma SP77, and Princesse A/C are Panorama/Touring. See [integration notes](gondola-integration.md).
 
 | Cabin | Reference files | Variants | Study |
 | --- | --- | --- | --- |
