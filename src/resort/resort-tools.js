@@ -190,6 +190,9 @@ if(drag?.pointer===e.pointerId){const p=ground(e),f=feature();if(p&&f){f.points[
  }
 
  return{get active(){return active;},get resumeSpeed(){return savedSpeed;},get terrainLifts(){return current().lifts;},guests,network,update,constructionBegan(){handles.visible=false;brushCursor.visible=false;},constructionEnded(){handles.visible=true;redrawHandles();ui();},commitLift,commitDefinitions,previewTerrain(def){
+   // A station-only draft has no alignment. Keep existing ground/scenery until
+   // both endpoints exist; clearing a previous complete preview still runs below.
+   if(def&&(!def.base||!def.top))def=null;
    const key=def?JSON.stringify([def.id,def.type,def.arrivalProfile,def.base,def.mid,def.top,def.stationElevations,def.stationFoundations]):'';
    if(key===previewStationKey)return;const previous=previewStations;previewStationKey=key;previewDef=def;previewStations=def?[def.base,def.mid,def.top].filter(Boolean).map(p=>p.slice()):[];
    for(const p of [...previous,...previewStations])updateGround({x0:p[0]-90,x1:p[0]+90,z0:p[1]-90,z1:p[1]+90},def);

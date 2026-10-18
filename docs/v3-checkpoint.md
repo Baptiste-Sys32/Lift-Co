@@ -64,3 +64,14 @@ No automated repository test suite was added or run. Syntax validation and tempo
 In a fixed overview of the four-line QA resort, Quality submitted an approximately 1387 × 1141 drawing buffer, 800 vegetation instances and 1100 snow particles; Performance used 832 × 684, 306 instances and 275 particles. That is about **64% fewer pixels** and **62% fewer vegetation instances**. Main-pass draw calls remained 985 because the trees are instanced; fewer instances reduce submitted geometry rather than the number of calls. Main-pass triangle counters were 4,649,312 versus 4,540,772. Shadows add separate rendering work.
 
 The headless browser uses a slow software-rendering environment: the close station inspection reported about 1 FPS, so these measurements do **not** establish a smooth frame rate on the user's laptop. The actual laptop remains the hardware performance check; Performance is the conservative default. No simulation simplifications were introduced to claim a higher frame rate.
+
+
+## Placement hotfix (18 October 2026)
+
+Fixed a reproducible `Cannot read properties of null (reading 'project')` in the V3 scenery-clearing preview. After station A was placed, the preview passed an incomplete draft to alignment projection. Terrain/scenery preview now waits for both endpoints. Returning from a complete preview to an incomplete draft restores the previous terrain and scenery.
+
+Also fixed the first station's height control before station B exists: it uses the authored elevation or local ground until the calculated station datum is available. The inspector and height editor share that rule; the funitel still displays its common platform height when both stations exist. Apply remains blocked for incomplete lines. Save version stays 3.
+
+Temporary regression probes covered 39 incomplete states across all thirteen lift types; real canvas placement followed by height/foundation edits, Reset, Undo/Redo and Cancel for all thirteen types; and complete-to-incomplete preview restoration with identical vegetation counts/matrices and an unchanged resort document. The normal `empty-map.html` loaded both patched scripts and completed first-station editing with an empty error overlay. All 44 source/module syntax checks passed; no repository test suite was added or run.
+
+Patched scripts have a `v=3.0.1` cache revision, so reloading the game fetches the fix. Pre-fix sources are in `archive/backups/v3-partial-placement-20261018/`; the updated checkpoint is `archive/releases/v3-20261018-hotfix-1/`. The original V3 snapshot is retained.

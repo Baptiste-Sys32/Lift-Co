@@ -280,3 +280,5 @@ Integration verification (2026-10-18): syntax checks passed for the twelve touch
 ## V3 checkpoint
 
 Graphics presets and individual device settings, focused workspaces, rounded station banks, conforming terrain refinement and embedded/scaled concrete footings are implemented. See the [V3 release record](v3-checkpoint.md) for exact behavior, save backups, research and verification. Endpoint status rings remain green/red; selectable connection targets remain teal. Operational rules, ability routing, entrance returns, 25 m piste measurement and ordered terrain-layer replay are unchanged.
+
+Single-station drafts remain editable. Their height/foundation controls work before the other endpoint is placed; terrain and scenery previews wait for both endpoints. Apply still requires a complete, valid line. See the placement hotfix record in [V3 notes](v3-checkpoint.md).
