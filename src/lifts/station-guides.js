@@ -1,6 +1,6 @@
 // Compact, three-sheave station receptors. Large approach trains belong to the
 // player's separate towers; the terminal itself has no automatic extra pole.
-window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false}){
+window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false,ropeRadius=.055}){
  const group=new T.Group();group.name='Station cable guides';root.add(group);
  const steel=new T.MeshStandardMaterial({color:fixedGrip?0x315b55:0x819092,roughness:.5,metalness:.55});
  const rubber=new T.MeshStandardMaterial({color:0x293337,roughness:.7,metalness:.2});
@@ -20,12 +20,16 @@ window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false}){
    for(let k=0;k<count;k++){
     const distance=start+dir*(.3+(length-.6)*k/(count-1)),slope=layout.slopeAt(distance),normalY=1/Math.hypot(1,slope);
     const contact=point(distance,side*railX),wheel=new T.Mesh(wheelG,rubber);
-    wheel.position.copy(contact).add(new T.Vector3(0,sign*.365*normalY,sign*.365*slope*normalY));
-    wheel.castShadow=true;group.add(wheel);wheel.add(new T.Mesh(hubG,alloy));
+    wheel.position.copy(contact).add(new T.Vector3(0,sign*(.31+ropeRadius)*normalY,sign*(.31+ropeRadius)*slope*normalY));
+    const carrier=new T.Group();group.add(carrier);
+    wheel.castShadow=true;carrier.add(wheel);wheel.add(new T.Mesh(hubG,alloy));
     const spoke=new T.Mesh(new T.BoxGeometry(.39,.4,.04),steel);wheel.add(spoke);
     const mount=new T.Vector3(frameX,wheel.position.y+sign*.19,wheel.position.z);frame.push(mount);contacts.push(wheel.position.clone());
-    beam(new T.Vector3(side*(railX-.18),wheel.position.y,wheel.position.z),new T.Vector3(frameX,wheel.position.y,wheel.position.z),.09,.09);
-    wheels.push({m:wheel,dir:(side>0?-1:1)*(sign>0?-1:1),radius:.31});
+    const axle=beam(new T.Vector3(side*(railX-.18),wheel.position.y,wheel.position.z),new T.Vector3(frameX,wheel.position.y,wheel.position.z),.09,.09);carrier.add(axle);
+    const anchor=mount.clone(),axleEnd=new T.Vector3(frameX,wheel.position.y,wheel.position.z);
+    const slider=sign>0?beam(anchor,axleEnd,.07,.08):null;
+    wheels.push({m:wheel,dir:(side>0?-1:1)*(sign>0?-1:1),radius:.31,
+      compression:sign>0,side,contactZ:contact.z,carrier,anchor,axleEnd,slider,restY:axleEnd.y});
    }
    for(let k=1;k<frame.length;k++)beam(frame[k-1],frame[k],.13,.2);
    // The approved study's swept receptors, fitted to the live rope contacts.
@@ -49,5 +53,22 @@ window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false}){
   }
  }
  group.userData.heads=heads;
- return {group,wheels,heads};
+ const delta=new T.Vector3(),axis=new T.Vector3(0,0,1);
+ function update(carriers){
+  for(const w of wheels){
+   if(!w.compression)continue;
+   let lift=0;
+   for(const c of carriers){
+    if(Math.abs(c.g.position.x-w.side*railX)>.65)continue;
+    const d=Math.abs(c.g.position.z-w.contactZ),t=Math.max(0,Math.min(1,(d-.28)/.97));
+    lift=Math.max(lift,.14*(1-t*t*(3-2*t)));
+   }
+   w.carrier.position.y=lift;w.axleEnd.y=w.restY+lift;
+   delta.subVectors(w.axleEnd,w.anchor);
+   w.slider.position.copy(w.anchor).add(w.axleEnd).multiplyScalar(.5);
+   w.slider.scale.z=delta.length()/w.slider.geometry.parameters.depth;
+   w.slider.quaternion.setFromUnitVectors(axis,delta.normalize());
+  }
+ }
+ return {group,wheels,heads,update};
 }};

@@ -1,11 +1,10 @@
 # Build and operate the Upper Snowfields resort
 
-Entry point: `empty-map.html`. The original `index.html` and approved lift model
-sources are unchanged. The new controls use the existing sidebar and camera.
+Entry point: `empty-map.html`. The original `index.html` stays separate; the approved carrier designs are retained. The new controls use the existing sidebar and camera.
 
 ## Construction
 
-- Edit a lift and choose Station A/B to set its boarding floor in 0.25 m steps.
+- Edit a lift and choose Station A/B (or Palace8 Station M) to set its boarding floor in 0.25 m steps.
   Select Terrace for cut/fill or Raised to retain the hillside. Raised stations
   have structural feet; the footprint is checked against hillside penetration.
   The 3-Section Train retains one common platform datum.
@@ -15,6 +14,13 @@ sources are unchanged. The new controls use the existing sidebar and camera.
 - Drag tower footing rings along the alignment. Side handles and profile dots
   change height. Copy/Paste transfers height and tilt, retaining the target ID
   and position. Existing grouping and tilt controls remain available.
+- All placement paths share finite-coordinate, boundary, length, tower-height,
+  ±20° tilt and footing-spacing checks, including loading V1/V2 saves. Ordinary
+  towers need 1.7 m between feet; reversible pylons need 10 m. Terminal margins remain
+  model-specific (14 m normally, 24 m for the train and Solo). Non-horizontal lifts need
+  their mountain platform at least 2 m above the valley platform; the train may
+  have equal-height platforms. Terminal footprint checks include rotated corners,
+  and exposed parallel/crossing corridors need 7 m of vertical separation.
 - Cancel discards the preview. Construction pauses guests and machinery while
   camera navigation stays available. Apply rebuilds affected runtimes in place.
 - The workbench provides session Undo/Redo. Each committed construction edit is
@@ -26,15 +32,29 @@ sources are unchanged. The new controls use the existing sidebar and camera.
 Choose a lift in Your resort. Open/Closed governs new boarding; Run/Stop governs
 that line's motion. Cable speed ramps at 0.65 m/s² and carriers retain their
 current loop positions. Fixed-grip chairs use the selected speed throughout;
-detachable terminal crawl remains controlled by the model.
+detachable terminal crawl remains controlled by the model and never exceeds
+its selected cable speed. Boarding is restricted to the gate approach while the
+carrier's doors or safety bar are open, at either terminal.
 
 Carrier count and dispatch spacing are linked and clamped to catalog dispatch
 pitch. Dispatch spacing is the equivalent line distance at catalog maximum
 speed, rather than the packed distance inside a detachable terminal. Fleet
 changes rebuild immediately and return assigned guests to the terminal where
-they boarded. One carrier remains reserved for the camera. The train's two
-paired carriers cannot be reconfigured. Readouts show queues, occupants and an
-estimated capacity; capacity is an estimate rather than a throughput guarantee.
+they boarded. One carrier remains reserved for the camera. The train and Solo each have two
+paired carriers that cannot be reconfigured. Readouts show queues, occupants and an
+estimated capacity per direction. The estimate integrates the actual loop with
+its terminal crawl and excludes the camera carrier. Closed or stopped lifts
+show zero capacity; reservations and guests still boarding count as queued
+until fully aboard; riding matches the global HUD. This is an upper bound: it does not simulate a full-carrier dispatch
+schedule, queue service guarantees or measured throughput.
+
+Catalog speeds and carrier capacities are game values retained for the approved
+models; this checkpoint does not retune them to manufacturer specifications.
+The existing train scales its complete model clock with selected speed, including
+acceleration, braking and station dwell. That deliberate simplification remains;
+the capacity estimate includes its 3 s acceleration, 16 s braking and 12 s dwell
+at catalog speed. Boarding avatars approach sequentially, so actual fills may be
+lower than the readout, especially for a 75-place train.
 
 ## Terrain, pistes and paths
 
@@ -71,7 +91,7 @@ Make junction splits a route at its selected interior point and explicitly
 connects both halves to the new junction. Other routes can connect endpoints to
 that junction. The pending-route selector allows work on multiple curves.
 
-The entrance selector chooses either terminal of any lift; the first built
+The entrance selector chooses any passenger station, including Palace8 Station M; the first built
 station is the default. Walking edges are bidirectional, piste edges descend in
 drawn order, and lifts board/unload at both ends. Guests receive one of four
 abilities equally, choose reachable descents with queue/travel/variety costs,
@@ -79,6 +99,10 @@ and require an entrance return before leaving. With no reachable outing they
 wait at the entrance. Closures replan remaining travel; people already aboard
 finish unless their lift is stopped. Changed occupied infrastructure returns
 guests to the entrance with a notice. Completed descents alone increase runs.
+
+The global skier HUD shows green/blue/red/black ability counts and the number
+waiting at the entrance (idle there, with no remaining plan or current edge).
+The existing runs-served counter remains the only served-runs tally.
 
 ## Persistence and verification
 
@@ -91,8 +115,162 @@ blocked if the pre-change browser backup cannot be made. Export includes it.
 
 Source originals are in `archive/backups/before-build-operate-20261016/`.
 
-Completed verification: JavaScript syntax checks, local script-reference and
-HTML-ID inspection, and direct console inspection of layer restoration,
-ability-aware return routing, migration and history data. No automated test
-suite was added or run. Browser tools reported no available browser; visual
-acceptance scenarios 1–10 and laptop rendering/performance remain unverified.
+Checkpoint verification (2026-10-17): JavaScript syntax checks; targeted
+placement probes for rotated terminal corners, parallel/crossing clearance,
+invalid/degenerate moves and tower limits; headless Chrome load/error-overlay
+checks (with the animation loop paused between probes); all eight existing catalog types constructed with matching carrier
+capacities; a fresh V2 save reloaded with types, IDs, heights, tilt, grouping and
+operating settings intact. Boarding-window and stopped/closed readout checks
+also ran against the browser runtime, including an actual station drag that
+collapsed the line and blocked Apply without an error-overlay entry. A V1
+payload migrated with its exact backup and one-time piste conversion; a forced
+backup failure left the original slot untouched and blocked commits/autosave.
+HUD probes checked exact ability/entrance counts and the single served counter. These are temporary checkpoint probes,
+not a new repository test suite. Full interactive scenarios 1–10 and laptop
+frame-rate/performance review remain outside this checkpoint verification.
+
+Deliberately unchanged: document version 2 and V1 migration, ability-aware outing
+selection and entrance-return fallback, sustained 25 m/cross-slope measurement,
+ordered terrain-layer replay, pre-change backup gating and Ctrl/Cmd+Z routing.
+Station terraces remain analytical shaping tied to station definitions; full
+height-cache replay is still used for some completed edits. This checkpoint
+stabilizes that implementation rather than completing the broader resort plan.
+
+
+### Solo téléphérique integration
+
+Solo is buildable in the resort with its approved timber halls, Heavy Portal pylons,
+fixed carrying ropes, twin traction circuits and two paired 12-person cabins.
+Catalog cruise is 10.25 m/s, pylon passage is limited to 7 m/s, and native dwell is
+8 seconds. Speed control scales the shared schedule, including dwell (the same
+simplification used for the reversible train). One cabin stays empty for the ride
+camera. Capacity readouts use the native full round-trip duration. Both ends board.
+
+The valley guide remains inclined at 12°. Station B offers an inclined 20° dock
+or a flat hall. New Solo lines default to the flat hall; existing saves retain the
+inclined dock until edited. Both profiles need a clear approach from the valley;
+the flat hall additionally requires an underlying cliff. Terrace construction clears two cabin channels through the
+station apron and up to 24 m into the approach, blending out by 34 m. Cut depth is
+limited to 8 m; deeper cuts and any remaining swept-cabin terrain intersection block
+Apply with an editable placement message. Raise the floor or move the station to
+resolve them. Raised foundations preserve the hillside and require natural clearance.
+This does not excavate a tunnel through the mountain or flatten the whole lift line.
+
+Solo earthworks derive from its station positions, elevations and foundations on top
+of ordered sculpt/piste layers, matching the existing station-terrace system. Edits,
+cancel, deletion and undo recompute them without leaving old cuts behind. Station
+chunks gain 2 m terrain detail. Solo does not generate close-pass woodland trees;
+existing scenery in the lift corridor is cleared through the shared scenery system.
+No save-schema change: version 2 and the version-1 migration remain in place. A
+pre-integration browser-save backup uses the existing blocking backup gate.
+
+
+### Technical lift names
+
+The builder uses capacity and mechanism names from the shared catalog: fixed-grip
+and detachable chairlifts, detachable monocable gondolas, reversible aerial tramways
+and reversible funitels. Solo is in its own Aerial tramways group. Gondola variants
+use descriptive cabin styles; design-study nicknames are retained as documentation
+aliases rather than presented as manufacturer identifications. The same catalog
+supplies HUD names and default names for new lines. Existing user-named lines and
+all saved type IDs remain unchanged. See [the naming table and sources](lift-types.md).
+
+
+### Solo span clearance and tall pylons
+
+Solo pylons now allow 3–150 m height, with a 45 m default for newly added pylons.
+Existing pylon heights stay unchanged. Tall Heavy Portal masts add lattice bays
+at roughly 5 m intervals instead of stretching the original seven bays.
+
+The carrying/haul profile solver checks unilateral saddle contact at open pylons.
+The enclosed station docking-guide transitions are constrained paths and do not
+force the whole cable line to lose tension to match their prescribed docking angles.
+Free spans retain gravity catenaries; carrier wheels, couplings, guides and ropes
+all sample those same profiles. Low pylons can still require tension adjustment.
+The builder displays the resulting maximum free-span sag, including that adjustment,
+rather than the misleading generic metres-per-50-metres label. Taller pylons and
+sensible approach supports permit longer clear spans; terrain and saddle checks
+still block an unsuitable layout. The station guide constraint is a game model,
+not a full structural/tension-load simulation. Save version remains 2.
+
+
+### Flat upper arrival for Solo
+
+Edit Solo, select **Station B**, and choose **Flat inside · cliff approach**.
+The carrying and haul ropes, trolley, rollers and station frame remain horizontal
+through the boarding hall (15 m towards the valley). The rounded entrance
+transition occupies 15–18 m from the dock, ending 2.5 m beyond the façade. Its
+Heavy Portal-style girders end at 18.25 m: a 2.75 m external nose, supported by
+a flared, X-braced mast embedded in the front podium. The former long external
+cage is removed. The last pylon must be at least 30 m
+from Station B; Station A keeps its 24 m margin. Flat upper halls use continuous fixed-rope saddles on brackets at about 1.6 m
+pitch, plus moving haul rollers at about 1.4 m pitch.
+Flat and inclined station profiles use the same catenary, machinery, carriage-contact and guest-boarding code.
+
+A flat arrival is blocked on a plateau or gentle hillside. The underlying terrain
+beneath each cabin lane must be at least 8 m lower 34 m out from the dock, and must
+include a drop of at least 10 m over a 25 m section within the first 60 m. This is
+the game's cliff criterion, sampled before station terraces/channel cuts. Merely
+raising the building or excavating its channels cannot satisfy it. Full swept-cabin
+clearance and the existing 8 m earthwork-depth limit also apply. The flat channel
+floor stays level inside, then falls into the approach; it does not reshape a
+plateau into a cliff. Changing profile previews the terrain and supports Apply,
+Cancel and local/session Undo/Redo. The optional `arrivalProfile` field is saved
+in the existing version-2 lift definition; older absent values mean inclined.
+
+### Solo suspension motion
+
+Solo's fixed carrying rope and twin haul grips keep the trolley on the solved
+profile. The single hanger and cabin swing about the upper attachment pin;
+passengers and the ride camera follow that suspended body frame. Changes in
+carriage velocity and rope grade excite a damped pendulum, so braking into a
+station, leaving it, and passing a pylon produce a short response. There is no
+circulating-grip turnaround kick, free yaw, wind or arbitrary idle oscillation.
+Fore-and-aft motion is limited to about 1.6°, with at most 0.18° of coupled lateral
+roll. Station capture starts 8 m before the guide (20 m from the base dock, 26 m
+from a flat upper dock), progressively increases damping and reduces those limits
+(to about 0.225° pitch / 0.018° roll at the dock) before boarding.
+
+Sway uses actual simulation seconds and speed-scaled carriage velocities,
+including operating-speed ramps. Stop freezes the cable/machinery while residual
+cabin motion settles; global Pause and construction freeze the suspension too.
+The independent workshop's journey scrub resets the pendulum rather than applying
+a false acceleration from a time jump. Swing is transient runtime state; no save
+schema or stored operating settings change. Solo's swept-ground check includes
+the hanging-body offset and small swing envelope. Inclined dock datums account
+for the moving attachment point so neutral boarding floors retain their level.
+
+
+Solo station carrying ropes now sit on continuous saddles, matching the pylons;
+the old stationary support-wheel rows are removed. All small haul rollers at
+stations and pylons use absolute haul displacement divided by wheel radius,
+with opposite rotation on the two lanes and reversal with the shuttle. Small
+silver face marks make their rotation visible. Instanced wheel matrices update
+with that phase; dwell and Stop keep those wheels stationary.
+
+
+### Approved chairlift and Palace8 integration
+
+All four B designs are buildable in `empty-map.html`, alongside the previous nine choices. Existing type IDs and the four-person Princesse cabins retain their meanings.
+
+| Stable type ID | Approved model | Line maximum | Station crawl | Passenger stations |
+| --- | --- | --- | --- | --- |
+| `chair-arcabulle` | Full shoulders / six-seat bubble chair | 5 m/s | 0.65 m/s | A, B |
+| `chair-alps5` | Round crown / fixed-grip double | 1.8 m/s | selected line speed | A, B |
+| `chair-panoramabahn` | Deep bubble / four-seat bubble chair | 5 m/s | 0.65 m/s | A, B; angle structure has no access |
+| `gondola-princesse8` | Broad waist / eight-seat Palace8 | 6 m/s | 0.4 m/s | A, M, B |
+
+The old double deliberately uses a fixed clamp, Classic canopy, period mast and no detachable conveyor. The real Alps n°5 reference is detachable; the game adaptation follows the user's explicit override. The other approved terminal shells, open angle structure, curved mid-station and gondola-style pylon are retained. Detailed bullwheels, haul-deflection pulleys, conveyor tyres, carrier running wheels and tower sheaves animate at their corresponding local carrier/rope speeds, with opposite travel on the two lanes. Grips pitch with the cable, release on supported station rails and reattach before leaving. Bubbles/bars open at passenger stops and stay closed through the passenger-free turn. Palace8 doors face the outside boarding platform, and its eight occupied seats show eight corresponding ski-rack positions.
+
+Only Panoramabahn and Palace8 have two-span layouts. Choosing one and placing A/B automatically creates its middle position. Drag its ring to reshape the bend; choose **Angle structure** or **Station M** to edit its datum and foundation. The angle structure's height field controls transfer-rope elevation rather than a passenger floor. Both turn directions are supported from 5° to 55°, with at least 75 m between the middle position and each terminal. Towers and their tilted heads stay 14 m beyond the ends of the transfer structure. Invalid moves remain editable and block Apply.
+
+Distances, tower fractions, the elevation profile, cable sampling, scenery clearing and crossing checks follow the actual supported centreline through the middle. Moving any station projects existing tower feet from their previous world positions onto that alignment. Station overlap and raised-foundation checks include the bent outgoing footprint. New-family towers default to 12 m and allow 3–60 m; existing models' limits are unchanged. Tilted columns retain fixed feet; close towers retain shared foundations and use shorter sheave banks to fit their spacing. Sheave centres use the same rope profile and contact normals as the carriers. Raised stations use a supported raft and piers down to the hillside, without station terrain shaping. Terraces are tied to each station definition and disappear/recompute on move, cancellation, deletion and undo.
+
+Palace8 adds an explicit M snap target and entrance choice. Its graph has all six directional station-to-station rides. Through guests stay in the same cabin; guests alight only at their destination. Mid-station boarding uses separate travel directions. Panoramabahn's angle structure creates no pedestrian target, queue or graph node. Reconfiguring a fleet returns riders to their original boarding station and preserves their intended destination, including M. Speed, opening, stopping and fleet changes remain one coupled operation for the complete lift. One carrier stays reserved for the ride camera.
+
+The cable/transfer model remains a game approximation: one synchronized circulating haul loop follows the supported deflection through each intermediate structure. The historical Princesse has coupled sections and multiple drives; independent rope circuits, tensions, load transfer and manufacturer-specific brake/dispatch timing are not simulated. Station creep and compact transfer acceleration are chosen for this game geometry. There is no money, construction timer, physical carrier garage or independent section control.
+
+Persistence stays version 2. The two dedicated layouts add optional `mid`, `stationElevations.mid` and `stationFoundations.mid` values inside their existing lift records; ordinary lift records need no middle position. All previous IDs, V1 migration, terrain layers and operating fields retain their meaning. Before any save write, browser slots are copied once to `lift-co-pre-next-lifts-20261018:<original key>` through the existing blocking backup gate. Source originals are in `archive/backups/next-lift-game-integration-20261018/`.
+
+
+Integration verification (2026-10-18): syntax checks passed for the twelve touched/new JavaScript sources and the main inline module. Isolated Chrome loaded all thirteen catalog choices with an empty error overlay. A fresh V2 save reloaded all four new types with tower tilt and operating settings intact; a V1 data probe retained its original type, tower settings and grouping. Browser probes exercised all twelve directional passenger journeys across the four additions, including Palace8 through travel without changing seats. Speed ramps retained riders, Stop froze carriers and machinery, and Resume moved them again. A fleet change returned a Palace8 rider to M's correct queue with the original destination; session Undo/Redo restored fleet sizes. An actual M-ring drag passed local undo/redo, Apply and session undo/redo. Additional probes checked a shared foundation, carrier-free construction previews, raised stations, both turn signs, and blocking messages for missing/straight/too-close intermediate positions. Static geometry is merged and repeated moving parts are instanced; dense rope sampling is limited to station machinery. No automated repository test suite was added or run, and laptop FPS remains a user review item. The original `index.html` checksum is unchanged.

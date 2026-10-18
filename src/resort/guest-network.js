@@ -11,8 +11,8 @@ window.LiftCoGuestNetwork=function(ctx){
  }
  function changed(removedIds=[]){revision++;let affected=0;for(const s of skiers){if(removedIds.some(id=>s.edge?.liftId===id||s.edge?.route?.id===id||s.networkNode?.startsWith(id+':'))){reset(s);affected++;}else if(!s.edge){s.plan=[];s.networkRevision=revision;}}if(affected)ctx.notice(affected+' guests returned to the resort entrance after construction.');}
  function release(s,lift){const c=lift?.cabins[s.chair];if(c?.riders[s.seat]===s)c.riders[s.seat]=null;s.chair=-1;s.seat=-1;}
- function info(lift,end){
-  if(lift.endInfo)return lift.endInfo(end);
+ function info(lift,end,dest){
+  if(lift.endInfo)return lift.endInfo(end,dest);
   const top=end==='top',half=ctx.liftFrame(lift.def).length/2,sign=top?-1:1;
   return{end,queuePoint:i=>lift.worldPoint(0,sign*(half+4+i*.9)),load:lift.worldPoint(0,sign*half),unload:lift.worldPoint(0,-sign*half)};
  }
@@ -36,25 +36,26 @@ window.LiftCoGuestNetwork=function(ctx){
    }else{const target=network.nodes.get(e.to);if(!target){reset(s);return;}if(walkTo(s,target,dt))complete(s);}
    if(s.state==='ski')ctx.leaveSkiTracks?.(s);else s.lastTrack=null;if(lifts[s.liftIndex])updateSkierEquipment(s);return;
   }
-  const lift=lifts.find(l=>l.def.id===e.liftId);if(!lift){reset(s);return;}s.liftIndex=lifts.indexOf(lift);const station=info(lift,e.end),dest=e.end==='base'?'top':'base',moving=lift.operations.running;
+  const lift=lifts.find(l=>l.def.id===e.liftId);if(!lift){reset(s);return;}s.liftIndex=lifts.indexOf(lift);const dest=e.dest||(e.end==='base'?'top':'base'),station=info(lift,e.end,dest),arrival=lift.layout?.path?info(lift,dest,e.end):station,moving=lift.operations.running;
   if(['queue','load'].includes(s.state)&&!lift.operations.open){release(s,lift);s.plan=[];s.edge=null;s.state='networkIdle';return;}
   if(s.state==='queue'){
-   const line=skiers.filter(o=>o.edge?.liftId===e.liftId&&o.edge.end===e.end&&o.state==='queue').sort((a,b)=>a.ticket-b.ticket),index=line.indexOf(s),target=station.queuePoint(Math.max(0,index));
+   const line=skiers.filter(o=>o.edge?.liftId===e.liftId&&o.edge.end===e.end&&(e.end!=='mid'||o.edge.dest===dest)&&o.state==='queue').sort((a,b)=>a.ticket-b.ticket),index=line.indexOf(s),target=station.queuePoint(Math.max(0,index));
    const arrived=walkTo(s,target,dt);s.qi=index;
-   if(index===0&&arrived&&moving)for(let i=0;i<lift.cabins.length;i++){const c=lift.cabins[i];if(c.cameraOnly)continue;const seat=c.riders.indexOf(null);const ready=lift.LIFT.reversible?c.station===e.end&&c.door>.8&&c.dwellRemaining>2:lift.wrapDist(c.s,station.gate)<(lift.LIFT.isChair?4:2.5);if(ready&&seat>=0){c.riders[seat]=s;s.chair=i;s.seat=seat;s.state='load';s.t=0;s.seatedCabin=!!c.seatedCabin;break;}}
+   if(index===0&&arrived&&moving)for(let i=0;i<lift.cabins.length;i++){const c=lift.cabins[i];if(c.cameraOnly)continue;const seat=c.riders.indexOf(null);const ready=lift.LIFT.reversible?c.station===e.end&&c.door>.8&&c.dwellRemaining>2:lift.boardingWindow(c,e.end,'reserve',dest);if(ready&&seat>=0){c.riders[seat]=s;s.chair=i;s.seat=seat;s.state='load';s.t=0;s.seatedCabin=!!c.seatedCabin;break;}}
   }else if(s.state==='load'){
    const c=lift.cabins[s.chair];if(!c){reset(s);return;}
    const target=lift.LIFT.reversible&&lift.boardingPoint?lift.boardingPoint(s.seat,c):station.load;
+   if(lift.LIFT.reversible&&!lift.endInfo&&e.end==='top'){target.x+=lift.def.top[0]-lift.def.base[0];target.z+=lift.def.top[1]-lift.def.base[1];}
    const arrived=walkTo(s,target,moving?dt:0,4);
-   const ready=lift.LIFT.reversible?c.station===e.end&&c.door>.7:lift.wrapDist(c.s,station.gate)<2;
+   const ready=lift.LIFT.reversible?c.station===e.end&&c.door>.7:lift.boardingWindow(c,e.end,'board',dest);
    if(arrived&&ready&&moving){s.state='board';s.t=0;s.boardFrom=s.g.position.clone();}
    else if(s.t>6&&moving){release(s,lift);s.state='queue';s.ticket=ctx.nextTicket();s.t=0;}
   }else if(s.state==='board'){
    if(!moving){s.t-=dt;return;}const c=lift.cabins[s.chair];cabinInterior(c,s.seat,a);const t=Math.min(1,s.t/.5);s.g.position.copy(s.boardFrom).lerp(a,t);s.g.scale.setScalar(1-.25*t);if(t>=1){s.state='ride';s.t=0;}
   }else if(s.state==='ride'){
-   const c=lift.cabins[s.chair];cabinInterior(c,s.seat,a);s.g.position.copy(a);s.g.rotation.set(c.sway||0,c.yaw+lift.root.rotation.y+(c.seatYaw?.[s.seat]||0),0,'YXZ');
-   const arrived=lift.LIFT.reversible?c.station===dest&&c.door>.8:lift.wrapDist(c.s,station.unloadGate)<1.2;
-   if(arrived&&moving){s.unloadFrom=s.g.position.clone();s.unloadTo=lift.LIFT.reversible&&lift.unloadPoint?lift.unloadPoint(c):station.unload;if(lift.LIFT.reversible&&dest==='base')s.unloadTo=lift.worldPoint(0,ctx.liftFrame(lift.def).length/2);release(s,lift);s.state='unload';s.t=0;}
+   const c=lift.cabins[s.chair];cabinInterior(c,s.seat,a);s.g.position.copy(a);s.g.rotation.set(c.sway||0,c.yaw+lift.root.rotation.y+(c.seatYaw?.[s.seat]||0),c.swayRoll||0,'YXZ');
+   const arrived=lift.LIFT.reversible?c.station===dest&&c.door>.8:lift.wrapDist(c.s,arrival.unloadGate)<1.2;
+   if(arrived&&moving){s.unloadFrom=s.g.position.clone();s.unloadTo=lift.LIFT.reversible&&lift.unloadPoint?lift.unloadPoint(c):arrival.unload;if(lift.LIFT.reversible&&!lift.endInfo&&dest==='base')s.unloadTo=lift.worldPoint(0,ctx.liftFrame(lift.def).length/2);release(s,lift);s.state='unload';s.t=0;}
   }else if(s.state==='unload'){
    const t=Math.min(1,s.t/.8);s.g.position.copy(s.unloadFrom).lerp(s.unloadTo,t);s.g.scale.setScalar(.75+.25*t);s.x=s.g.position.x;s.z=s.g.position.z;if(t>=1){s.state='networkExit';s.g.rotation.x=s.g.rotation.z=0;}
   }else if(s.state==='networkExit'){

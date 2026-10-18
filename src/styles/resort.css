@@ -27,3 +27,21 @@ body.ui-hidden #transport{left:24px;right:auto;bottom:24px}
 body.ui-hidden #transport>.row:not(:first-child),body.ui-hidden #transport>.row:first-child>:not(#btnPause){display:none}
 body.ui-hidden #transport #btnPause{min-width:35px;min-height:35px}
 body.ui-hidden #err{left:24px}
+
+/* Resort workbench: snow-paper controls, brass selection, teal connections. */
+.resort-tools{border-top:2px solid var(--gold);padding-top:14px;margin-bottom:22px}
+.resort-tools h2{font:21px Georgia,serif;margin:17px 0 10px}
+.resort-tools select,.resort-tools input:not([type=range]){box-sizing:border-box;width:100%;padding:7px 8px;border:1px solid var(--line);background:#faf7ed;color:var(--ink);border-radius:3px}
+.resort-tools label{display:block;margin-top:10px;font-size:11px}
+.resort-tools .row>label{width:50%;min-width:0}
+.resort-tools .row{gap:6px;margin-top:9px}
+.resort-tools .row>button{flex:1;min-width:0;white-space:normal}
+.resort-tools button{font-size:11px}
+.resort-tools #featureList{display:grid;gap:5px;margin-top:12px}
+.resort-tools #featureList button{text-align:left}
+.resort-tools #operations{padding-bottom:13px;border-bottom:1px solid var(--line)}
+#earthEditor{margin-top:16px;padding:12px 10px;background:#e9eadf;border-left:2px solid var(--gold)}
+#earthConflicts{white-space:pre-line;line-height:1.65}
+#stationControls input,#stationControls select{width:100%;box-sizing:border-box;padding:7px;border:1px solid var(--line);background:#faf7ed;color:var(--ink)}
+#stationControls label{display:block;margin:10px 0 5px}
+#earthEditor[hidden],#routeSettings[hidden],#pointSettings[hidden],#stationControls[hidden],#brushSettings[hidden],#operations[hidden]{display:none}

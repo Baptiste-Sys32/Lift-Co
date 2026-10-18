@@ -2,14 +2,41 @@
 
 Open `empty-map.html`, choose **Build a lift**, then select the lift type before placing stations and towers.
 
-| Type ID | Model | Capacity | Status |
-| --- | --- | --- | --- |
-| `gondola` | Alpine enclosed gondola | 4 standing passengers | Buildable |
-| `ridge` | Ridge open chairlift | 6 seated passengers | Buildable |
-| `classic` | Classic fixed-grip chairlift | 4 seated passengers | Buildable |
-| `solo` | Solo reversible téléphérique | 12 standing passengers | Buildable in V1 |
+| Type ID | Technical menu name | Capacity |
+| --- | --- | --- |
+| `gondola` | 4-person detachable gondola — sliding-door cabin | 4 standing |
+| `classic` | 4-seat fixed-grip chairlift | 4 seated |
+| `ridge` | 6-seat detachable chairlift | 6 seated |
+| `princesse-panorama` | 4-person detachable gondola — panoramic cabin | 4 seated |
+| `princesse-touring` | 4-person detachable gondola — tall cabin | 4 seated |
+| `arbois` | 4-person detachable gondola — faceted cabin | 4 seated |
+| `jaillet` | 4-person detachable gondola — clamshell cabin | 4 seated |
+| `solo` | 12-person reversible aerial tramway | 12 standing per cabin |
+| `funitel-rocharbois` | 75-person reversible funitel — articulated cabin | 75 standing per cabin |
+| `chair-arcabulle` | 6-seat detachable bubble chairlift — Arcabulle | 6 seated |
+| `chair-alps5` | 2-seat fixed-grip chairlift — Alps-inspired | 2 seated |
+| `chair-panoramabahn` | 4-seat detachable bubble chairlift — angle station | 4 seated |
+| `gondola-princesse8` | 8-person detachable gondola — passenger mid-station | 8 seated |
 
-Classic is integrated into the game with its approved compact white/glass canopy, green supports and permanent rope clamps. The original `experiments/classic-chairlift.html` study remains available. Heritage and Glacier remain design studies. Solo is integrated into Upper Snowfields V1.
+All thirteen types are buildable. Solo offers an inclined or level upper hall; the level hall requires a cliff.
+The dropdown groups **Chairlifts**, **Monocable gondola lifts**, **Aerial tramways**
+and **Funitels**. **Surface lifts** stays hidden until a model is available.
+Solo belongs to Aerial tramways, separately from circulating gondolas.
+
+Naming follows the mechanism and capacity, with descriptive cabin styles where
+several gondolas share the same mechanism. POMA uses
+[detachable gondola lift](https://www.poma.net/en/product-range/detachable-gondola-lift-mountain/)
+and [detachable chairlift](https://www.poma.net/en/product-range/detachable-chairlift/);
+Doppelmayr uses [reversible aerial tramway](https://www.doppelmayr.com/en/systems/reversible-aerial-tramways/).
+Cabin-style suffixes describe the game models; they are not verified factory model
+numbers. Earlier names (Classic, Panorama, Touring, Sigma Arbois, Sigma SP77, Solo
+and 3-Section Train) remain design-study aliases in the notes below. In particular,
+Sigma Arbois was a descriptive game name and Sigma SP77 was user-selected, not a
+confirmed identification; see [cabin integration notes](gondola-integration.md).
+
+The earlier naming pass changed display names, menu grouping and default names for new lines. Internal
+type IDs, user-named existing lines, geometry, capacities, operations and version-2
+save data retain their meaning. Heritage and Glacier remain separate design studies.
 
 ## Shared operation
 
@@ -23,9 +50,17 @@ Classic runs at a constant **1.8 m/s**, on the slope and through both stations. 
 
 Every terminal has a compact three-sheave receptor on each cable lane, projecting about 3.2 m from the housing with short swept metal cheeks. There is no automatic extra column or long station-mounted sheave train. The roof lip stops at the entry plane to expose these small receptors. The cable joins the level station smoothly; its sheaves follow the actual rope normals and use support/hold-down orientation as needed.
 
-For a steep approach, place ordinary towers outside the terminal and adjust their heights to ease the grade in stages. Their larger trains remain separate structures, as in the supplied approach-pole references. Existing tower spacing and ground-clearance rules still apply. Close/grouped approach poles remain a future experiment.
+For a steep approach, place ordinary towers outside the terminal and adjust their heights to ease the grade in stages. Their larger trains remain separate structures, as in the supplied approach-pole references. Existing tower spacing and ground-clearance rules still apply. The main game supports close/grouped tower foundations; their heights and tilt remain individually editable.
 
 Construction previews show stations, towers and cable only. Carrier geometry and dispatch allocation are deferred until the lift is built and opened, including when editing an existing line.
+
+## Current aesthetic work
+
+Station hold-down receptors lift individually by up to 0.14 m as a grip passes beneath. Their axles and sliding bearing links follow the movement; support sheaves below the rope stay fixed. The same behavior is present on normal pylons. Rope grips pitch with the cable tangent while the hanger and body retain their upright suspension and existing sway.
+
+Circulating-lift and train pylons have a downward floodlight on each side; Solo retains its approved unlit Heavy Portal structure. Fixtures glow after dusk and before sunrise; eight shadow-free spotlights are assigned to the nearest fixtures within 320 m of the camera to limit laptop rendering cost. The fade begins at 220 m. No new station or cabin lights are added.
+
+New lines store `autoPiste:false` and generate no return piste, markers, grooming or preset ski tracks. Existing lines retain their previous routes. The flag survives editing, saving, removal and undo. Guests require connected, ability-suitable outings and an entrance return. With no reachable descent they wait at the entrance; there are no arbitrary walking transfers and no run credit for lift-only travel.
 
 ## Implementation
 
@@ -41,9 +76,9 @@ V1 retains the save schema version and uses a separate `lift-co-upper-snowfields
 
 ## Solo cabin reference
 
-`designs/single-arm.html` retains the approved 4.5 m cabin and single curved hanger. The longer carriage has eight running wheels, with one additional axle at each end of the original six-wheel arrangement and the original wheel spacing retained. Its side beams extend to support the new end wheels; the central arm and haul-clamp anchors stay in place. It has one fixed support cable beneath a single central row of grooved running wheels mounted below the frame. A separate thinner central haul cable passes through a clamp bolted to the carriage cross-brace. The curved hanger stays outboard of the support rope and attaches to a lug on one side of the carriage beam; it does not connect centrally from underneath. Wheel rotation in the shuttle preview follows the cabin’s actual distance traveled.
+`designs/single-arm.html` retains the approved 4.5 m cabin and single curved hanger. The longer carriage has eight running wheels, with one additional axle at each end of the original six-wheel arrangement and the original wheel spacing retained. The wheels now sit within slim continuous side webs around their axles, with rims projecting above and below the beam. The full-length top cap and end caps are removed; short bridges keep the haul attachment connected. The central arm, wheel centres and fixed support-rope datum stay in place. Traction now uses paired clamps on the cross-brace, slightly higher to clear the hanger attachment. One fixed support cable runs beneath the wheel grooves; two thinner haul ropes flank it and pass through paired cross-brace clamps. The curved hanger stays outboard of the support rope and attaches to a lug on one side of the carriage beam. Wheel rotation follows the cabin’s actual distance traveled. The reusable factory and original cabin inspection page share this revised carriage treatment.
 
-Use **Trolley** or **Cable layout / end-on** to inspect the arrangement. The approved Heavy Portal pylons and compact inclined cage stations are integrated into V1; Heritage and Glacier integration is deferred.
+Use **Trolley** or **Cable layout / end-on** to inspect the arrangement. Heavy Portal pylons and the inclined docking machinery remain in the Solo studies and paused runtime; the line and playground now wrap the stations in timber halls. Heritage and Glacier integration is deferred.
 
 ## Solo structure studies
 
@@ -57,24 +92,106 @@ The tower wheel banks have continuous inboard backing plates parallel to each ro
 
 ## Solo complete line test
 
-Open `experiments/solo-line.html` for the combined rig: two Solo cabins shuttling on separate fixed track ropes, two open docking cages and three approved Heavy Portal supports on flat ground, an uphill slope and the crest of a hill. `src/lifts/solo-structures.js` reuses the workshop geometry for the complete line; this remains separate from the resort builder.
+Open `experiments/solo-line.html` for the combined rig: two Solo cabins shuttling on separate fixed track ropes, two enclosed timber station halls and three Heavy Portal supports on flat ground, an uphill slope and the crest of a hill. The stations retain their inclined docking machinery inside the buildings. `src/lifts/solo-structures.js` supplies this revised geometry for the line and playground; both remain separate from the resort builder. The earlier `solo-structures.html` page retains its bare-cage design study.
 
 The 670 m horizontal layout has a lower valley and an upper terminal on a cliff terrace at approximately 233 m. The bottom cage uses a 12° approach; the upper cage faces downhill with a 20° climb into its docking position. The upper platform projects beyond the cliff, with open channels allowing the cabin to rise from below platform level. Both cabins share one arc-length displacement and always move in opposite directions. One drive schedule limits open-span speed to **10.25 m/s**, and holds **7 m/s** while either carriage crosses a pylon. Smooth acceleration/braking is bounded at 0.65 m/s², with an eight-second terminal dwell and doors opening only at the stops. Because both vehicles share a drive, either cabin's pylon passage slows the whole line. Carrier pitch follows the cable tangent while cabin bodies remain upright.
 
-Use the pylon view buttons followed by **Pause at selected crossing** to inspect all three ground/slope cases; whole-line, side-profile, terminal and follow views are also available. The journey slider pauses at any position. Playback defaults to real time with quarter/half/double speed options. Upper and lower cable paths remain in one vertical plane per lane. The fixed track-rope anchors are represented by the terminal frames; the haul drive and closed return circuit are not modeled in this visual rig.
+Use the pylon view buttons followed by **Pause at selected crossing** to inspect all three ground/slope cases; whole-line, side-profile, terminal and follow views are also available. The journey slider pauses at any position. Playback defaults to real time with quarter/half/double speed options. The support path remains central, flanked by the two haul ropes in each lane. The fixed track ropes terminate at separate station anchors/tension connections. The complete haul paths, lower drive and upper return/tension are now supplied by `src/lifts/solo-machinery.js`; see [the machinery notes](solo-machinery.md).
 
-Cable geometry in the full Solo rig is defined span by span. Unsupported spans use a straight chord with small downward parabolic sag. Grade changes are confined to the 8.96 m pylon wheel banks and short terminal receptor sections; there are no long free-space easing curves or horizontal approach plateaus. Rendering samples that profile directly rather than applying a global Catmull–Rom spline. Station cages, rope paths, roller contact normals, vehicle pitch and journey distance all use the same profile.
+Cable geometry in the full Solo rig is defined span by span. Unsupported spans use gravity catenaries with a common tension parameter, reduced as needed to keep the ropes seated on their saddles. Grade changes are confined to the 8.96 m pylon wheel banks and short terminal receptor sections; there are no long free-space easing curves or horizontal approach plateaus. Rendering samples that profile directly rather than applying a global Catmull–Rom spline. Station cages, rope paths, roller contact normals, vehicle pitch and journey distance all use the same profile.
 
-### Compact Solo terminals and upper hold-down guides
+### Compact Solo docking guides
 
 The complete-line terminal cage is shortened from 36 m to 19 m, with 16 m of lower guide wheels instead of the previous full-length bank. Cable entry transitions are contained in the outer six metres of these compact guides. The cliff location, fixed cage angles and floor-level stop positions are unchanged.
 
-Upper haul-rope hold-down banks use seven 0.26 m radius wheels at each terminal receptor. Tower heads choose an upper hold-down bank when the outgoing grade exceeds the incoming grade; otherwise the existing lower guide plate remains. Each upper wheel is offset above the rope along its actual local normal, so the blue cable passes under the groove. Sliding bearing blocks lift 0.15 m near a passing haul clamp to provide clearance without sideways rope motion. This is a proposed clearance mechanism for the visual prototype, not a manufacturer-validated assembly. The lower fixed support rope and Solo running wheels keep their existing path.
+Station traction now runs through circular lead-in deflections, the lower double-groove drive and the upper staggered return/tension assembly. The former sliding upper receptor banks are removed. Pylons retain low guides for both haul ropes and have no raised upper wheel banks. Fixed support-rope geometry and native carrier motion remain unchanged. The machinery is a visual adaptation documented in [Solo machinery](solo-machinery.md).
 
-## Solo in Upper Snowfields V1
+### Enclosed Solo station architecture
+
+The line and playground now enclose the cage in a timber-clad hall inspired by
+[Stalden–Gspon / Arnold Zurniwen Architekten](https://www.azarch.ch/projekte/luftseilbahn-stalden-gspon).
+The original geometry uses vertical timber screens, a pale concrete podium,
+recessed window bands, a shallow standing-seam roof, two open-bottom cabin
+portals and a rear pedestrian entrance. The hall covers the machinery while
+retaining the 12° / 20° docking arrangement. Its width is 20.4 m, with the shell
+extending from 12 m behind the stop to 15.5 m toward the span. Roof height follows
+the local machinery envelope. These larger architectural bounds will need to
+be included in placement validation when Solo returns to the main builder.
+
+The playground's **Station buildings** checkbox hides both shells for machinery
+inspection and keeps that choice when rebuilding. The reference photograph is
+not bundled or used as a texture; the architecture is modeled in Three.js.
+
+## Solo integration (on hold since October 16, 2026)
+
+The [Solo playground](../experiments/solo-playground.html) now exercises the retained
+runtime independently of resort saves. Adjust each Heavy Portal pylon's position
+and height, station floor offsets, terrain case and span sag, then rebuild.
+Playback, full-cycle scrubbing, dock shortcuts and pylon-crossing inspection use
+the runtime's own schedule. Red terrain-envelope markers are a preliminary visual
+check; they do not replace the resort's full construction validation. Alpine and
+Summit lattice alternatives and the arrival cage remain in the structure workshop.
+
+Solo is available again in the main resort builder. Browser saves are backed up under `lift-co-pre-solo-integration-20261018:` before the updated game saves. Existing hold-era backups remain untouched; they are not automatically merged into the current resort. Document version remains 2.
 
 `src/lifts/solo-runtime.js` supplies the live line and the builder's elevation profile. Construction creates infrastructure only; opening the saved line creates exactly two Solo carriers. Both cabins use one common rope displacement, alternate between the two terminals, slow to 7 m/s when either crosses a pylon, and cruise at 10.25 m/s where the span permits. Stops last eight seconds, with doors closing before departure. The original eight-wheel single-arm carriage and compact station guides are reused.
 
-Solo starts with 25 m pylons; tower height remains player-controlled from 3 to 40 m. Its larger stations require 24 m between a pylon and terminal. Endpoint cages use the approved inclined arrangement (12° base / 20° top); a top terminal on a broad shelf interior can fail clearance if its incoming cabin would hit the mountain. Place it at a suitable edge or revise the line. Station foundations have local boarding channels, with refined terrain geometry under their footprints.
+Solo starts with 45 m pylons; tower height remains player-controlled from 3 to 150 m. Existing saved heights are preserved. Tall masts gain additional lattice bays. Its stations require 24 m between a pylon and terminal, increased to 30 m before a flat upper hall. The base remains inclined at 12°; Station B can use either the original 20° inclined guide or a level hall with a compact entrance transition and a 2.75 m guide nose carried by an embedded lattice portal. A flat arrival on a plateau or gentle hillside is blocked by the cliff check; any incoming cabin/terrain collision also blocks construction. Place it at a suitable edge or revise the line. Station foundations have local boarding channels, with refined terrain geometry under their footprints.
 
-Guests queue on the central deck, reserve places in the docked valley cabin, board before departure and unload at the summit. Actual skier meshes stand in the cabin; display passengers remain hidden. One carrier remains empty for ride-camera use, consistent with other lift types. Solo supports construction previews, saving/reloading, tower editing, cabin camera, deletion and undo through the shared resort editor.
+Guests queue on the central deck at either end, board the docked cabin before departure and unload at the opposite station. Actual skier meshes stand in the cabin; display passengers remain hidden. One carrier remains empty for ride-camera use, consistent with other lift types. Solo supports construction previews, saving/reloading, tower editing, cabin camera, deletion and undo through the shared resort editor.
+
+## Rocharbois integration
+
+Choose **Funitel → 3-Section Train** in the current game. The approved Sotelem A cabin has three independently supported, level compartments and flexible bellows. Two cabins shuttle on separate pairs of ropes at up to 5 m/s. Both game terminals use the approved Type A timber hall and three-pulley layout. Timber side walls, rear walls and front/rear gables enclose the building up to the roof, leaving cabin portals and pedestrian entrances open. The separate study retains its other terminal alternatives. Pylons use the approved Yumbo geometry and common grooved sheave style.
+
+Equal-height terminals are allowed. Towers retain player-controlled position and height, with 24 m terminal spacing. Funitel towers can reach 100 m; other buildable types retain their 40 m limit. Above 30 m, the Funitel mast and collars become thicker and the concrete foundation becomes wider and deeper, increasing with tower height. Rope-lane spacing and the head geometry stay unchanged. The slider, number field, profile drag and saved-line validation use the same per-type limit. Stations have local terrain pads and recessed docking channels. The builder profile uses a conservative moving-load clearance envelope; in operation each cabin loads its own rope pair. Longer spans use a higher visual rope tension to bound deflection. This is the existing visual study solver, not an engineering load calculation.
+
+The preview creates only infrastructure. Opening a line creates exactly two three-section cabins; one remains reserved for the interior camera. Guests use the existing base queue / destination unload system, with 75 standing anchors distributed among the three compartments. They carry skis inside. No piste is generated. Editing, saving, removal and undo use the shared lift definitions.
+
+Runtime adapter: `src/lifts/funitel-runtime.js`. The original study is unchanged. Main-game sources were backed up to `archive/releases/pre-funitel-integration-20261016/`; existing browser saves are copied once to `lift-co-pre-funitel-20261016:` before the updated game saves progress. Integration has not been browser-tested in this change.
+
+### Enclosed station housings
+
+The shared red gondola and detachable chairlift housing has a solid underside. A 1.4 m continuous U-shaped slot, allowing for the curved hanger sweep, follows the two station rails and the rear turnaround for the moving hangers; the rest of the machinery bay is covered from below. These panels belong to the removable station housing, so the existing machinery inspection toggle still exposes the equipment.
+
+### Funitel elevation guide
+
+During Funitel endpoint placement, placing station A highlights terrain across the buildable map within ±1 m of A's snow elevation in teal. A brighter contour marks the closest match. The endpoint cursor and legend show the signed terrain-height difference; when both endpoints exist, the legend also reports the actual prepared platform-height difference. The overlay returns when selecting either endpoint tool and disappears during tower editing, when changing to another lift family, hiding the UI or leaving construction. It reuses the terrain geometry and changes no elevations. The highlight helps choose terrain with little excavation or fill. Both platforms are automatically aligned to A's foundation datum; B's local footprint no longer raises its platform independently.
+
+### Funitel: Level lift
+
+After placing endpoints and towers, **Level lift** aligns all tower contact centres with station A's actual cable elevation. Each height is calculated from the same raw terrain and station layout used by the operating Funitel, without quarter-metre rounding. The entire adjustment is one undoable edit. Towers added afterward also receive calculated heights.
+
+If the required height is below 3 m or above 100 m, the tower is clamped to the nearest limit and highlighted red in the 3D preview, map ring, elevation profile and tower list. Its inspector reports the required height and whether it is too high or too low. Opening the lift is blocked until those towers are moved/removed or the alignment is revised. Diagnostics update when the draft changes. Both station platforms share station A's foundation datum. The far terminal's terrain pad is cut or filled to this elevation, so its cable contact height exactly matches A; Level lift then matches tower heads to the same cable datum. Manual changes can be followed by pressing Level lift again. Existing rope sag and cabin-weight behavior are retained.
+
+## Leaning tower columns
+
+In the current game, chairlift and gondola towers expose a **Side-view tilt · toward A / B** slider, limited to ±20°. Viewed from the side, perpendicular to rope travel, the column tips left/right from its fixed foundation. Its top moves along the lift alignment. Wheel centres and contact normals are rebuilt from the resulting cable profile, so the sheave assembly follows the rope rather than inheriting the column's tilt. The footing and foundation remain on the original placed spot. **Reset column upright** restores zero tilt.
+
+The cable profile, preview, running cabins, height handles and elevation profile all use the moved head positions. Height stays the vertical cable height above the original footing. Construction is blocked if tilted heads would cross, crowd one another or crowd a terminal. Column tilt persists in `leanAlong` through saves, reloads, deletion/restore and undo. Older towers default to upright; the previous sideways control is removed. Funitel columns are unaffected. Shared mast geometry lives in `src/lifts/tower-mast.js`.
+
+## Grouped foundation experiment
+
+Open [Grouped towers](../experiments/grouped-towers.html). Five supports start on a crest, including three adjacent supports on one foundation. Adjust **Maximum neighbouring gap** to merge or split groups, select a tower, then move it along the alignment or adjust its height and lean. **Foundation close-up** focuses the selected group. Flat and side-slope terrains are also available.
+
+Grouping follows successive along-line gaps (default 7 m); 0 m disables it. The test permits 1.7 m head spacing. Each group receives one continuous level concrete plinth covering its fixed column feet, with enough depth to intersect the slope. Columns pivot at the shared top face and their heads move along the line; the foundation does not slide when a column tilts. Footings that cannot support a low head at the chosen geometry are marked red with a message. Wheel locations and support/hold-down orientation follow the same shared cable-profile engine as the main builder, using the moved head positions. The workshop has no carriers and is not a structural engineering calculation.
+
+This experiment uses the same mast implementation as the main game, and has its own temporary undo history. Grouped foundations are now also integrated into the main chairlift/gondola builder; the original workshop remains available for experimentation. Source: `src/lifts/tower-group-study.js`. These changes have not been browser-tested.
+
+## Main-game grouped foundations and selection
+
+Chairlifts and gondolas now allow **1.7 m minimum foundation spacing**. The **Group nearby foundations** slider controls merging by consecutive foot-to-foot gaps: default **7 m**, adjustable **0–15 m**, with 0 disabling grouping. Separate groups split automatically as towers are moved apart. Terminal spacing stays unchanged. Funitel supports retain their existing spacing and foundations.
+
+Each close group has one continuous concrete base with a level top face and a contrasting cap. Its footprint covers the fixed feet and its bottom intersects the hillside. Columns pivot from this common top face. Cable heights remain measured above each original terrain site; raising a shared footing shortens the column rather than moving the cable vertically. Head offsets are recalculated from that actual column rise, and wheels follow the updated cable. Too-low heads above a common footing produce a red foundation and block opening the lift.
+
+Close heads use shorter service decks and shorter, even-numbered sheave trains so neighbouring machinery fits the reduced spacing. The builder prevents tilted heads crossing or moving within 1.7 m of one another. Each line stores `groupDistance` along with its per-tower tilt and height; edit/reload, delete/restore and undo preserve it. Legacy lines default to 7 m grouping but their formerly wider spacing keeps them separate.
+
+Selecting a tower in the preview, tower list or profile highlights that tower's column, head and wheels in gold. Shared foundations keep their own appearance. Selection is temporary and does not change the saved lift paint. Clicking a common footing selects its nearest column. Original materials are restored when selection changes or the UI is hidden. The pre-change sources are in `archive/backups/before-main-grouped-foundations-20261016/`. Integration has not been browser-tested.
+
+## Approved B additions — October 18
+
+Arcabulle runs at up to 5 m/s with 0.65 m/s passenger crawl. Panoramabahn shares those speeds, with a dedicated open, passenger-free transfer structure. Alps-inspired is deliberately fixed-grip at up to 1.8 m/s throughout; this differs from the real detachable Alps n°5 reference. Palace8 runs at up to 6 m/s with 0.4 m/s passenger crawl and three passenger stations. The existing four-person Princesse skins remain separate.
+
+The intermediate ring is automatically placed when both end stations exist and can be dragged. Bends may turn left or right by 5–55°, with at least 75 m to each end station. Towers stay 14 m outside the transfer structure. New-family towers allow 3–60 m and retain fixed feet, tilt and grouping. Close heads shorten their sheave banks to fit the available spacing. The turn/mid option is exclusive to its dedicated type.
+
+See [the build/operate specification](build-operate.md#approved-chairlift-and-palace8-integration) for operations, guest connections, saves and mechanical approximations. Factories are in `next-lift-runtime.js` and `next-lift-alignment.js`; approved geometry remains shared with the HTML studies.

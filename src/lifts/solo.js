@@ -14,9 +14,9 @@ function shell(parent,rings,material,skipSides=false){const vertices=rings.flat(
 function textPlane(parent,text,w,h,x,y,z,angle,color='#eee9da',background=null){const canvas=document.createElement('canvas');canvas.width=768;canvas.height=128;const c=canvas.getContext('2d');if(background){c.fillStyle=background;c.fillRect(0,0,768,128);}c.fillStyle=color;c.textAlign='center';c.textBaseline='middle';c.font='46px Georgia';c.fillText(text,384,65,730);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:texture,transparent:!background,side:T.DoubleSide,depthWrite:false}));m.position.set(x,y,z);m.rotation.y=angle;parent.add(m);return m;}
 function passenger(g,x,z,i){const p=new T.Group();p.position.set(x,.18,z);g.add(p);const colors=[0xb7644b,0xd0a34d,0x627f75,0x60778b,0x91846d],coat=mat('coat'+i%5,colors[i%5]),pants=mat('pants',0x3b4952),skin=mat('skin',0xe0b997);
  for(const side of [-1,1]){box(p,.14,.73,.17,side*.13,.47,0,pants);box(p,.18,.13,.3,side*.13,.08,.06,dark);bar(p,[side*.3,1.29,0],[side*.34,.85,.08],.085,coat);}box(p,.48,.62,.32,0,1.15,0,coat);mesh(p,geo('head',()=>new T.SphereGeometry(.17,12,8)),skin,0,1.65,0);mesh(p,geo('hat',()=>new T.SphereGeometry(.18,12,8,0,Math.PI*2,0,Math.PI*.53)),mat('hat'+i%5,colors[(i+2)%5]),0,1.7,0);return p;}
-// The single running rope sits below the wheel grooves. The haul rope is a
-// separate central line, gripped by hardware on the carriage cross-brace.
-const SOLO_RIG={trackX:0,wheelY:-.12,wheelRadius:.16,trackRadius:.033,frameY:.23,haulY:.38,haulRadius:.022};
+// The support rope sits below the wheel grooves. Two haul ropes are gripped
+// by paired attachments on the carriage cross-brace.
+const SOLO_RIG={trackX:0,wheelY:-.12,wheelRadius:.16,trackRadius:.033,frameY:.23,haulY:.18,haulRadius:.022,haulOffsets:[-.85,.85]};
 SOLO_RIG.trackY=SOLO_RIG.wheelY-SOLO_RIG.wheelRadius-SOLO_RIG.trackRadius;
 function makeCabin(def=definition,number=1,showPassengers=false){
  const g=new T.Group(),body=new T.Group();g.add(body);const {width:w,length:l,height:h,sill,chamfer:c}=def,paint=mat('paint'+def.id,def.color,.46,.18),roofMat=mat('roof'+def.id,def.roof,.55,.25),trim=mat('trim'+def.id,def.trim,.5,.4),windowTrim=def.style==='heritage'?cream:trim;
@@ -95,10 +95,11 @@ function makeCabin(def=definition,number=1,showPassengers=false){
  // Preserve the original wheel spacing and add one complete axle at each end.
  const wheelPitch=(originalLength-.3)/(originalCount-1),trolleyLength=originalLength+2*wheelPitch;
  const wheels=[],rig=SOLO_RIG;
- // One central wheel row rides on the fixed support cable. The two narrow
- // side beams straddle that row, carrying the axle bearings above each wheel.
+ // A slim continuous beam surrounds the axles, exposing both upper and lower
+ // wheel rims. Wheel centres and the rope contact datum remain unchanged.
  const count=originalCount+2;
- for(const side of [-1,1])box(trolley,.13,.16,trolleyLength,side*.15,rig.frameY,0,steel);
+ const webBottom=rig.wheelY-.095,webTop=rig.wheelY+.095,webHeight=webTop-webBottom;
+ for(const side of [-1,1])box(trolley,.09,webHeight,trolleyLength,side*.16,(webTop+webBottom)/2,0,steel);
  for(let i=0;i<count;i++){
   const z=(i-(count-1)/2)*(trolleyLength-.3)/(count-1);
   const wheel=mesh(trolley,geo('solo-grooved-wheel',()=>{
@@ -107,35 +108,52 @@ function makeCabin(def=definition,number=1,showPassengers=false){
   }),rubber,0,rig.wheelY,z);
   mesh(wheel,geo('solo-wheelhub',()=>{const a=new T.CylinderGeometry(.085,.085,.17,12);a.rotateZ(Math.PI/2);return a;}),steel);
   for(const side of [-1,1]){
-   box(trolley,.08,rig.frameY-rig.wheelY,.13,side*.15,(rig.frameY+rig.wheelY)/2,z,steel);
-   bar(trolley,[0,rig.wheelY,z],[side*.15,rig.wheelY,z],.035,steel);
+   const cap=mesh(trolley,geo('solo-recessed-axle-cap',()=>{const a=new T.CylinderGeometry(.044,.044,.018,12);a.rotateZ(Math.PI/2);return a;}),dark,side*.213,rig.wheelY,z);
+   cap.name='Flush carriage axle cap';
   }
   wheels.push(wheel);
  }
  for(const z of [-originalLength*.36,originalLength*.36]){
-  box(trolley,2*(rig.trackX+.23),.13,.14,0,rig.frameY,z,steel);
+  box(trolley,.78,.13,.14,0,rig.frameY,z,steel);
+  const bridgeTop=rig.frameY-.065;
+  for(const side of [-1,1])box(trolley,.08,bridgeTop-webTop,.14,side*.2,(bridgeTop+webTop)/2,z,steel);
  }
  // The hanger attaches to the outer side of one running beam. The upper arm
  // stays outboard of the support rope and wheels before hooking into this lug.
  const armLug=new T.Group();armLug.name='Offset side-mounted hanger attachment';trolley.add(armLug);
  for(const front of [-1,1]){
-  box(armLug,.49,.4,.06,armMountX-.055,rig.frameY,front*.17,steel);
+  const lugTop=rig.frameY+.2;
+  box(armLug,.49,lugTop-rig.wheelY,.06,armMountX-.055,(lugTop+rig.wheelY)/2,front*.17,steel);
   mesh(armLug,boltGeometry,rubber,armMountX,rig.frameY,front*.26);
  }
  mesh(armLug,geo('hanger-side-pin',()=>{const a=new T.CylinderGeometry(.105,.105,.47,20);a.rotateX(Math.PI/2);return a;}),steel,armMountX,rig.frameY,0);
- // A separate haul-rope clamp bolts onto the forward cross-brace, not a wheel.
- const hitch=new T.Group();hitch.name='Haul cable attachment';hitch.position.z=-originalLength*.36;trolley.add(hitch);
- box(hitch,.23,.11,.32,0,.3,0,steel);
+ // Low split collars bolt into a compact front cross-brace, above the roller
+ // rims. The side gussets continue the running beams; there is no overhead hook.
+ const gripZ=-originalLength*.36,headY=rig.haulY+.12,haulGrips=[];
+ box(trolley,1.95,.1,.32,0,headY,gripZ,steel);
  for(const side of [-1,1]){
-  box(hitch,.055,.13,.35,side*.055,rig.haulY,0,dark);
-  mesh(hitch,geo('haul-clamp-bolt',()=>{const a=new T.CylinderGeometry(.025,.025,.18,6);a.rotateZ(Math.PI/2);return a;}),gold,0,rig.haulY,.12*side);
+  const profile=new T.Shape();profile.moveTo(gripZ-.24,webBottom);profile.lineTo(gripZ+.24,webBottom);profile.lineTo(gripZ+.24,webTop);profile.lineTo(gripZ+.10,headY+.05);profile.lineTo(gripZ-.24,headY+.05);profile.closePath();
+  const geometry=new T.ExtrudeGeometry(profile,{depth:.07,bevelEnabled:false});
+  // Shape coordinates are longitudinal Z / height Y; extrude along the axle X.
+  geometry.applyMatrix4(new T.Matrix4().set(0,0,-1,side*.16+.035,0,1,0,0,1,0,0,0,0,0,0,1));
+  mesh(trolley,geometry,steel);
+  for(const z of [gripZ-.15,gripZ+.12])mesh(trolley,geo('nose-bolt',()=>{const g=new T.CylinderGeometry(.035,.035,.02,6);g.rotateZ(Math.PI/2);return g;}),dark,side*.205,headY-.02,z);
  }
- textPlane(trolley,String(number).padStart(2,'0'),.26,.15,.24,rig.frameY,.65,Math.PI/2,'#354d3e','#eae5d5');
+ for(const offset of rig.haulOffsets){
+  const hitch=new T.Group();hitch.name='Flush haul collar on front cross-brace';hitch.position.set(offset,0,gripZ);trolley.add(hitch);
+  const stemHeight=.08,stem=box(hitch,.14,stemHeight,.22,0,headY,0,steel),bridge=box(hitch,.19,.05,.36,0,rig.haulY+.12,0,steel);
+  for(const side of [-1,1]){
+   box(hitch,.028,.095,.35,side*.031,rig.haulY+.0595,0,dark);
+   mesh(hitch,geo('haul-clamp-bolt',()=>{const a=new T.CylinderGeometry(.025,.025,.16,6);a.rotateZ(Math.PI/2);return a;}),gold,0,rig.haulY+.11,.12*side);
+  }
+  haulGrips.push({g:hitch,stem,bridge,stemHeight,stemY:stem.position.y});
+ }
+ textPlane(trolley,String(number).padStart(2,'0'),.26,.15,.24,rig.wheelY,.65,Math.PI/2,'#354d3e','#eae5d5');
  // The interior remains visible through the glass and the real door opening.
  for(const side of [-1,1]){bar(body,[side*w*.37,.18,-l*.36],[side*w*.37,1.3,-l*.36],.025,steel);bar(body,[side*w*.37,1.3,-l*.36],[side*w*.37,1.3,l*.36],.025,steel);}
  for(const z of [-l*.3,l*.3])bar(body,[-w*.34,h-.33,z],[w*.34,h-.33,z],.025,steel);
  const people=new T.Group();body.add(people);const rows=def.family?4:2;for(let i=0;i<rows;i++)for(const side of [-1,1])passenger(people,side*w*.21,(i-(rows-1)/2)*(def.family?.9:.95),(i*2+(side+1)/2));people.visible=showPassengers;
- return{g,body,suspension,trolley,trolleyY,doors,people,wheels,def};
+ return{g,body,suspension,trolley,trolleyY,doors,people,wheels,haulGrips,def};
 }
 return {create:makeCabin,definition,rig:SOLO_RIG,materials,geometries};
 }};
