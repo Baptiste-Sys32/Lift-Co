@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. — Princesse / Palace8 studies</title><link rel="stylesheet" href="../src/styles/cabin-study.css"><link rel="stylesheet" href="../src/styles/next-lift-study.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script></head><body>
+<p style="padding:30px;font:13px Georgia">Opening the Princesse / Palace8 study…</p><noscript>This 3D study needs JavaScript.</noscript>
+<script src="../src/lifts/detachable-station.js"></script><script src="../src/lifts/tower-mast.js"></script>
+<script src="../src/lifts/classic-station.js"></script>
+<script src="../src/lifts/next-lift-machinery.js"></script>
+<script src="../src/lifts/next-lift-structures.js"></script>
+<script src="../src/lifts/next-lift-studies.js"></script><script src="../src/lifts/next-lift-study-viewer.js"></script>
+<script type="module">import * as THREE from 'three';import {OrbitControls} from 'three/addons/controls/OrbitControls.js';import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+try{window.LiftCoNextStudyViewer.start(THREE,OrbitControls,RoomEnvironment,"princesse");}catch(error){const p=document.createElement('pre');p.className='error';p.textContent=String(error.stack||error);document.body.appendChild(p);}</script></body></html>

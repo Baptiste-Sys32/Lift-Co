@@ -39,6 +39,7 @@ window.LiftCoPlacement=(()=>{
   const dx=def.top[0]-def.base[0],dz=def.top[1]-def.base[1],length=Math.hypot(dx,dz),along={x:dx/length,z:dz/length},across={x:along.z,z:-along.x};
   return ['base','top'].map(end=>{const sign=end==='base'?-1:1,p=def[end],offset=spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?-1.25:spec.id==='solo'?.25:spec.funitel?2:station.straight/2;return{x:p[0]+along.x*sign*offset,z:p[1]+along.z*sign*offset,along,across,halfLength:spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?17.5:spec.id==='solo'?16:spec.funitel?15:station.straight/2+10,halfWidth:spec.id==='solo'?11:10};});
  }
+ function boxDistance(box,x,z){const dx=x-box.x,dz=z-box.z,a=Math.abs(dx*box.along.x+dz*box.along.z)-box.halfLength,b=Math.abs(dx*box.across.x+dz*box.across.z)-box.halfWidth;return Math.hypot(Math.max(a,0),Math.max(b,0))+Math.min(Math.max(a,b),0);}
  function boxesOverlap(a,b){
   const dx=b.x-a.x,dz=b.z-a.z,dot=(u,v)=>u.x*v.x+u.z*v.z;
   for(const axis of [a.along,a.across,b.along,b.across]){
@@ -70,7 +71,7 @@ window.LiftCoPlacement=(()=>{
    for(const [t,u,p,q]of pairs)if(Math.hypot(p.x-q.x,p.z-q.z)<width&&Math.abs(layoutA.heightAt(x.s+t*(x.end-x.s))-layoutB.heightAt(y.s+u*(y.end-y.s)))<7-EPS)return true;
   }return false;
  }
- return{definitionReason,terminalsOverlap,linesTooClose,margins,terminalBoxes,boxesOverlap};
+ return{definitionReason,terminalsOverlap,linesTooClose,margins,terminalBoxes,boxesOverlap,boxDistance};
 })();
 
 // Construction tools for the resort. Layouts are saved as data, then reconstructed

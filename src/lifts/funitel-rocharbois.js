@@ -290,14 +290,14 @@ window.LiftCoFunitelStudy={
   }};
  }
  function rail(parent,x,y,z1,z2){for(const z of [z1,z2,(z1+z2)/2])box(parent,.045,1,.045,x,y+.5,z,M.silver);for(const yy of [.48,1])beam(parent,[x,y+yy,z1],[x,y+yy,z2],.035,.035,M.silver);}
- function makeTower(index,{height=H,stubs=true}={}){
+ function makeTower(index,{height=H,stubs=true,groundAt=null}={}){
   // Above 30 m use a heavier mast, bearing collars and concrete footing.
   // The head and its rope lanes retain their metre scale and contact height.
   const reinforcement=height>30?1.25+.95*Math.min(1,(height-30)/70):1;
   const v={...window.LiftCoFunitelStudy.towers[index]};v.shaft*=reinforcement;
   const root=new T.Group(),frame=new T.Group(),head=new T.Group(),rotors=[];root.add(frame,head);
   const foundationDepth=.65*Math.sqrt(reinforcement);
-  box(frame,3*reinforcement,foundationDepth,3*reinforcement,0,foundationDepth/2,0,M.concrete);cylinder(frame,v.shaft+.22,.25,0,.78,0);cylinder(frame,v.shaft,height-2.15,0,(height-2.15)/2+.9,0,M.steel,v.shaft*.92);
+  const footing=box(frame,3*reinforcement,foundationDepth,3*reinforcement,0,foundationDepth/2,0,M.concrete);if(groundAt&&window.LiftCoFoundations)window.LiftCoFoundations.replaceBox(T,footing,groundAt);cylinder(frame,v.shaft+.22,.25,0,.78,0);cylinder(frame,v.shaft,height-2.15,0,(height-2.15)/2+.9,0,M.steel,v.shaft*.92);
   for(const a of [0,Math.PI/2,Math.PI,Math.PI*1.5])box(frame,.15,.4,.15,Math.cos(a)*(v.shaft+.10),.91,Math.sin(a)*(v.shaft+.10),M.silver);
   cylinder(frame,v.shaft+.10,.15,0,height-v.brace,0,M.silver);
   // Upper transverse structure stays above the cabin envelope; banks hang outboard.

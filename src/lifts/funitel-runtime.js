@@ -38,7 +38,7 @@ window.LiftCoFunitelRuntime=(()=>{
    for(const [x,w]of [[0,3.75],[-6.1,1.6],[6.1,1.6]])factory.box(station.root,w,g-foot,station.v.length,x,(g+foot)/2,0,factory.M.concrete);
   }
   for(const n of layout.nodes.slice(1,-1)){
-   const ground=groundAt(n.distance),tower=factory.makeTower(0,{height:n.height-ground,stubs:false});tower.root.position.set(0,ground,n.distance);tower.root.userData.number=layout.nodes.indexOf(n);line.add(tower.root);towers.push(tower);
+   const ground=groundAt(n.distance),tower=factory.makeTower(0,{height:n.height-ground,stubs:false,groundAt:(x,z)=>{const p=ctx.planPoint(def,-x,half-n.distance-z);return ctx.terrain(p.x,p.z)-ground;}});tower.root.position.set(0,ground,n.distance);tower.root.userData.number=layout.nodes.indexOf(n);line.add(tower.root);towers.push(tower);
    for(const side of [-1,1]){
     const lamp=new T.Group(),target=new T.Object3D();lamp.position.set(side*4.2,n.height-ground+.15,.5);target.position.set(side*5,0,2);tower.root.add(lamp,target);lamp.lookAt(tower.root.localToWorld(target.position.clone()));
     factory.box(lamp,.66,.36,.2,0,0,0,factory.M.dark);const lensMaterial=new T.MeshStandardMaterial({color:0xf0e8d5,emissive:0xffdf9f,emissiveIntensity:0,roughness:.35});factory.box(lamp,.54,.25,.025,0,0,.112,lensMaterial);

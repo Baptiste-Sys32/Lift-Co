@@ -8,7 +8,7 @@ window.LiftCoSoloPlacement=(()=>{
   if(raised)return y;
   const u=-out,top=end==='top',slope=Math.tan((top?20:12)*Math.PI/180)*(top?-1:1);
   // Hall: 20.4 m wide, 12 m behind the dock and 15.5 m towards the line.
-  const pad=(1-smooth(10.5,16,Math.abs(x)))*smooth(-20,-12,out)*(1-smooth(12,20,out));
+  const pad=window.LiftCoTerrainSurface?window.LiftCoTerrainSurface.terrace(x,out,10.5,-12,12,datum,y):(1-smooth(10.5,16,Math.abs(x)))*smooth(-20,-12,out)*(1-smooth(12,20,out));
   y+=(datum-y)*pad;
   // Only the two cabin channels are excavated. Keep the centre boarding deck.
   // Full cut through 24 m, blended back to existing hillside by 34 m.

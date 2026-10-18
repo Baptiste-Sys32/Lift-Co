@@ -27,7 +27,7 @@ window.LiftCoTowerMast={
   const foot=footOverride||this.foot({headY,groundAt,along,across}),bottom=new T.Vector3(foot.x,foot.y,foot.z),top=new T.Vector3(0,headY,0),axis=top.clone().sub(bottom).normalize(),rotation=new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),axis);
   function mesh(geometry,material,position,quaternion){const m=new T.Mesh(geometry,material);m.position.copy(position);if(quaternion)m.quaternion.copy(quaternion);m.castShadow=m.receiveShadow=true;root.add(m);return m;}
   function bar(a,b,width,material){const delta=b.clone().sub(a);return mesh(new T.CylinderGeometry(width,width,delta.length(),8),material,a.clone().add(b).multiplyScalar(.5),new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize()));}
-  if(foundation)mesh(new T.BoxGeometry(1.65,.38,1.65),concrete,new T.Vector3(foot.x,foot.y-.10,foot.z));
+  if(foundation){if(window.LiftCoFoundations)window.LiftCoFoundations.create(T,{parent:root,x:foot.x,z:foot.z,top:foot.y+.09,width:window.LiftCoFoundations.width(headY-foot.y),groundAt,material:concrete});else mesh(new T.BoxGeometry(1.65,.38,1.65),concrete,new T.Vector3(foot.x,foot.y-.10,foot.z));}
   mesh(new T.CylinderGeometry(.38,.55,top.distanceTo(bottom),12),steel,bottom.clone().add(top).multiplyScalar(.5),rotation);
   const flange=bottom.clone().addScaledVector(axis,.15);mesh(new T.CylinderGeometry(.68,.68,.13,12),dark,flange,rotation);
   for(const x of [-.45,.45])for(const z of [-.45,.45])mesh(new T.BoxGeometry(.1,.13,.1),dark,new T.Vector3(x,.24,z).applyQuaternion(rotation).add(bottom),rotation);

@@ -1,4 +1,4 @@
-# Lift Co. — V1
+# Lift Co. — V3
 
 A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser; there is no build step. The Three.js CDN needs an internet connection.
 
@@ -6,10 +6,12 @@ A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser;
 
 | Page | Purpose |
 | --- | --- |
-| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V1, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
+| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V3, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
 | [index.html](index.html) | Original working resort with Summit Express, skiers and the construction UI. |
 
-These two pages stay at the project root to preserve their browser addresses. V1 uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
+The [V3 checkpoint](docs/v3-checkpoint.md) adds graphics presets, focused workspaces, smoother station earthworks and grounded, height-scaled pylon foundations. V1/V2 worlds migrate to V3 after an automatic backup.
+
+These two pages stay at the project root to preserve their browser addresses. Upper Snowfields uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
 
 The pre-funitel game sources are preserved in `archive/releases/pre-funitel-integration-20261016/`. The earlier pre-change build is in `archive/releases/pre-solo-hold-20261016/`. See [the October 16 update](docs/2026-10-16-lift-details.md) for save backups and the next cabin studies.
 
@@ -71,6 +73,7 @@ ski-lift/
 ├── src/
 │   ├── builder/               Layout model, workshop view, resort editor
 │   ├── lifts/                 Reusable gondola/station model
+│   ├── resort/                World data, terrain, routing, operations UI and graphics
 │   └── styles/                Shared resort UI stylesheet
 ├── assets/
 │   ├── data/                  Full/cropped elevation data and source metadata

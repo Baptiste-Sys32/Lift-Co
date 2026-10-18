@@ -1,3 +1,5 @@
+> **Current release: V3.** [V3 checkpoint, graphics, terrain, UI and compatibility notes](v3-checkpoint.md) supersede the earlier release-specific version statements below. World documents now write version 3; existing V1/V2 slots still migrate. Historical verification entries retain their original versions.
+
 # Build and operate the Upper Snowfields resort
 
 Entry point: `empty-map.html`. The original `index.html` stays separate; the approved carrier designs are retained. The new controls use the existing sidebar and camera.
@@ -106,8 +108,8 @@ The existing runs-served counter remains the only served-runs tally.
 
 ## Persistence and verification
 
-The document is version 2: stable-ID lifts, pistes, paths, junctions, ordered
-terrain layers and an entrance-station reference. V1 lift types, heights, tilt
+The current document is version 3: stable-ID lifts, pistes, paths, junctions, ordered
+terrain layers and an entrance-station reference. V1/V2 lift types, heights, tilt
 and grouping remain intact. Legacy automatic pistes become independent entities
 once. Operating settings persist. Browser slots are copied to
 `lift-co-before-build-operate:<original slot>` before migration; saving is
@@ -161,7 +163,7 @@ of ordered sculpt/piste layers, matching the existing station-terrace system. Ed
 cancel, deletion and undo recompute them without leaving old cuts behind. Station
 chunks gain 2 m terrain detail. Solo does not generate close-pass woodland trees;
 existing scenery in the lift corridor is cleared through the shared scenery system.
-No save-schema change: version 2 and the version-1 migration remain in place. A
+The Solo integration retained version 2 and the V1 migration; V3 now migrates those same records to version 3. A
 pre-integration browser-save backup uses the existing blocking backup gate.
 
 
@@ -191,7 +193,7 @@ The builder displays the resulting maximum free-span sag, including that adjustm
 rather than the misleading generic metres-per-50-metres label. Taller pylons and
 sensible approach supports permit longer clear spans; terrain and saddle checks
 still block an unsuitable layout. The station guide constraint is a game model,
-not a full structural/tension-load simulation. Save version remains 2.
+not a full structural/tension-load simulation. These mechanics originally shipped with save version 2; V3 retains their fields.
 
 
 ### Flat upper arrival for Solo
@@ -216,7 +218,7 @@ clearance and the existing 8 m earthwork-depth limit also apply. The flat channe
 floor stays level inside, then falls into the approach; it does not reshape a
 plateau into a cliff. Changing profile previews the terrain and supports Apply,
 Cancel and local/session Undo/Redo. The optional `arrivalProfile` field is saved
-in the existing version-2 lift definition; older absent values mean inclined.
+in the existing lift definition (retained from V2 into V3); older absent values mean inclined.
 
 ### Solo suspension motion
 
@@ -270,7 +272,11 @@ Palace8 adds an explicit M snap target and entrance choice. Its graph has all si
 
 The cable/transfer model remains a game approximation: one synchronized circulating haul loop follows the supported deflection through each intermediate structure. The historical Princesse has coupled sections and multiple drives; independent rope circuits, tensions, load transfer and manufacturer-specific brake/dispatch timing are not simulated. Station creep and compact transfer acceleration are chosen for this game geometry. There is no money, construction timer, physical carrier garage or independent section control.
 
-Persistence stays version 2. The two dedicated layouts add optional `mid`, `stationElevations.mid` and `stationFoundations.mid` values inside their existing lift records; ordinary lift records need no middle position. All previous IDs, V1 migration, terrain layers and operating fields retain their meaning. Before any save write, browser slots are copied once to `lift-co-pre-next-lifts-20261018:<original key>` through the existing blocking backup gate. Source originals are in `archive/backups/next-lift-game-integration-20261018/`.
+The expansion integration originally used version 2; V3 writes version 3 with the same fields. The two dedicated layouts add optional `mid`, `stationElevations.mid` and `stationFoundations.mid` values inside their existing lift records; ordinary lift records need no middle position. All previous IDs, V1 migration, terrain layers and operating fields retain their meaning. Before any save write, browser slots are copied once to `lift-co-pre-next-lifts-20261018:<original key>` through the existing blocking backup gate. Source originals are in `archive/backups/next-lift-game-integration-20261018/`.
 
 
 Integration verification (2026-10-18): syntax checks passed for the twelve touched/new JavaScript sources and the main inline module. Isolated Chrome loaded all thirteen catalog choices with an empty error overlay. A fresh V2 save reloaded all four new types with tower tilt and operating settings intact; a V1 data probe retained its original type, tower settings and grouping. Browser probes exercised all twelve directional passenger journeys across the four additions, including Palace8 through travel without changing seats. Speed ramps retained riders, Stop froze carriers and machinery, and Resume moved them again. A fleet change returned a Palace8 rider to M's correct queue with the original destination; session Undo/Redo restored fleet sizes. An actual M-ring drag passed local undo/redo, Apply and session undo/redo. Additional probes checked a shared foundation, carrier-free construction previews, raised stations, both turn signs, and blocking messages for missing/straight/too-close intermediate positions. Static geometry is merged and repeated moving parts are instanced; dense rope sampling is limited to station machinery. No automated repository test suite was added or run, and laptop FPS remains a user review item. The original `index.html` checksum is unchanged.
+
+## V3 checkpoint
+
+Graphics presets and individual device settings, focused workspaces, rounded station banks, conforming terrain refinement and embedded/scaled concrete footings are implemented. See the [V3 release record](v3-checkpoint.md) for exact behavior, save backups, research and verification. Endpoint status rings remain green/red; selectable connection targets remain teal. Operational rules, ability routing, entrance returns, 25 m piste measurement and ordered terrain-layer replay are unchanged.

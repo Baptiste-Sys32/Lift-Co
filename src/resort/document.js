@@ -4,7 +4,7 @@ window.LiftCoResort=(()=>{
  const copy=v=>JSON.parse(JSON.stringify(v)),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
  const id=prefix=>prefix+'-'+(globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2));
  function migrate(saved,lifts){
-  const doc={version:2,lifts:copy(lifts),pistes:copy(saved?.pistes||[]),paths:copy(saved?.paths||[]),junctions:copy(saved?.junctions||[]),terrainLayers:copy(saved?.terrainLayers||[]),entranceStation:saved?.entranceStation||null};
+  const doc={version:3,lifts:copy(lifts),pistes:copy(saved?.pistes||[]),paths:copy(saved?.paths||[]),junctions:copy(saved?.junctions||[]),terrainLayers:copy(saved?.terrainLayers||[]),entranceStation:saved?.entranceStation||null};
   for(const lift of doc.lifts){lift.towers.forEach((t,i)=>t.id??=lift.id+'-tower-'+(i+1));lift.operations??={open:true,running:true,speed:null,count:null};}
   doc.entranceStation??=doc.lifts[0]?doc.lifts[0].id+':base':null;
   return doc;

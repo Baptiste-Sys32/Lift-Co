@@ -9,11 +9,11 @@
 <aside class="sidebar"><div class="brand"><a href="../index.html">Lift Co<span>.</span></a><span class="eyebrow">DESIGN ROOM / 04</span></div>
 <div class="intro"><span class="eyebrow">SOLO / SELECTED DESIGN</span><h1>A single sweeping arm.</h1><p class="small">Your selected single-arm cabin, now 4.5 m long. The narrow red front, curved ivory plate arm and exposed bolts follow your reference.</p></div>
 <div id="choices"></div>
-<div class="selection-note">One fixed support cable carries a single row of grooved wheels beneath the carriage frame. A separate central haul cable attaches to the metal cross-brace. The offset arm hooks onto the outside of one carriage beam, clear of the support cable.</div>
+<div class="selection-note">One fixed support cable carries eight grooved wheels within a slim continuous carriage beam. The wheels project above and below the beam. Two haul ropes flank the support rope and attach to the cross-brace. The offset arm hooks onto the outside of the carriage beam.</div>
 <section class="section"><span class="eyebrow">01 / INSPECT THE CABIN</span><div class="row presets"><button data-angle="side">Long side</button><button data-angle="end">Front / arm</button><button data-angle="trolley">Trolley</button></div><button data-angle="ropes" style="width:100%;margin-top:6px">Cable layout / end-on ↗</button><label class="check"><input id="passengers" type="checkbox"> Show standing passengers</label><div class="row spread"><label class="mono" for="doors">Side doors</label><span id="doorReadout" class="mono">Closed</span></div><input id="doors" type="range" min="0" max="1" step="0.01" value="0"><label class="check"><input id="guides" type="checkbox" checked> Show cable direction</label></section>
 <section class="section"><span class="eyebrow">02 / YOUR NEW REFERENCE</span><div class="ref-grid" style="display:block"><a style="height:170px" target="_blank" href="../assets/references/telepheriques/single-arm-front.jpeg"><img style="object-fit:contain" alt="Front reference showing a red cabin on one offset ivory suspension arm" src="../assets/references/telepheriques/single-arm-front.jpeg"></a></div><p class="footer-note">Dimensions below are proposed game-model sizes.<br><a class="small-link" href="./telepheriques.html">← Heritage & Glacier cabins</a><br><a class="small-link" href="../index.html">← Return to the resort</a></p></section>
 </aside>
-<main id="stage"><div class="topbar"><div><span class="eyebrow">LIFT CO. / SINGLE-ARM COLLECTION</span><p class="mono" style="margin-top:5px" id="viewName"></p></div><div><button data-mode="cabin" class="active">Cabin</button><button data-mode="travel">Shuttle ↔</button></div></div><div class="info-tag" id="orientation">1 SUPPORT CABLE + 1 HAUL CABLE</div><div class="phase" id="phase"></div><div class="caption"><span class="eyebrow" id="modelTag"></span><h2 id="modelName"></h2><p id="modelDescription"></p><div class="specs"><div><b id="modelLength"></b><span>length / along cable</span></div><div><b id="modelWidth"></b><span>width / across</span></div><div><b id="modelHeight"></b><span>cabin height</span></div></div></div><div class="lower-tools"><div class="row"><button id="pause">Pause</button><button id="rotate">Auto orbit</button><button id="reset">Reset view ↗</button></div><span id="hint">drag = orbit · right-drag = pan · scroll = zoom</span></div><div id="loading">Opening the design room…</div><div id="labels"></div></main><div id="error"></div>
+<main id="stage"><div class="topbar"><div><span class="eyebrow">LIFT CO. / SINGLE-ARM COLLECTION</span><p class="mono" style="margin-top:5px" id="viewName"></p></div><div><button data-mode="cabin" class="active">Cabin</button><button data-mode="travel">Shuttle ↔</button></div></div><div class="info-tag" id="orientation">1 SUPPORT CABLE + 2 HAUL CABLES</div><div class="phase" id="phase"></div><div class="caption"><span class="eyebrow" id="modelTag"></span><h2 id="modelName"></h2><p id="modelDescription"></p><div class="specs"><div><b id="modelLength"></b><span>length / along cable</span></div><div><b id="modelWidth"></b><span>width / across</span></div><div><b id="modelHeight"></b><span>cabin height</span></div></div></div><div class="lower-tools"><div class="row"><button id="pause">Pause</button><button id="rotate">Auto orbit</button><button id="reset">Reset view ↗</button></div><span id="hint">drag = orbit · right-drag = pan · scroll = zoom</span></div><div id="loading">Opening the design room…</div><div id="labels"></div></main><div id="error"></div>
 <script type="module">
 import * as T from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
@@ -40,9 +40,9 @@ function shell(parent,rings,material,skipSides=false){const vertices=rings.flat(
 function textPlane(parent,text,w,h,x,y,z,angle,color='#eee9da',background=null){const canvas=document.createElement('canvas');canvas.width=768;canvas.height=128;const c=canvas.getContext('2d');if(background){c.fillStyle=background;c.fillRect(0,0,768,128);}c.fillStyle=color;c.textAlign='center';c.textBaseline='middle';c.font='46px Georgia';c.fillText(text,384,65,730);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:texture,transparent:!background,side:T.DoubleSide,depthWrite:false}));m.position.set(x,y,z);m.rotation.y=angle;parent.add(m);return m;}
 function passenger(g,x,z,i){const p=new T.Group();p.position.set(x,.18,z);g.add(p);const colors=[0xb7644b,0xd0a34d,0x627f75,0x60778b,0x91846d],coat=mat('coat'+i%5,colors[i%5]),pants=mat('pants',0x3b4952),skin=mat('skin',0xe0b997);
  for(const side of [-1,1]){box(p,.14,.73,.17,side*.13,.47,0,pants);box(p,.18,.13,.3,side*.13,.08,.06,dark);bar(p,[side*.3,1.29,0],[side*.34,.85,.08],.085,coat);}box(p,.48,.62,.32,0,1.15,0,coat);mesh(p,geo('head',()=>new T.SphereGeometry(.17,12,8)),skin,0,1.65,0);mesh(p,geo('hat',()=>new T.SphereGeometry(.18,12,8,0,Math.PI*2,0,Math.PI*.53)),mat('hat'+i%5,colors[(i+2)%5]),0,1.7,0);return p;}
-// The single running rope sits below the wheel grooves. The haul rope is a
-// separate central line, gripped by hardware on the carriage cross-brace.
-const SOLO_RIG={trackX:0,wheelY:-.12,wheelRadius:.16,trackRadius:.033,frameY:.23,haulY:.38,haulRadius:.022};
+// The support rope sits below the wheel grooves. Two haul ropes are gripped
+// by paired attachments on the carriage cross-brace.
+const SOLO_RIG={trackX:0,wheelY:-.12,wheelRadius:.16,trackRadius:.033,frameY:.23,haulY:.18,haulRadius:.022,haulOffsets:[-.85,.85]};
 SOLO_RIG.trackY=SOLO_RIG.wheelY-SOLO_RIG.wheelRadius-SOLO_RIG.trackRadius;
 function makeCabin(def,number=1){
  const g=new T.Group(),body=new T.Group();g.add(body);const {width:w,length:l,height:h,sill,chamfer:c}=def,paint=mat('paint'+def.id,def.color,.46,.18),roofMat=mat('roof'+def.id,def.roof,.55,.25),trim=mat('trim'+def.id,def.trim,.5,.4),windowTrim=def.style==='heritage'?cream:trim;
@@ -121,10 +121,10 @@ function makeCabin(def,number=1){
  // Preserve the original wheel spacing and add one complete axle at each end.
  const wheelPitch=(originalLength-.3)/(originalCount-1),trolleyLength=originalLength+2*wheelPitch;
  const wheels=[],rig=SOLO_RIG;
- // One central wheel row rides on the fixed support cable. The two narrow
- // side beams straddle that row, carrying the axle bearings above each wheel.
+ // Slim side webs surround the axles; upper and lower wheel rims stay exposed.
  const count=originalCount+2;
- for(const side of [-1,1])box(trolley,.13,.16,trolleyLength,side*.15,rig.frameY,0,steel);
+ const webBottom=rig.wheelY-.095,webTop=rig.wheelY+.095,webHeight=webTop-webBottom;
+ for(const side of [-1,1])box(trolley,.09,webHeight,trolleyLength,side*.16,(webTop+webBottom)/2,0,steel);
  for(let i=0;i<count;i++){
   const z=(i-(count-1)/2)*(trolleyLength-.3)/(count-1);
   const wheel=mesh(trolley,geo('solo-grooved-wheel',()=>{
@@ -133,30 +133,46 @@ function makeCabin(def,number=1){
   }),rubber,0,rig.wheelY,z);
   mesh(wheel,geo('solo-wheelhub',()=>{const a=new T.CylinderGeometry(.085,.085,.17,12);a.rotateZ(Math.PI/2);return a;}),steel);
   for(const side of [-1,1]){
-   box(trolley,.08,rig.frameY-rig.wheelY,.13,side*.15,(rig.frameY+rig.wheelY)/2,z,steel);
-   bar(trolley,[0,rig.wheelY,z],[side*.15,rig.wheelY,z],.035,steel);
+   mesh(trolley,geo('solo-recessed-axle-cap',()=>{const a=new T.CylinderGeometry(.044,.044,.018,12);a.rotateZ(Math.PI/2);return a;}),dark,side*.213,rig.wheelY,z);
   }
   wheels.push(wheel);
  }
  for(const z of [-originalLength*.36,originalLength*.36]){
-  box(trolley,2*(rig.trackX+.23),.13,.14,0,rig.frameY,z,steel);
+  box(trolley,.78,.13,.14,0,rig.frameY,z,steel);
+  const bridgeTop=rig.frameY-.065;
+  for(const side of [-1,1])box(trolley,.08,bridgeTop-webTop,.14,side*.2,(bridgeTop+webTop)/2,z,steel);
  }
  // The hanger attaches to the outer side of one running beam. The upper arm
  // stays outboard of the support rope and wheels before hooking into this lug.
  const armLug=new T.Group();armLug.name='Offset side-mounted hanger attachment';trolley.add(armLug);
  for(const front of [-1,1]){
-  box(armLug,.49,.4,.06,armMountX-.055,rig.frameY,front*.17,steel);
+  const lugTop=rig.frameY+.2;
+  box(armLug,.49,lugTop-rig.wheelY,.06,armMountX-.055,(lugTop+rig.wheelY)/2,front*.17,steel);
   mesh(armLug,boltGeometry,rubber,armMountX,rig.frameY,front*.26);
  }
  mesh(armLug,geo('hanger-side-pin',()=>{const a=new T.CylinderGeometry(.105,.105,.47,20);a.rotateX(Math.PI/2);return a;}),steel,armMountX,rig.frameY,0);
- // A separate haul-rope clamp bolts onto the forward cross-brace, not a wheel.
- const hitch=new T.Group();hitch.name='Haul cable attachment';hitch.position.z=-originalLength*.36;trolley.add(hitch);
- box(hitch,.23,.11,.32,0,.3,0,steel);
+ // Low split collars bolt into a compact front cross-brace, above the roller
+ // rims. The side gussets continue the running beams; there is no overhead hook.
+ const gripZ=-originalLength*.36,headY=rig.haulY+.12,haulGrips=[];
+ box(trolley,1.95,.1,.32,0,headY,gripZ,steel);
  for(const side of [-1,1]){
-  box(hitch,.055,.13,.35,side*.055,rig.haulY,0,dark);
-  mesh(hitch,geo('haul-clamp-bolt',()=>{const a=new T.CylinderGeometry(.025,.025,.18,6);a.rotateZ(Math.PI/2);return a;}),gold,0,rig.haulY,.12*side);
+  const profile=new T.Shape();profile.moveTo(gripZ-.24,webBottom);profile.lineTo(gripZ+.24,webBottom);profile.lineTo(gripZ+.24,webTop);profile.lineTo(gripZ+.10,headY+.05);profile.lineTo(gripZ-.24,headY+.05);profile.closePath();
+  const geometry=new T.ExtrudeGeometry(profile,{depth:.07,bevelEnabled:false});
+  // Shape coordinates are longitudinal Z / height Y; extrude along the axle X.
+  geometry.applyMatrix4(new T.Matrix4().set(0,0,-1,side*.16+.035,0,1,0,0,1,0,0,0,0,0,0,1));
+  mesh(trolley,geometry,steel);
+  for(const z of [gripZ-.15,gripZ+.12])mesh(trolley,geo('nose-bolt',()=>{const g=new T.CylinderGeometry(.035,.035,.02,6);g.rotateZ(Math.PI/2);return g;}),dark,side*.205,headY-.02,z);
  }
- textPlane(trolley,String(number).padStart(2,'0'),.26,.15,.24,rig.frameY,.65,Math.PI/2,'#354d3e','#eae5d5');
+ for(const offset of rig.haulOffsets){
+  const hitch=new T.Group();hitch.name='Flush haul collar on front cross-brace';hitch.position.set(offset,0,gripZ);trolley.add(hitch);
+  const stemHeight=.08,stem=box(hitch,.14,stemHeight,.22,0,headY,0,steel),bridge=box(hitch,.19,.05,.36,0,rig.haulY+.12,0,steel);
+  for(const side of [-1,1]){
+   box(hitch,.028,.095,.35,side*.031,rig.haulY+.0595,0,dark);
+   mesh(hitch,geo('haul-clamp-bolt',()=>{const a=new T.CylinderGeometry(.025,.025,.16,6);a.rotateZ(Math.PI/2);return a;}),gold,0,rig.haulY+.11,.12*side);
+  }
+  haulGrips.push({g:hitch,stem,bridge,stemHeight,stemY:stem.position.y});
+ }
+ textPlane(trolley,String(number).padStart(2,'0'),.26,.15,.24,rig.wheelY,.65,Math.PI/2,'#354d3e','#eae5d5');
  // The interior remains visible through the glass and the real door opening.
  for(const side of [-1,1]){bar(body,[side*w*.37,.18,-l*.36],[side*w*.37,1.3,-l*.36],.025,steel);bar(body,[side*w*.37,1.3,-l*.36],[side*w*.37,1.3,l*.36],.025,steel);}
  for(const z of [-l*.3,l*.3])bar(body,[-w*.34,h-.33,z],[w*.34,h-.33,z],.025,steel);
@@ -166,7 +182,7 @@ function makeCabin(def,number=1){
 function clear(){if(!activeGroup)return;scene.remove(activeGroup);const cachedG=new Set(geometries.values()),cachedM=new Set(Object.values(materials)),localG=new Set(),localM=new Set(),textures=new Set();activeGroup.traverse(o=>{if(o.geometry&&!cachedG.has(o.geometry))localG.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])if(!cachedM.has(m)){localM.add(m);if(m.map)textures.add(m.map);}});localG.forEach(g=>g.dispose());localM.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());}
 function cable(parent,x,y,z,length){
  const support=bar(parent,[x,y+SOLO_RIG.trackY,z-length/2],[x,y+SOLO_RIG.trackY,z+length/2],SOLO_RIG.trackRadius,dark);support.name='Fixed support cable';
- const haul=bar(parent,[x,y+SOLO_RIG.haulY,z-length/2],[x,y+SOLO_RIG.haulY,z+length/2],SOLO_RIG.haulRadius,steel);haul.name='Central haul cable';
+ for(const offset of SOLO_RIG.haulOffsets){const haul=bar(parent,[x+offset,y+SOLO_RIG.haulY,z-length/2],[x+offset,y+SOLO_RIG.haulY,z+length/2],SOLO_RIG.haulRadius,steel);haul.name='Twin haul cable';}
 }
 function directionGuide(parent,x,z,length){const g=new T.Group();parent.add(g);const material=new T.LineBasicMaterial({color:0xaeb99f,transparent:true,opacity:.7}),line=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(x,-.07,z-length/2),new T.Vector3(x,-.07,z+length/2)]),material);g.add(line);for(const end of [-1,1]){const a=new T.ArrowHelper(new T.Vector3(0,0,end),new T.Vector3(x,-.05,z+end*(length/2-1)),.75,0xb8a070,.5,.25);g.add(a);}g.visible=$('guides').checked;guides.push(g);}
 function podium(parent,x,z,def){box(parent,def.width+2.3,.15,def.length+2,x,-.075,z,mat('podium',0xd9ded1));directionGuide(parent,x,z,def.length+4.7);}
@@ -194,7 +210,7 @@ function resetCamera(angle='default'){
  if(mode==='compare'){controls.target.set(0,4,0);camera.position.set(19,16,33);}
  else if(mode==='travel'){controls.target.set(0,4,-7);camera.position.set(49,35,52);}
  else{controls.target.set(0,4.5,0);if(angle==='side'){controls.target.set(0,3.8,0);camera.position.set(17+d.length*.45,6,0.01);}else if(angle==='end'){controls.target.set(0,4.1,0);camera.position.set(.01,6.3,18+d.length*.3);}else if(angle==='trolley'){controls.target.set(0,d.height+5.6,0);camera.position.set(3.5,d.height+7.1,4.5);}else if(angle==='ropes'){controls.target.set(0,d.height+5.6,0);camera.position.set(.01,d.height+6.45,5.8);}else camera.position.set(7+d.length*.18,8.3,18+d.length*.3);}
- controls.update();controls.enableDamping=true;if(mode==='cabin')$('viewName').textContent=angle==='trolley'?'Trolley / wheels beneath the support frame':angle==='ropes'?'Cable layout / one support rope and one haul rope':'01 — Individual cabin study';
+ controls.update();controls.enableDamping=true;if(mode==='cabin')$('viewName').textContent=angle==='trolley'?'Trolley / slim beam with exposed wheel rims':angle==='ropes'?'Cable layout / one support rope and twin haul ropes':'01 — Individual cabin study';
 }
 for(const [i,d]of designs.entries()){
  const b=document.createElement('button');b.className='choice';b.style.width='100%';b.style.marginBottom='6px';b.innerHTML='<span class="num">'+d.id+'</span><span><strong>'+d.name+'</strong><small>'+d.length.toFixed(1)+' m long / '+(i===0?'closest reference':i===1?'ivory & glacier blue':'panoramic deep red')+'</small></span><span class="swatch" style="background:#'+d.color.toString(16).padStart(6,'0')+';border-color:#'+d.arm.toString(16).padStart(6,'0')+'"></span>';b.onclick=()=>{selected=i;if(mode==='compare')mode='cabin';build();};$('choices').append(b);
@@ -210,7 +226,7 @@ function animate(){
    if(t<hold)position=0;else if(t<.5)position=T.MathUtils.smootherstep((t-hold)/travel,0,1);else if(t<.5+hold)position=1;else position=1-T.MathUtils.smootherstep((t-.5-hold)/travel,0,1);
    const previousZ=c.g.position.z;c.g.position.z=c.side*(32-64*position);opening=t<hold||t>=.5&&t<.5+hold?1:0;
    c.opening=T.MathUtils.damp(c.opening||0,opening,4,paused?0:dt);opening=c.opening;for(const wheel of c.wheels)wheel.rotation.x+=(c.g.position.z-previousZ)/SOLO_RIG.wheelRadius;
-   $('phase').textContent=(t<hold||t>=.5&&t<.5+hold)?'Docked · doors open · one cabin at each end':'One fixed support cable per lane · separate haul cable pulls the carriage';
+   $('phase').textContent=(t<hold||t>=.5&&t<.5+hold)?'Docked · doors open · one cabin at each end':'One fixed support cable per lane · paired haul ropes pull the carriage';
   }
   for(const door of c.doors)door.g.position.z=T.MathUtils.lerp(door.closed,door.open,opening);
  }
