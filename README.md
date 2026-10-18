@@ -1,4 +1,4 @@
-# Lift Co. — V3
+# Lift Co. — V1
 
 A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser; there is no build step. The Three.js CDN needs an internet connection.
 
@@ -6,18 +6,16 @@ A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser;
 
 | Page | Purpose |
 | --- | --- |
-| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V3, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
+| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V1, 3.6 km terrain, eight buildable lift styles, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
 | [index.html](index.html) | Original working resort with Summit Express, skiers and the construction UI. |
 
-The [V3 checkpoint](docs/v3-checkpoint.md) adds graphics presets, focused workspaces, smoother station earthworks and grounded, height-scaled pylon foundations. V1/V2 worlds migrate to V3 after an automatic backup.
-
-These two pages stay at the project root to preserve their browser addresses. Upper Snowfields uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
+These two pages stay at the project root to preserve their browser addresses. V1 uses its own browser saves, scoped by resort slot. Earlier empty-map saves remain intact. See [V1 backup and release notes](docs/v1-upper-snowfields.md).
 
 The pre-funitel game sources are preserved in `archive/releases/pre-funitel-integration-20261016/`. The earlier pre-change build is in `archive/releases/pre-solo-hold-20261016/`. See [the October 16 update](docs/2026-10-16-lift-details.md) for save backups and the next cabin studies.
 
 ## Approved lift designs
 
-The four approved B designs are now buildable in the game: **Arcabulle** (6-seat detachable bubble chair), **Alps-inspired double** (2-seat fixed-grip), **Panoramabahn** (4-seat bubble chair with its own angle structure) and **Princesse / Palace8** (8-seat gondola with its own passenger mid-station). The special layouts appear as dedicated dropdown choices. Place the two end stations, then drag the automatically placed middle ring to set the bend. Their [inspection pages and reference notes](docs/chairlift-expansion-studies.md) remain available. [Construction, operations and connections](docs/build-operate.md) describe the playable integration.
+The next additions are in a separate [chairlift and Palace8 design pass](docs/chairlift-expansion-studies.md): [Arcabulle](designs/chair-arcabulle.html), [Alps n°5](designs/chair-alps5.html), [Panoramabahn](designs/chair-panoramabahn.html) and [Princesse / Palace8](designs/gondola-princesse8.html). Carrier **B is selected for all four**: Full shoulders, Round crown, Deep bubble and Broad waist respectively. Their pages show the selected carriers. **02 is deliberately a fixed-grip double for the game**, with the Classic station and a period pylon. 03 has an open angle-transfer structure; 04 has a gondola pylon and one curved passenger mid-station. The accepted 01/03/04 terminal shells are retained, with revised detailed machinery for review. These are design studies, not buildable game types. The turning chairlift and passenger mid-station gondola are intended as dedicated dropdown choices; existing lift layouts stay as they are.
 
 | Study | Selected models |
 | --- | --- |
@@ -29,7 +27,7 @@ The four approved B designs are now buildable in the game: **Arcabulle** (6-seat
 | [Téléphériques](designs/telepheriques.html) | **Heritage** — compact; **Glacier** — panoramic. |
 | [Single-arm téléphérique](designs/single-arm.html) | **Solo** — the longer 4.5 m version. |
 
-Design studies include model inspection and animation previews. The [three new 3S studies](docs/3s-studies.md) are separate proposals awaiting selection; use their **Cabins / Towers** buttons to inspect each group. **Buildable families: fixed-grip and detachable chairlifts; six detachable monocable gondola choices; the 12-person reversible aerial tramway (Solo); and the 75-person reversible funitel. All thirteen are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is buildable with its timber halls, inclined valley dock, flat or inclined upper dock, Heavy Portal pylons and twin haul circuits. Its arrival requires an open downhill approach; small station cuts are automatic. Circulating lifts have station cable-entry guides, yielding hold-down wheels and pylon floodlights. Solo retains its fixed carrying-rope saddles and recessed traction guides. New lines no longer generate ski slopes automatically. Chairlifts and gondolas support fixed-foot column tilt, closely placed towers on shared foundations, an adjustable grouping distance and gold highlighting for the selected tower.
+Design studies include model inspection and animation previews. The [three new 3S studies](docs/3s-studies.md) are separate proposals awaiting selection; use their **Cabins / Towers** buttons to inspect each group. **Buildable families: fixed-grip and detachable chairlifts; five detachable monocable gondola variants; the 12-person reversible aerial tramway (Solo); and the 75-person reversible funitel. All nine are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is buildable with its timber halls, inclined valley dock, flat or inclined upper dock, Heavy Portal pylons and twin haul circuits. Its arrival requires an open downhill approach; small station cuts are automatic. Circulating lifts have station cable-entry guides, yielding hold-down wheels and pylon floodlights. Solo retains its fixed carrying-rope saddles and recessed traction guides. New lines no longer generate ski slopes automatically. Chairlifts and gondolas support fixed-foot column tilt, closely placed towers on shared foundations, an adjustable grouping distance and gold highlighting for the selected tower.
 
 ## Megève gondola cabin studies
 
@@ -73,7 +71,6 @@ ski-lift/
 ├── src/
 │   ├── builder/               Layout model, workshop view, resort editor
 │   ├── lifts/                 Reusable gondola/station model
-│   ├── resort/                World data, terrain, routing, operations UI and graphics
 │   └── styles/                Shared resort UI stylesheet
 ├── assets/
 │   ├── data/                  Full/cropped elevation data and source metadata

@@ -13,12 +13,8 @@ Open `empty-map.html`, choose **Build a lift**, then select the lift type before
 | `jaillet` | 4-person detachable gondola — clamshell cabin | 4 seated |
 | `solo` | 12-person reversible aerial tramway | 12 standing per cabin |
 | `funitel-rocharbois` | 75-person reversible funitel — articulated cabin | 75 standing per cabin |
-| `chair-arcabulle` | 6-seat detachable bubble chairlift — Arcabulle | 6 seated |
-| `chair-alps5` | 2-seat fixed-grip chairlift — Alps-inspired | 2 seated |
-| `chair-panoramabahn` | 4-seat detachable bubble chairlift — angle station | 4 seated |
-| `gondola-princesse8` | 8-person detachable gondola — passenger mid-station | 8 seated |
 
-All thirteen types are buildable. Solo offers an inclined or level upper hall; the level hall requires a cliff.
+All nine types are buildable. Solo offers an inclined or level upper hall; the level hall requires a cliff.
 The dropdown groups **Chairlifts**, **Monocable gondola lifts**, **Aerial tramways**
 and **Funitels**. **Surface lifts** stays hidden until a model is available.
 Solo belongs to Aerial tramways, separately from circulating gondolas.
@@ -34,7 +30,7 @@ and 3-Section Train) remain design-study aliases in the notes below. In particul
 Sigma Arbois was a descriptive game name and Sigma SP77 was user-selected, not a
 confirmed identification; see [cabin integration notes](gondola-integration.md).
 
-The earlier naming pass changed display names, menu grouping and default names for new lines. Internal
+Only display names, menu grouping and default names for new lines change. Internal
 type IDs, user-named existing lines, geometry, capacities, operations and version-2
 save data retain their meaning. Heritage and Glacier remain separate design studies.
 
@@ -50,7 +46,7 @@ Classic runs at a constant **1.8 m/s**, on the slope and through both stations. 
 
 Every terminal has a compact three-sheave receptor on each cable lane, projecting about 3.2 m from the housing with short swept metal cheeks. There is no automatic extra column or long station-mounted sheave train. The roof lip stops at the entry plane to expose these small receptors. The cable joins the level station smoothly; its sheaves follow the actual rope normals and use support/hold-down orientation as needed.
 
-For a steep approach, place ordinary towers outside the terminal and adjust their heights to ease the grade in stages. Their larger trains remain separate structures, as in the supplied approach-pole references. Existing tower spacing and ground-clearance rules still apply. The main game supports close/grouped tower foundations; their heights and tilt remain individually editable.
+For a steep approach, place ordinary towers outside the terminal and adjust their heights to ease the grade in stages. Their larger trains remain separate structures, as in the supplied approach-pole references. Existing tower spacing and ground-clearance rules still apply. Close/grouped approach poles remain a future experiment.
 
 Construction previews show stations, towers and cable only. Carrier geometry and dispatch allocation are deferred until the lift is built and opened, including when editing an existing line.
 
@@ -60,7 +56,7 @@ Station hold-down receptors lift individually by up to 0.14 m as a grip passes b
 
 Circulating-lift and train pylons have a downward floodlight on each side; Solo retains its approved unlit Heavy Portal structure. Fixtures glow after dusk and before sunrise; eight shadow-free spotlights are assigned to the nearest fixtures within 320 m of the camera to limit laptop rendering cost. The fade begins at 220 m. No new station or cabin lights are added.
 
-New lines store `autoPiste:false` and generate no return piste, markers, grooming or preset ski tracks. Existing lines retain their previous routes. The flag survives editing, saving, removal and undo. Guests require connected, ability-suitable outings and an entrance return. With no reachable descent they wait at the entrance; there are no arbitrary walking transfers and no run credit for lift-only travel.
+New lines store `autoPiste:false` and generate no return piste, markers, grooming or preset ski tracks. Existing lines retain their previous routes. The flag survives editing, saving, removal and undo. Guests on a line without a route unload and pause at the summit before using the existing walking transfer behavior; no ski run is credited.
 
 ## Implementation
 
@@ -187,11 +183,3 @@ Each close group has one continuous concrete base with a level top face and a co
 Close heads use shorter service decks and shorter, even-numbered sheave trains so neighbouring machinery fits the reduced spacing. The builder prevents tilted heads crossing or moving within 1.7 m of one another. Each line stores `groupDistance` along with its per-tower tilt and height; edit/reload, delete/restore and undo preserve it. Legacy lines default to 7 m grouping but their formerly wider spacing keeps them separate.
 
 Selecting a tower in the preview, tower list or profile highlights that tower's column, head and wheels in gold. Shared foundations keep their own appearance. Selection is temporary and does not change the saved lift paint. Clicking a common footing selects its nearest column. Original materials are restored when selection changes or the UI is hidden. The pre-change sources are in `archive/backups/before-main-grouped-foundations-20261016/`. Integration has not been browser-tested.
-
-## Approved B additions — October 18
-
-Arcabulle runs at up to 5 m/s with 0.65 m/s passenger crawl. Panoramabahn shares those speeds, with a dedicated open, passenger-free transfer structure. Alps-inspired is deliberately fixed-grip at up to 1.8 m/s throughout; this differs from the real detachable Alps n°5 reference. Palace8 runs at up to 6 m/s with 0.4 m/s passenger crawl and three passenger stations. The existing four-person Princesse skins remain separate.
-
-The intermediate ring is automatically placed when both end stations exist and can be dragged. Bends may turn left or right by 5–55°, with at least 75 m to each end station. Towers stay 14 m outside the transfer structure. New-family towers allow 3–60 m and retain fixed feet, tilt and grouping. Close heads shorten their sheave banks to fit the available spacing. The turn/mid option is exclusive to its dedicated type.
-
-See [the build/operate specification](build-operate.md#approved-chairlift-and-palace8-integration) for operations, guest connections, saves and mechanical approximations. Factories are in `next-lift-runtime.js` and `next-lift-alignment.js`; approved geometry remains shared with the HTML studies.

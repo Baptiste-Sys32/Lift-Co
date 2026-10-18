@@ -1,6 +1,6 @@
 # Chairlifts and the Palace8 gondola
 
-Reference and design pass, 18 October 2026. The user chose **HTML design studies first**. The inspection pages remain separate; all four approved models are now integrated into `empty-map.html` with the existing version-2 document. Carrier proportions are interpretations of photographs; dimensions, station massing and pylon geometry are estimates rather than manufacturer drawings.
+Reference and design pass, 18 October 2026. The user chose **HTML design studies first**. These pages do not register game types or change the version-2 resort document. Carrier proportions are interpretations of photographs; dimensions, station massing and pylon geometry are estimates rather than manufacturer drawings.
 
 ## Carrier selection — locked in
 
@@ -11,24 +11,24 @@ The user selected **B for all four carriers** on 18 October 2026:
 - Panoramabahn: **B / Deep bubble**.
 - Princesse / Palace8: **B / Broad waist**.
 
-The pages now display only the selected B carriers, preserving their selected frame/body geometry and proportions. The later user request changes only the Alps running gear to a simple fixed cable clamp. `approvedVariant` records the selection per family. Earlier A/C definitions are retained in source, and the complete pre-selection studies are backed up in `archive/backups/next-lift-carrier-selection-20261018/`. **The terminal shells for 01, 03 and 04 are retained following user approval. The user also approved the revised machinery, 02 structures and special intermediate stations.** The completed game integration is described in [Build and operate](build-operate.md#approved-chairlift-and-palace8-integration).
+The pages now display only the selected B carriers, preserving their selected frame/body geometry and proportions. The later user request changes only the Alps running gear to a simple fixed cable clamp. `approvedVariant` records the selection per family. Earlier A/C definitions are retained in source, and the complete pre-selection studies are backed up in `archive/backups/next-lift-carrier-selection-20261018/`. **The terminal shells for 01, 03 and 04 are retained following user approval. Revised machinery, the new 02 structures and the special intermediate stations remain under review.** This selection does not integrate the lifts into the game.
 
 ## Scope agreed with the user
 
-Four additional build choices are now available:
+Four additional build choices are intended after design selection:
 
-| Stable ID | Dropdown choice | Layout capability |
+| Proposed stable ID | Intended dropdown choice | Layout capability |
 | --- | --- | --- |
 | `chair-arcabulle` | 6-seat detachable bubble chairlift — Arcabulle | Conventional two-terminal straight line |
 | `chair-alps5` | 2-seat fixed-grip chairlift — Alps-inspired | Conventional two-terminal straight line |
 | `chair-panoramabahn` | 4-seat detachable bubble chairlift — turning station | Two alignments joined by a passenger-free angle station |
 | `gondola-princesse8` | 8-person detachable gondola — passenger mid-station | Two alignments joined by an intermediate passenger station |
 
-These stable IDs are enabled catalog entries. **The turning chairlift and the mid-station gondola are dedicated dropdown options. Do not give every existing lift an optional turn or mid-station.** Shared internal helpers may still be reused. Preserve existing IDs, approved models and saved lines.
+These IDs are proposals, not enabled catalog entries. **The turning chairlift and the mid-station gondola are dedicated dropdown options. Do not give every existing lift an optional turn or mid-station.** Shared internal helpers may still be reused. Preserve existing IDs, approved models and saved lines.
 
 ## Game interpretation of 02 — explicit user override
 
-The user explicitly wants the game's old, inexpensive **fixed-grip double**, despite the real Alps n°5 reference being detachable. The study is now labelled fixed-grip, with a **1.8 m/s** game line speed, one speed in terminals and on the line, a simple cable clamp and no tyre conveyor. Its B chair frame/bench is retained. This is a deliberate fictional adaptation, not a claim about the real Ansaku installation. The runtime uses fixed-grip operation rather than the report's 4 m/s detachable operating data.
+The user explicitly wants the game's old, inexpensive **fixed-grip double**, despite the real Alps n°5 reference being detachable. The study is now labelled fixed-grip, with a **1.8 m/s** game line speed, one speed in terminals and on the line, a simple cable clamp and no tyre conveyor. Its B chair frame/bench is retained. This is a deliberate fictional adaptation, not a claim about the real Ansaku installation. Future integration must use fixed-grip operation rather than the report's 4 m/s detachable operating data.
 
 ## Reference findings
 
@@ -46,7 +46,7 @@ The report identifies a 1991 **two-seat detachable**, rather than a slow fixed-g
 
 ### Panoramabahn — Leitner
 
-This is the historical 2004 installation photographed in the report; the page lists its end of service in 2019. It has four-seat bubble chairs, green cushions, 5 m/s travel and an intermediate station that **turns the line without boarding or unloading**. The photographs show an elevated, open structure supporting the deflection and transfer equipment. It must not become a guest-network station. This study does not assign an exact historical turn angle: the adjustable diagram explores the concept. The dedicated game runtime implements supported rope deflection, release, slow transfer and reattachment; the turn has no guest-network node.
+This is the historical 2004 installation photographed in the report; the page lists its end of service in 2019. It has four-seat bubble chairs, green cushions, 5 m/s travel and an intermediate station that **turns the line without boarding or unloading**. The photographs show an elevated, open structure supporting the deflection and transfer equipment. It must not become a guest-network station. This study does not assign an exact historical turn angle: the adjustable diagram explores the concept. Detailed rope deflection, release, slow transfer and reattachment need a dedicated runtime prototype before game integration.
 
 [Original report and photographs](https://www.remontees-mecaniques.net/bdd/reportage-tsd4b-panoramabahn-leitner-1396.html).
 
@@ -65,9 +65,9 @@ The 2002 gondola uses eight-seat Sigma Palace8 cabins with OmegaT grips and 6 m/
 | [Panoramabahn](../designs/chair-panoramabahn.html) | Green quartet | **Deep bubble — selected** | Compact crown |
 | [Princesse / Palace8](../designs/gondola-princesse8.html) | Palace facets | **Broad waist — selected** | Tall lantern |
 
-The original studies offered three carrier alternatives and comparison views. After selection, each page opens directly on the locked B carrier, with camera presets, look-in-place right drag, opening animation, optional seated occupants, glazing and paint controls, and an enlarged reference-photo gallery. Station and pylon tabs retain the approved adapted designs. The two special layouts also offer an end-terminal view. Station roofs can be hidden. The line plan shows passenger access separately from the carrier route. Its moving dot represents a journey in either direction, not a mechanical simulation or actual boarding.
+The original studies offered three carrier alternatives and comparison views. After selection, each page opens directly on the locked B carrier, with camera presets, look-in-place right drag, opening animation, optional seated occupants, glazing and paint controls, and an enlarged reference-photo gallery. Station and pylon tabs contain adapted concepts awaiting approval. The two special layouts also offer an end-terminal view. Station roofs can be hidden. The line plan shows passenger access separately from the carrier route. Its moving dot represents a journey in either direction, not a mechanical simulation or actual boarding.
 
-Bubble-chair opening currently moves the bubble and safety bar together for inspection. In the game they open at passenger terminals and stay closed through the angle structure. Palace8 has eight seat positions and two independently translated door leaves. The game runtime adds capacity readouts, passenger boarding, occupied ski racks and one camera-reserved carrier.
+Bubble-chair opening currently moves the bubble and safety bar together for inspection. It does not specify their eventual automatic timing. Palace8 has eight seat positions and two independently translated door leaves. Continuous capacity, passenger flow, ski loading and camera reservations remain integration work.
 
 The carrier factories and viewer are new standalone sources (`next-lift-studies.js` and `next-lift-study-viewer.js`). They do not load the resort runtime. Geometry primitives are shared, pixel ratio is capped at 1.4, and one 1024-pixel shadow map is used. Reference photographs are copied unmodified; per-image URLs and credits are recorded in `assets/references/next-lifts/<family>/sources.json`. No redistribution license is asserted.
 
@@ -82,15 +82,18 @@ The accepted terminal shells for **01 / Arcabulle, 03 / Panoramabahn and 04 / Pr
 
 Pylon sheaves now have separate cast rims, perforated webs, rubber running grooves, bolted hubs and axle caps. Inboard bearing and rocker frames stay clear of the wheel envelope. Station tyres have rounded pneumatic profiles, pressed rims, tread grooves and small drive pulleys/belts. The running rails sit under the grip's running wheels; the overhead tyre bottoms meet its upper friction pad. Supported longitudinal I-sections and hangers connect the tyre modules to the main structure. Return/drive bullwheels have grooved rubber linings, perforated webs, bolted hubs, bearing stacks and brake calipers. Finned motors, guarded couplings and inspection covers replace plain motor blocks.
 
-These pages remain **static inspection models**. The separate game runtime now supplies circulating and intermediate-station operation. Wheel dimensions, the internal pulley arrangement, the 35° turn and the 15° mid-station deflection remain visual estimates. Carrier transfer and passenger operation are integrated; the game uses a synchronized circulating haul-loop approximation rather than reproducing the real installation's separate rope circuits and drive arrangement. The photos establish architectural/mechanical character, not surveyed dimensions or a complete rope-routing drawing.
+These are **static inspection models**, not a finished detachable-transfer or multi-station operating runtime. Wheel dimensions, the internal pulley arrangement, the 35° turn and the 15° mid-station deflection remain visual estimates. Carrier transfer timing, the complete incoming/outgoing rope circuits, synchronized drives and passenger operation still require integration. The photos establish architectural/mechanical character, not surveyed dimensions or a complete rope-routing drawing.
 
-`next-lift-machinery.js` supplies the reusable detailed geometry. Static machinery is merged by material to control draw calls; cutaway roofs and carrier previews remain separate. More original machinery/turn photographs are included in the galleries, with URLs/credits in the per-family `sources.json`. Original sources are preserved in `archive/backups/next-lift-mechanical-detail-20261018/`. The `ClassicStation` factory's new optional arguments default to its original two terminals and drive assembly, preserving current game callers. The later integration adds the four dedicated catalog entries and optional middle-position fields within version 2; it preserves the original study pages.
+`next-lift-machinery.js` supplies the reusable detailed geometry. Static machinery is merged by material to control draw calls; cutaway roofs and carrier previews remain separate. More original machinery/turn photographs are included in the galleries, with URLs/credits in the per-family `sources.json`. Original sources are preserved in `archive/backups/next-lift-mechanical-detail-20261018/`. The `ClassicStation` factory's new optional arguments default to its original two terminals and drive assembly, preserving current game callers. No game catalog entries or save fields are added in this pass.
 
-## Completed integration
+## Integration order after model selection
 
-All four choices now use the approved geometry in `empty-map.html`. `next-lift-alignment.js` supplies the dedicated two-span centreline and footprint calculations. `next-lift-runtime.js` supplies carriers, supported ropes, stations, pylons, animated machinery, seats, camera anchors and merged/instanced rendering. The builder supports middle-position dragging, station elevations/foundations, tower projection and existing history. The network supports Palace8's six directional rides, through passengers and intermediate queues. Panoramabahn has no intermediate passenger access.
+1. Integrate Arcabulle as a detachable bubble chair and 02 as the explicitly requested fixed-grip double first. Generalize the current hard-coded six-chair and four-cabin seat assumptions where needed, using actual seat anchors and each model's catalog speed. Keep Arcabulle’s detachable station speed distinct from line speed; 02 must use the same fixed-grip speed throughout. Verify safety bar, bubble, boarding window, seats and clearance together.
+2. Prototype the Panoramabahn angle station with visible cable and carrier paths. Two straight spans need a real station transition, not an unsupported bend at a pylon. Preserve carrier identity, spacing and occupied seats during transfer. No pedestrian snap target or queue at the bend.
+3. Extend only the dedicated Princesse8 type to three passenger stations. Support valley–mid, mid–summit and through journeys in both directions, intermediate queues and alighting, seats that remain occupied through the station, coupled stopping and operations, and terrain/foundation validation at all three stations.
+4. Integrate construction, edit/cancel/undo, delete/restore, persistence and network return checks for each dedicated layout. The existing builder and guest adapter assume base/top and one straight alignment; registering a catalog entry alone is insufficient. Any optional fields must preserve version 2 and the original migration/backup gates.
 
-The original nine types, original `index.html`, document version 2 and V1 migration are retained. [Build and operate](build-operate.md#approved-chairlift-and-palace8-integration) records construction limits, mechanical approximations and persistence. Physical garages remain deferred.
+Physical garages remain deferred. The source photographs may show them; they are not part of these additions.
 
 ## Verification
 
@@ -98,4 +101,4 @@ All five changed/new JavaScript sources pass `node --check`. Temporary isolated-
 
 A temporary geometric probe sampled **4,992 rays** through all four pylons’ sheave envelopes against their head steelwork, with **zero hits**. The inboard frame has 0.18 m axial clearance from the revised hub/cap envelope. Rope-to-rubber-tread contact matches the displayed cable height. The Classic factory's default two-terminal output has identical vertex/index buffers and world transforms to the pre-change factory, so its optional study arguments do not change existing game callers.
 
-The compact open turn was checked separately after shortening its preview; its internal cable arcs remain tangent to the deflection pulleys. Carrier, station, open-turn, pylon and machinery-detail screenshots were reviewed. No automated test suite was introduced or run. Those checks describe the original inspection pass. Game integration checks are recorded in the build/operate specification; they are not a laptop FPS benchmark.
+The compact open turn was checked separately after shortening its preview; its internal cable arcs remain tangent to the deflection pulleys. Carrier, station, open-turn, pylon and machinery-detail screenshots were reviewed. No automated test suite was introduced or run. This is not a laptop FPS benchmark or proof of a finished operating lift: these remain isolated design studies, with construction, routing and operation still to integrate.

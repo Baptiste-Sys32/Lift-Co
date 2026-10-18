@@ -1,12 +1,10 @@
-> **Current release: V3.** [V3 checkpoint, graphics, terrain, UI and compatibility notes](v3-checkpoint.md) supersede the earlier release-specific version statements below. World documents now write version 3; existing V1/V2 slots still migrate. Historical verification entries retain their original versions.
-
 # Build and operate the Upper Snowfields resort
 
 Entry point: `empty-map.html`. The original `index.html` stays separate; the approved carrier designs are retained. The new controls use the existing sidebar and camera.
 
 ## Construction
 
-- Edit a lift and choose Station A/B (or Palace8 Station M) to set its boarding floor in 0.25 m steps.
+- Edit a lift and choose Station A/B to set its boarding floor in 0.25 m steps.
   Select Terrace for cut/fill or Raised to retain the hillside. Raised stations
   have structural feet; the footprint is checked against hillside penetration.
   The 3-Section Train retains one common platform datum.
@@ -37,13 +35,6 @@ current loop positions. Fixed-grip chairs use the selected speed throughout;
 detachable terminal crawl remains controlled by the model and never exceeds
 its selected cable speed. Boarding is restricted to the gate approach while the
 carrier's doors or safety bar are open, at either terminal.
-
-Detachable chairs (Ridge, Arcabulle and Panoramabahn) use a damped fore/aft
-pendulum driven by their measured speed change. Braking swings the chair forward;
-acceleration leaves it trailing the grip, then it settles along the line. The
-hanger, seats, riders and ride camera move together while the grip follows its
-existing cable/rail path. The same response covers Panoramabahn's transfer in
-both directions. Fixed-grip station speed behavior and gondola motion are retained.
 
 Carrier count and dispatch spacing are linked and clamped to catalog dispatch
 pitch. Dispatch spacing is the equivalent line distance at catalog maximum
@@ -100,7 +91,7 @@ Make junction splits a route at its selected interior point and explicitly
 connects both halves to the new junction. Other routes can connect endpoints to
 that junction. The pending-route selector allows work on multiple curves.
 
-The entrance selector chooses any passenger station, including Palace8 Station M; the first built
+The entrance selector chooses either terminal of any lift; the first built
 station is the default. Walking edges are bidirectional, piste edges descend in
 drawn order, and lifts board/unload at both ends. Guests receive one of four
 abilities equally, choose reachable descents with queue/travel/variety costs,
@@ -115,8 +106,8 @@ The existing runs-served counter remains the only served-runs tally.
 
 ## Persistence and verification
 
-The current document is version 3: stable-ID lifts, pistes, paths, junctions, ordered
-terrain layers and an entrance-station reference. V1/V2 lift types, heights, tilt
+The document is version 2: stable-ID lifts, pistes, paths, junctions, ordered
+terrain layers and an entrance-station reference. V1 lift types, heights, tilt
 and grouping remain intact. Legacy automatic pistes become independent entities
 once. Operating settings persist. Browser slots are copied to
 `lift-co-before-build-operate:<original slot>` before migration; saving is
@@ -170,7 +161,7 @@ of ordered sculpt/piste layers, matching the existing station-terrace system. Ed
 cancel, deletion and undo recompute them without leaving old cuts behind. Station
 chunks gain 2 m terrain detail. Solo does not generate close-pass woodland trees;
 existing scenery in the lift corridor is cleared through the shared scenery system.
-The Solo integration retained version 2 and the V1 migration; V3 now migrates those same records to version 3. A
+No save-schema change: version 2 and the version-1 migration remain in place. A
 pre-integration browser-save backup uses the existing blocking backup gate.
 
 
@@ -200,7 +191,7 @@ The builder displays the resulting maximum free-span sag, including that adjustm
 rather than the misleading generic metres-per-50-metres label. Taller pylons and
 sensible approach supports permit longer clear spans; terrain and saddle checks
 still block an unsuitable layout. The station guide constraint is a game model,
-not a full structural/tension-load simulation. These mechanics originally shipped with save version 2; V3 retains their fields.
+not a full structural/tension-load simulation. Save version remains 2.
 
 
 ### Flat upper arrival for Solo
@@ -225,7 +216,7 @@ clearance and the existing 8 m earthwork-depth limit also apply. The flat channe
 floor stays level inside, then falls into the approach; it does not reshape a
 plateau into a cliff. Changing profile previews the terrain and supports Apply,
 Cancel and local/session Undo/Redo. The optional `arrivalProfile` field is saved
-in the existing lift definition (retained from V2 into V3); older absent values mean inclined.
+in the existing version-2 lift definition; older absent values mean inclined.
 
 ### Solo suspension motion
 
@@ -256,36 +247,3 @@ stations and pylons use absolute haul displacement divided by wheel radius,
 with opposite rotation on the two lanes and reversal with the shuttle. Small
 silver face marks make their rotation visible. Instanced wheel matrices update
 with that phase; dwell and Stop keep those wheels stationary.
-
-
-### Approved chairlift and Palace8 integration
-
-All four B designs are buildable in `empty-map.html`, alongside the previous nine choices. Existing type IDs and the four-person Princesse cabins retain their meanings.
-
-| Stable type ID | Approved model | Line maximum | Station crawl | Passenger stations |
-| --- | --- | --- | --- | --- |
-| `chair-arcabulle` | Full shoulders / six-seat bubble chair | 5 m/s | 0.65 m/s | A, B |
-| `chair-alps5` | Round crown / fixed-grip double | 1.8 m/s | selected line speed | A, B |
-| `chair-panoramabahn` | Deep bubble / four-seat bubble chair | 5 m/s | 0.65 m/s | A, B; angle structure has no access |
-| `gondola-princesse8` | Broad waist / eight-seat Palace8 | 6 m/s | 0.4 m/s | A, M, B |
-
-The old double deliberately uses a fixed clamp, Classic canopy, period mast and no detachable conveyor. The real Alps n°5 reference is detachable; the game adaptation follows the user's explicit override. The other approved terminal shells, open angle structure, curved mid-station and gondola-style pylon are retained. Detailed bullwheels, haul-deflection pulleys, conveyor tyres, carrier running wheels and tower sheaves animate at their corresponding local carrier/rope speeds, with opposite travel on the two lanes. Grips pitch with the cable, release on supported station rails and reattach before leaving. Bubbles/bars open at passenger stops and stay closed through the passenger-free turn. Palace8 doors face the outside boarding platform, and its eight occupied seats show eight corresponding ski-rack positions.
-
-Only Panoramabahn and Palace8 have two-span layouts. Choosing one and placing A/B automatically creates its middle position. Drag its ring to reshape the bend; choose **Angle structure** or **Station M** to edit its datum and foundation. The angle structure's height field controls transfer-rope elevation rather than a passenger floor. Both turn directions are supported from 5° to 55°, with at least 75 m between the middle position and each terminal. Towers and their tilted heads stay 14 m beyond the ends of the transfer structure. Invalid moves remain editable and block Apply.
-
-Distances, tower fractions, the elevation profile, cable sampling, scenery clearing and crossing checks follow the actual supported centreline through the middle. Moving any station projects existing tower feet from their previous world positions onto that alignment. Station overlap and raised-foundation checks include the bent outgoing footprint. New-family towers default to 12 m and allow 3–60 m; existing models' limits are unchanged. Tilted columns retain fixed feet; close towers retain shared foundations and use shorter sheave banks to fit their spacing. Sheave centres use the same rope profile and contact normals as the carriers. Raised stations use a supported raft and piers down to the hillside, without station terrain shaping. Terraces are tied to each station definition and disappear/recompute on move, cancellation, deletion and undo.
-
-Palace8 adds an explicit M snap target and entrance choice. Its graph has all six directional station-to-station rides. Through guests stay in the same cabin; guests alight only at their destination. Mid-station boarding uses separate travel directions. Panoramabahn's angle structure creates no pedestrian target, queue or graph node. Reconfiguring a fleet returns riders to their original boarding station and preserves their intended destination, including M. Speed, opening, stopping and fleet changes remain one coupled operation for the complete lift. One carrier stays reserved for the ride camera.
-
-The cable/transfer model remains a game approximation: one synchronized circulating haul loop follows the supported deflection through each intermediate structure. The historical Princesse has coupled sections and multiple drives; independent rope circuits, tensions, load transfer and manufacturer-specific brake/dispatch timing are not simulated. Station creep and compact transfer acceleration are chosen for this game geometry. There is no money, construction timer, physical carrier garage or independent section control.
-
-The expansion integration originally used version 2; V3 writes version 3 with the same fields. The two dedicated layouts add optional `mid`, `stationElevations.mid` and `stationFoundations.mid` values inside their existing lift records; ordinary lift records need no middle position. All previous IDs, V1 migration, terrain layers and operating fields retain their meaning. Before any save write, browser slots are copied once to `lift-co-pre-next-lifts-20261018:<original key>` through the existing blocking backup gate. Source originals are in `archive/backups/next-lift-game-integration-20261018/`.
-
-
-Integration verification (2026-10-18): syntax checks passed for the twelve touched/new JavaScript sources and the main inline module. Isolated Chrome loaded all thirteen catalog choices with an empty error overlay. A fresh V2 save reloaded all four new types with tower tilt and operating settings intact; a V1 data probe retained its original type, tower settings and grouping. Browser probes exercised all twelve directional passenger journeys across the four additions, including Palace8 through travel without changing seats. Speed ramps retained riders, Stop froze carriers and machinery, and Resume moved them again. A fleet change returned a Palace8 rider to M's correct queue with the original destination; session Undo/Redo restored fleet sizes. An actual M-ring drag passed local undo/redo, Apply and session undo/redo. Additional probes checked a shared foundation, carrier-free construction previews, raised stations, both turn signs, and blocking messages for missing/straight/too-close intermediate positions. Static geometry is merged and repeated moving parts are instanced; dense rope sampling is limited to station machinery. No automated repository test suite was added or run, and laptop FPS remains a user review item. The original `index.html` checksum is unchanged.
-
-## V3 checkpoint
-
-Graphics presets and individual device settings, focused workspaces, rounded station banks, conforming terrain refinement and embedded/scaled concrete footings are implemented. See the [V3 release record](v3-checkpoint.md) for exact behavior, save backups, research and verification. Endpoint status rings remain green/red; selectable connection targets remain teal. Operational rules, ability routing, entrance returns, 25 m piste measurement and ordered terrain-layer replay are unchanged.
-
-Single-station drafts remain editable. Their height/foundation controls work before the other endpoint is placed; terrain and scenery previews wait for both endpoints. Apply still requires a complete, valid line. See the placement hotfix record in [V3 notes](v3-checkpoint.md).

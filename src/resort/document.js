@@ -4,7 +4,7 @@ window.LiftCoResort=(()=>{
  const copy=v=>JSON.parse(JSON.stringify(v)),clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
  const id=prefix=>prefix+'-'+(globalThis.crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2));
  function migrate(saved,lifts){
-  const doc={version:3,lifts:copy(lifts),pistes:copy(saved?.pistes||[]),paths:copy(saved?.paths||[]),junctions:copy(saved?.junctions||[]),terrainLayers:copy(saved?.terrainLayers||[]),entranceStation:saved?.entranceStation||null};
+  const doc={version:2,lifts:copy(lifts),pistes:copy(saved?.pistes||[]),paths:copy(saved?.paths||[]),junctions:copy(saved?.junctions||[]),terrainLayers:copy(saved?.terrainLayers||[]),entranceStation:saved?.entranceStation||null};
   for(const lift of doc.lifts){lift.towers.forEach((t,i)=>t.id??=lift.id+'-tower-'+(i+1));lift.operations??={open:true,running:true,speed:null,count:null};}
   doc.entranceStation??=doc.lifts[0]?doc.lifts[0].id+':base':null;
   return doc;
@@ -60,7 +60,7 @@ window.LiftCoResort=(()=>{
    this.nodes=new Map();this.edges=new Map();this.doc=doc;this.routes=routes;
    const addNode=(key,p)=>{this.nodes.set(key,p);if(!this.edges.has(key))this.edges.set(key,[]);};
    const edge=(from,to,data)=>{if(this.nodes.has(from)&&this.nodes.has(to))this.edges.get(from).push({from,to,...data});};
-   for(const lift of doc.lifts)for(const end of (window.LiftCoNextAlignment?.ends(lift)||['base','top']))addNode(lift.id+':'+end,stationPoint(lift,end));
+   for(const lift of doc.lifts)for(const end of ['base','top'])addNode(lift.id+':'+end,stationPoint(lift,end));
    for(const j of doc.junctions)addNode(j.id,j);
    for(const f of [...doc.paths,...doc.pistes]){if(f.points.length<2)continue;addNode(f.id+':start',f.points[0]);addNode(f.id+':end',f.points.at(-1));}
    for(const f of [...doc.paths,...doc.pistes]){
@@ -69,7 +69,7 @@ window.LiftCoResort=(()=>{
     if(doc.paths.includes(f)){edge(a,b,{kind:'walk',route:r,cost:r.length/2.8});edge(b,a,{kind:'walk',route:r,reverse:true,cost:r.length/2.8});}
     else if(r.rating.valid)edge(a,b,{kind:'ski',route:r,ability:r.rating.ability,cost:r.length/7});
    }
-   for(const lift of doc.lifts){if(lift.operations?.open===false)continue;const ends=window.LiftCoNextAlignment?.ends(lift)||['base','top'],path=window.LiftCoNextAlignment?.make(lift),distance=end=>end==='base'?0:end==='mid'?path.midDistance:path?.length??Math.hypot(lift.base[0]-lift.top[0],lift.base[1]-lift.top[1]);for(const a of ends)for(const b of ends)if(a!==b)edge(lift.id+':'+a,lift.id+':'+b,{kind:'lift',liftId:lift.id,end:a,dest:b,cost:Math.abs(distance(a)-distance(b))/(lift.operations?.speed||5)+20});}
+   for(const lift of doc.lifts){if(lift.operations?.open===false)continue;for(const [a,b]of [['base','top'],['top','base']])edge(lift.id+':'+a,lift.id+':'+b,{kind:'lift',liftId:lift.id,end:a,cost:Math.hypot(lift.base[0]-lift.top[0],lift.base[1]-lift.top[1])/(lift.operations?.speed||5)+20});}
    this.entrance=doc.entranceStation;
   }
   shortest(from,to,ability=3,penalty=()=>0){const dist=new Map([[from,0]]),prev=new Map(),remaining=new Set(this.nodes.keys());while(remaining.size){let at=null,best=Infinity;for(const k of remaining)if((dist.get(k)??Infinity)<best){at=k;best=dist.get(k);}if(at===null)break;remaining.delete(at);if(at===to)break;for(const e of this.edges.get(at)||[]){if((e.ability??0)>ability)continue;const d=best+e.cost+penalty(e);if(d<(dist.get(e.to)??Infinity)){dist.set(e.to,d);prev.set(e.to,e);}}}if(!dist.has(to))return null;const result=[];for(let k=to;k!==from;){const e=prev.get(k);if(!e)return null;result.unshift(e);k=e.from;}return result;}

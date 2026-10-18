@@ -1,6 +1,6 @@
 // Reuse the game's approved detachable housing and fixed-foot mast.
 // The corner shell is architectural adaptation, not a finished angle-station drive.
-window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
+window.LiftCoNextStructures={createFactory(T,{makeCarrier}){
  const cache=new Map(),mat=(color,metalness=0,roughness=.65)=>new T.MeshStandardMaterial({color,metalness,roughness});
  const steel=mat(0xa4b0ad,.65,.38),dark=mat(0x354342,.45),rubber=mat(0x202b2b),concrete=mat(0xb4baad),deckM=mat(0xd5d9cc),yellow=mat(0xbd9d52,.2);
  deckM.side=T.DoubleSide;concrete.side=T.DoubleSide;
@@ -9,15 +9,15 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
  const box=(p,w,h,d,x,y,z,m=steel)=>mesh(p,geo('box'+[w,h,d],()=>new T.BoxGeometry(w,h,d)),m,x,y,z);
  function beam(p,a,b,w=.08,d=w,m=steel){const va=new T.Vector3(...a),vb=new T.Vector3(...b),delta=vb.clone().sub(va),o=box(p,w,delta.length(),d,0,0,0,m);o.position.copy(va).add(vb).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());return o;}
  function cylinder(p,r,h,x,y,z,m=steel,axis='y'){const o=mesh(p,geo('cyl'+[r,h],()=>new T.CylinderGeometry(r,r,h,16)),m,x,y,z);if(axis==='x')o.rotation.z=Math.PI/2;return o;}
- function pipe(p,points,r,m=steel){if(runtime&&r===.018)return null;const curve=new T.CatmullRomCurve3(points.map(v=>Array.isArray(v)?new T.Vector3(...v):v));return mesh(p,new T.TubeGeometry(curve,Math.max(32,points.length*2),r,6,false),m);}
+ function pipe(p,points,r,m=steel){const curve=new T.CatmullRomCurve3(points.map(v=>Array.isArray(v)?new T.Vector3(...v):v));return mesh(p,new T.TubeGeometry(curve,Math.max(32,points.length*2),r,6,false),m);}
  function surface(p,rows,m){const n=rows[0].length,positions=[],indices=[];for(const row of rows)for(const q of row)positions.push(...q);for(let j=0;j<rows.length-1;j++)for(let i=0;i<n-1;i++){const a=j*n+i;indices.push(a,a+n,a+1,a+1,a+n,a+n+1);}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();return mesh(p,g,m);}
  const details=window.LiftCoStudyMachinery.createFactory(T,{geo,mesh,box,beam,cylinder,pipe,surface,steel,dark,rubber,concrete,yellow});
  const sheave=details.sheave;
- function addCarrier(root,id,position,yaw=0,opening=0){if(runtime)return null;const c=makeCarrier(id);c.root.position.copy(position);c.root.rotation.y=yaw;c.setOpening(opening);c.rope.visible=false;root.add(c.root);return c;}
- function pylon(id,{count:requestedCount,halfDeck}={}){
+ function addCarrier(root,id,position,yaw=0,opening=0){const c=makeCarrier(id);c.root.position.copy(position);c.root.rotation.y=yaw;c.setOpening(opening);c.rope.visible=false;root.add(c.root);return c;}
+ function pylon(id){
   const old=id==='alps5',gondola=id==='princesse',root=new T.Group(),head=new T.Group(),passengers=new T.Group(),paint=mat(old?0x68736b:0x9baaa5,.55,old?.78:.45);root.add(head,passengers);
   root.name=old?'Period fixed-grip double support':gondola?'Game gondola support / six-sheave head':'Chairlift support / eight-sheave head';
-  const ropeY=10.3,platformY=old?9.25:gondola?ropeY-1.22:8.8,headY=old?11.05:gondola?ropeY+2.85:12.35,railX=old?2.45:3.1,count=requestedCount??(old?4:gondola?6:8),cy=ropeY-.34;
+  const ropeY=10.3,platformY=old?9.25:gondola?ropeY-1.22:8.8,headY=old?11.05:gondola?ropeY+2.85:12.35,railX=old?2.45:3.1,count=old?4:gondola?6:8,cy=ropeY-.34;
   let mast;
   if(old){
    box(root,1.65,.40,1.65,0,.10,0,concrete);const shaft=mesh(root,geo('period-mast',()=>new T.CylinderGeometry(.34,.53,9.1,12)),paint,0,4.85,0);cylinder(root,.64,.10,0,.35,0,dark);
@@ -32,7 +32,7 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
    details.girder(head,[-4.4,headY,0],[4.4,headY,0],.30,.34,paint);
    if(gondola)for(const side of [-1,1]){beam(head,[side*4.05,headY,0],[side*4.05,headY-.3,.48],.065);const lamp=box(head,.55,.27,.22,side*4.05,headY-.35,.53,dark);box(lamp,.43,.16,.025,0,0,.125,deckM);}
   }
-  const deckHalf=halfDeck??(old?.68:gondola?1.45:1.2),deckWidth=old?1.70:gondola?2.25:1.85;
+  const deckHalf=old?.68:gondola?1.45:1.2,deckWidth=old?1.70:gondola?2.25:1.85;
   for(const x of [-deckWidth,deckWidth])details.girder(head,[x,platformY-.12,-deckHalf],[x,platformY-.12,deckHalf],.14,.18,dark);
   for(let x=-deckWidth+.05;x<deckWidth;x+=.18){if(Math.abs(x)<.34){box(head,.06,.035,deckHalf+.35,x,platformY,(-deckHalf+.35)/2,steel);if(deckHalf>.98)box(head,.06,.035,deckHalf-.98,x,platformY,(deckHalf+.98)/2,steel);}else box(head,.06,.035,deckHalf*2,x,platformY,0,steel);}
   if(!old)for(const side of [-1,1]){for(const z of [-deckHalf,0,deckHalf])beam(head,[side*deckWidth,platformY,z],[side*deckWidth,platformY+1.0,z],.035);for(const h of [.5,1])beam(head,[side*deckWidth,platformY+h,-deckHalf],[side*deckWidth,platformY+h,deckHalf],.035);}
@@ -59,16 +59,16 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
   return t=>{let p,d;if(t<1/3){p=new T.Vector2(0,-half+t*3*leg);d=new T.Vector2(0,1);}else if(t>2/3){const q=corner+(t*3-2)*leg;p=new T.Vector2(q*Math.sin(angle),q*Math.cos(angle));d=new T.Vector2(Math.sin(angle),Math.cos(angle));}else{const u=(t-1/3)*3;p=curve.getPoint(u);d=curve.getTangent(u);}return{x:p.x,z:p.y,nx:d.y,nz:-d.x,yaw:Math.atan2(d.x,d.y)};};
  }
  function deflection(parent,angle,trackY,{half=14}={}){
-  const pulleys=[],paths=[],radius=.9,offset=1.3,y=trackY-.22,sign=Math.sign(angle)||1;
-  for(const side of [-1,1]){const x=side*offset,vz=-x*Math.tan(angle/2),d=radius*Math.tan(Math.abs(angle)/2),cx=x+sign*radius,cz=vz-d;
+  const pulleys=[],paths=[],radius=.9,offset=1.3,y=trackY-.22;
+  for(const side of [-1,1]){const x=side*offset,vz=-x*Math.tan(angle/2),d=radius*Math.tan(angle/2),cx=x+radius,cz=vz-d;
    const rotor=details.bullwheel(parent,{x:cx,y,z:cz,radius,brakes:false});pulleys.push(rotor);details.bearing(parent,cx,y+.45,cz);cylinder(parent,.12,.45,cx,y+.225,cz,steel);details.girder(parent,[cx-.7,y+.75,cz],[cx+.7,y+.75,cz],.16,.20);
-   const points=[];for(let i=0;i<=60;i++)points.push(new T.Vector3(x,y,-half+(cz+half)*i/60));for(let i=1;i<=64;i++){const a=(sign>0?Math.PI:0)-angle*i/64;points.push(new T.Vector3(cx+radius*Math.cos(a),y,cz+radius*Math.sin(a)));}const begin=points.at(-1),end=new T.Vector3(half*Math.sin(angle)+x*Math.cos(angle),y,half*Math.cos(angle)-x*Math.sin(angle));for(let i=1;i<=60;i++)points.push(begin.clone().lerp(end,i/60));pipe(parent,points,.018,dark);for(const dx of [-.55,.55])beam(parent,[cx+dx,y+.75,cz],[cx+dx,trackY+1.3,cz],.10,.14);details.girder(parent,[-4,trackY+1.3,cz],[4,trackY+1.3,cz],.20,.26);paths.push({center:[cx,y,cz],radius,points});
+   const points=[];for(let i=0;i<=60;i++)points.push(new T.Vector3(x,y,-half+(cz+half)*i/60));for(let i=1;i<=64;i++){const a=Math.PI-angle*i/64;points.push(new T.Vector3(cx+radius*Math.cos(a),y,cz+radius*Math.sin(a)));}const begin=points.at(-1),end=new T.Vector3(half*Math.sin(angle)+x*Math.cos(angle),y,half*Math.cos(angle)-x*Math.sin(angle));for(let i=1;i<=60;i++)points.push(begin.clone().lerp(end,i/60));pipe(parent,points,.018,dark);for(const dx of [-.55,.55])beam(parent,[cx+dx,y+.75,cz],[cx+dx,trackY+1.3,cz],.10,.14);details.girder(parent,[-4,trackY+1.3,cz],[4,trackY+1.3,cz],.20,.26);paths.push({center:[cx,y,cz],radius,points});
   }return{pulleys,paths};
  }
  function turnConveyor(parent,R,trackY){
   const rollers=[],rail=[];for(let i=0;i<=64;i++){const a=i/64*Math.PI;rail.push(new T.Vector3((R-.20)*Math.cos(a),trackY-.11,26+(R-.20)*Math.sin(a)));}pipe(parent,rail,.04,details.alloy);
   const spine=[];for(let i=0;i<=40;i++){const a=i/40*Math.PI;spine.push(new T.Vector3((R-.30)*Math.cos(a),trackY+.60,26+(R-.30)*Math.sin(a)));}pipe(parent,spine,.085,dark);
-  for(let i=1;i<16;i++){const a=i/16*Math.PI,nx=Math.cos(a),nz=Math.sin(a),x=(R+.12)*nx,z=26+(R+.12)*nz;const tyre=details.tyre(parent,x,trackY+.33,z,-a);tyre.userData.laneSide=1;tyre.userData.turnAngle=a;rollers.push(tyre);beam(parent,[(R-.30)*nx,trackY+.33,26+(R-.30)*nz],[x,trackY+.33,z],.055,.055,steel);}
+  for(let i=1;i<16;i++){const a=i/16*Math.PI,nx=Math.cos(a),nz=Math.sin(a),x=(R+.12)*nx,z=26+(R+.12)*nz;rollers.push(details.tyre(parent,x,trackY+.33,z,-a));beam(parent,[(R-.30)*nx,trackY+.33,26+(R-.30)*nz],[x,trackY+.33,z],.055,.055,steel);}
   return rollers;
  }
  function terminalDrive(parent,R=2.55,{z=26,y=4.98,small=false}={}){
@@ -80,11 +80,11 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
   const model=window.LiftCoClassicStation.create(T,{root:legacy,half:0,straight:12,railX:2.2,base:{y:5.2},top:{y:5.2},ends:[1],driveAssembly:false});legacy.children[0].position.z=0;
   const rotor=terminalDrive(mechanics,2.2,{z:0,y:5.2,small:true}),points=[new T.Vector3(2.2,5.2,-17),new T.Vector3(2.2,5.2,0)];for(let i=1;i<=64;i++){const a=i/64*Math.PI;points.push(new T.Vector3(2.2*Math.cos(a),5.2,2.2*Math.sin(a)));}points.push(new T.Vector3(-2.2,5.2,-17));pipe(mechanics,points,.018,dark);
   const carrier=addCarrier(root,id,new T.Vector3(2.2,0,-7),0,1);let paint;legacy.traverse(o=>{if(o.material?.color?.getHex()===0x315b55)paint=o.material;});
-  details.merge(mechanics,runtime?new Set([rotor]):new Set());return{root,roof:model.roofs[0],passengers,paint,mechanics,carrier,rollers:[],role:'terminal',through:false,allowAccess:true,fixedGrip:true,height:9,title:'Classic fixed-grip terminal',pulleys:[rotor],detailTarget:[0,5.8,-1],setOpening(){},setColor(c){paint.color.set(c);},setGlazing(){},setCutaway(q){model.roofs.forEach(r=>r.visible=!q);}};
+  details.merge(mechanics);return{root,roof:model.roofs[0],passengers,paint,mechanics,carrier,rollers:[],role:'terminal',through:false,allowAccess:true,fixedGrip:true,height:9,title:'Classic fixed-grip terminal',pulleys:[rotor],detailTarget:[0,5.8,-1],setOpening(){},setColor(c){paint.color.set(c);},setGlazing(){},setCutaway(q){model.roofs.forEach(r=>r.visible=!q);}};
  }
- function openAngleStation(id,angle=35*Math.PI/180){
+ function openAngleStation(id){
   const root=new T.Group(),roof=new T.Group(),supports=new T.Group(),mechanics=new T.Group(),passengers=new T.Group(),paint=mat(0x37765e,.3,.55);root.add(roof,supports,mechanics,passengers);root.name='Open Leitner angle-transfer structure';
-  const trackY=8.2,sample=route(angle,{half:10,corner:5}),samples=Array.from({length:181},(_,i)=>sample(i/180));
+  const angle=35*Math.PI/180,trackY=8.2,sample=route(angle,{half:10,corner:5}),samples=Array.from({length:181},(_,i)=>sample(i/180));
   const mechanism=details.conveyor(mechanics,samples,{trackY}),haul=deflection(mechanics,angle,trackY,{half:10});
   for(const t of [.16,.84]){const p=sample(t),height=trackY+1.25;box(supports,2.15,.45,2.15,p.x,.12,p.z,concrete);box(supports,1.35,height,1.35,p.x,height/2,p.z,concrete);details.girder(supports,[p.x-4.5*p.nx,height,p.z-4.5*p.nz],[p.x+4.5*p.nx,height,p.z+4.5*p.nz],.42,.45,steel);
    for(const side of [-1,1]){beam(supports,[p.x,height-1.8,p.z],[p.x+side*3.9*p.nx,height,p.z+side*3.9*p.nz],.22,.24,dark);beam(supports,[p.x+side*2.8*p.nx,trackY+.60,p.z+side*2.8*p.nz],[p.x+side*2.8*p.nx,height,p.z+side*2.8*p.nz],.13,.16,steel);}
@@ -93,14 +93,14 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
   const selected=samples.filter((p,i)=>i%15===0);for(const offset of [-1.70,1.70])details.walk(supports,selected.map(p=>({x:p.x+offset*p.nx,z:p.z+offset*p.nz})),.78,trackY+1.50);
   // The inspection ladder reaches the service gallery, never a passenger deck.
   const base=sample(.16);for(const side of [-1,1])beam(supports,[base.x+side*.27,.4,base.z+.84],[base.x+side*.27,trackY+2.3,base.z+.84],.032);for(let y=.6;y<trackY+2.2;y+=.3)beam(supports,[base.x-.27,y,base.z+.84],[base.x+.27,y,base.z+.84],.025);
-  const p=sample(.14),carrier=addCarrier(root,id,new T.Vector3(p.x+3.1*p.nx,trackY-5.2,p.z+3.1*p.nz),p.yaw,0);details.merge(mechanics,runtime?new Set([...mechanism.rollers,...haul.pulleys]):new Set());details.merge(supports);
+  const p=sample(.14),carrier=addCarrier(root,id,new T.Vector3(p.x+3.1*p.nx,trackY-5.2,p.z+3.1*p.nz),p.yaw,0);details.merge(mechanics);details.merge(supports);
   return{root,roof,supports,mechanics,passengers,paint,carrier,rollers:mechanism.rollers,railPoints:mechanism.railPoints,pulleys:haul.pulleys,haulPaths:haul.paths,through:true,allowAccess:false,role:'intermediate',sample,trackY,R:3.1,height:12,detailTarget:[0,8.5,0],title:'Open angle-transfer structure',setOpening(){},setColor(c){paint.color.set(c);},setGlazing(){},setCutaway(q){roof.visible=!q;}};
  }
- function station(id,{role,angle:turnAngle}={}){
+ function station(id,{role}={}){
   if(id==='alps5')return legacyStation(id);
-  const f=window.LiftCoNextStudies.families[id],special=f.layout!=='straight';role=role||(special?'intermediate':'terminal');const through=role==='intermediate';if(through&&id==='panoramabahn')return openAngleStation(id,turnAngle);
+  const f=window.LiftCoNextStudies.families[id],special=f.layout!=='straight';role=role||(special?'intermediate':'terminal');const through=role==='intermediate';if(through&&id==='panoramabahn')return openAngleStation(id);
   const root=new T.Group(),roof=new T.Group(),passengers=new T.Group(),supports=new T.Group(),mechanics=new T.Group();root.name=through?'Single curved gondola passenger bay':'Approved detachable terminal';root.add(roof,passengers,supports,mechanics);
-  const color=id==='panoramabahn'?0x37765e:id==='princesse'?0xd5d5ca:0xe2e2d8,shiftY=1.12,trackY=5.2,R=3.1,angle=turnAngle??15*Math.PI/180,sample=route(angle,{through}),housings=[];
+  const color=id==='panoramabahn'?0x37765e:id==='princesse'?0xd5d5ca:0xe2e2d8,shiftY=1.12,trackY=5.2,R=3.1,angle=15*Math.PI/180,sample=route(angle,{through}),housings=[];
   const shellRoot=new T.Group(),supportRoot=new T.Group();shellRoot.position.y=shiftY;roof.add(shellRoot);supports.add(supportRoot);const housing=window.LiftCoDetachableStation.create(T,{parent:shellRoot,supportParent:supportRoot,color,name:f.name,through,supportHeightOffset:shiftY});housings.push(housing);
   if(through){
    // Deform one complete approved through shell onto the shared centreline.
@@ -109,13 +109,13 @@ window.LiftCoNextStructures={createFactory(T,{makeCarrier,runtime=false}){
   }
   // The adapter replaces the plain placeholder spindle with a bearing stack.
   if(!through)housing.supports.traverse(o=>{if(o.geometry?.parameters?.radiusTop===.22)o.visible=false;});
-  const samples=Array.from({length:181},(_,i)=>sample(i/180)),conveyor=details.conveyor(mechanics,samples,{trackY}),pulleys=[],haulPaths=[];if(through){const haul=deflection(mechanics,angle,trackY);pulleys.push(...haul.pulleys);haulPaths.push(...haul.paths);}else{conveyor.rollers.push(...turnConveyor(mechanics,R,trackY));pulleys.push(terminalDrive(mechanics));const points=[];for(let i=0;i<=64;i++){const a=i/64*Math.PI;points.push(new T.Vector3(2.55*Math.cos(a),4.98,26+2.55*Math.sin(a)));}pipe(mechanics,points,.018,dark);for(const side of [-1,1])pipe(mechanics,[[side*2.55,4.98,0],[side*2.55,4.98,26]],.018,dark);}
+  const samples=Array.from({length:181},(_,i)=>sample(i/180)),conveyor=details.conveyor(mechanics,samples,{trackY}),pulleys=[];if(through){const haul=deflection(mechanics,angle,trackY);pulleys.push(...haul.pulleys);}else{conveyor.rollers.push(...turnConveyor(mechanics,R,trackY));pulleys.push(terminalDrive(mechanics));const points=[];for(let i=0;i<=64;i++){const a=i/64*Math.PI;points.push(new T.Vector3(2.55*Math.cos(a),4.98,26+2.55*Math.sin(a)));}pipe(mechanics,points,.018,dark);for(const side of [-1,1])pipe(mechanics,[[side*2.55,4.98,0],[side*2.55,4.98,26]],.018,dark);}
   for(const z of [3.8,26]){const p=through?sample(z/29.6):{x:0,z,nx:1,nz:0};for(const side of [-1,1])beam(mechanics,[p.x+side*2.8*p.nx,trackY+.60,p.z+side*2.8*p.nz],[p.x+side*2.8*p.nx,7.17,p.z+side*2.8*p.nz],.13,.16,steel);}
   const platformY=id==='princesse'?1.19:.26;
   for(const side of [-1,1]){const strips=samples.map(p=>[5.2,7.2].map(x=>[p.x+side*x*p.nx,platformY,p.z+side*x*p.nz]));surface(root,strips,deckM);for(const x of [5.2,7.2])surface(root,samples.map(p=>[0,platformY].map(y=>[p.x+side*x*p.nx,y,p.z+side*x*p.nz])),concrete);pipe(root,samples.map(p=>new T.Vector3(p.x+side*7.05*p.nx,platformY+1.03,p.z+side*7.05*p.nz)),.03,steel);for(let i=0;i<=180;i+=18){const p=samples[i];beam(root,[p.x+side*7.05*p.nx,platformY,p.z+side*7.05*p.nz],[p.x+side*7.05*p.nx,platformY+1.03,p.z+side*7.05*p.nz],.03);}}
   if(through){const walk=samples.filter((p,i)=>i%15===0).map(p=>({x:p.x,z:p.z}));details.walk(mechanics,walk,1.20,6.75);}
   const p=sample(through?.18:.25),carrier=addCarrier(root,id,new T.Vector3(p.x+R*p.nx,trackY-(id==='princesse'?4.2:5.2),p.z+R*p.nz),p.yaw,1),paint=housing.materials.body;
-  details.merge(mechanics,runtime?new Set([...conveyor.rollers,...pulleys]):new Set());details.merge(supports);return{root,roof,passengers,paint,housings,mechanics,rollers:conveyor.rollers,carrier,railPoints:conveyor.railPoints,pulleys,haulPaths,through,allowAccess:true,role,sample,trackY,R,height:11,title:through?'Single curved passenger mid-station':'Adapted detachable terminal',setOpening(){},setColor(c){housings.forEach(h=>h.setColor(c));},setGlazing(){},setCutaway(q){roof.visible=!q;}};
+  details.merge(mechanics);details.merge(supports);return{root,roof,passengers,paint,housings,mechanics,rollers:conveyor.rollers,carrier,railPoints:conveyor.railPoints,pulleys,through,allowAccess:true,role,sample,trackY,R,height:11,title:through?'Single curved passenger mid-station':'Adapted detachable terminal',setOpening(){},setColor(c){housings.forEach(h=>h.setColor(c));},setGlazing(){},setCutaway(q){roof.visible=!q;}};
  }
  return{station,pylon};
 }};
