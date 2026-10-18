@@ -74,7 +74,8 @@
 <script src="./src/lifts/next-lift-machinery.js?v=3"></script>
 <script src="./src/lifts/next-lift-structures.js?v=3"></script>
 <script src="./src/lifts/next-lift-studies.js?v=3"></script>
-<script src="./src/lifts/next-lift-runtime.js?v=3"></script>
+<script src="./src/lifts/chair-sway.js?v=3.0.2"></script>
+<script src="./src/lifts/next-lift-runtime.js?v=3.0.2"></script>
 <script src="./src/lifts/catalog.js?v=3"></script>
 <script src="./src/lifts/ridge-chair.js?v=3"></script>
 <script src="./src/lifts/classic-chair.js?v=3"></script>
@@ -1231,7 +1232,8 @@ if(!def.preview&&spec.cabinFamily){
       const oldSpeed=c.speed;
       // Integrate distance on the existing loop: changing speed never rephases a carrier.
       for(let remaining=dt;remaining>0;){const step=Math.min(.02,remaining);LOOP.pos(c.s,direction);LOOP.pos(c.s+.05,wheelObject.position);const metric=Math.max(.5,direction.distanceTo(wheelObject.position)/.05);c.s=(c.s+targetSpeedAt(c.s)*step/metric)%LOOP.total;remaining-=step;}
-      c.speed=targetSpeedAt(c.s);updateCabinSway(c,dt>0?(c.speed-oldSpeed)/dt:0,dt);
+      c.speed=targetSpeedAt(c.s);const acceleration=dt>0?(c.speed-oldSpeed)/dt:0;
+      if(isChair&&!isClassic)window.LiftCoChairSway.update(c,acceleration,dt);else updateCabinSway(c,acceleration,dt);
       LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);const yaw=Math.atan2(direction.x,direction.z);let delta=yaw-c.yaw;while(delta>Math.PI)delta-=Math.PI*2;while(delta<-Math.PI)delta+=Math.PI*2;c.yaw+=delta*Math.min(1,dt*5);c.g.rotation.y=c.yaw;
       // A short, damped rattle as each trolley traverses the sheave train.
       let vibration=0;

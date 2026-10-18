@@ -38,6 +38,13 @@ detachable terminal crawl remains controlled by the model and never exceeds
 its selected cable speed. Boarding is restricted to the gate approach while the
 carrier's doors or safety bar are open, at either terminal.
 
+Detachable chairs (Ridge, Arcabulle and Panoramabahn) use a damped fore/aft
+pendulum driven by their measured speed change. Braking swings the chair forward;
+acceleration leaves it trailing the grip, then it settles along the line. The
+hanger, seats, riders and ride camera move together while the grip follows its
+existing cable/rail path. The same response covers Panoramabahn's transfer in
+both directions. Fixed-grip station speed behavior and gondola motion are retained.
+
 Carrier count and dispatch spacing are linked and clamped to catalog dispatch
 pitch. Dispatch spacing is the equivalent line distance at catalog maximum
 speed, rather than the packed distance inside a detachable terminal. Fleet
