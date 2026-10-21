@@ -7,3 +7,4 @@ auth.json
 credentials
 *.keystore
 archive/
+.opencodeignore
