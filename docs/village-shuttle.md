@@ -1,7 +1,7 @@
 # Village and automatic shuttle
 
 Local milestone for `empty-map.html`, built from the current Upper Snowfields
-sources on 2026-10-20. The original resort (`index.html`) and VPS are unchanged.
+sources on 2026-10-20. The original resort (`index.html`) is unchanged.
 The milestone was developed and verified in an isolated working copy, then
 installed in the local project. Standalone studies and asset sources are unchanged.
 

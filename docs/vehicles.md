@@ -1,6 +1,6 @@
 # Vehicle workshop
 
-Open [the local vehicle workshop](../designs/vehicles.html). It is separate from the resort: no traffic simulation, resort-save writes, schema changes or VPS deployment are included.
+Open [the local vehicle workshop](../designs/vehicles.html). It is separate from the resort: no traffic simulation, resort-save writes or schema changes are included.
 
 The first set contains twelve original procedural models:
 

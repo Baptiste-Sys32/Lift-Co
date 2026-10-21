@@ -1,9 +1,9 @@
-# Lift Co. — V3
+# Lift Co. - V3
 
 A cozy Three.js ski-resort prototype. Serve the folder over local HTTP (e.g. `python3 -m http.server`) and open the pages from there; they do not load via `file://`. There is no build step. The Three.js CDN needs an internet connection.
 
 Local village milestone: [construction, shuttle and resident specification](docs/village-shuttle.md).
-The original resort (`index.html`) and VPS remain unchanged.
+The original resort (`index.html`) remains unchanged.
 
 ## Start here
 
@@ -28,10 +28,10 @@ The four approved B designs are now buildable in the game: **Arcabulle** (6-seat
 | [Coblence 3S](designs/3s-coblence.html) | CWA Zeta: **three cabin + three tower proposals**. |
 | [Campitello 3S](designs/3s-campitello.html) | CWA Atria: **three cabin + three tower proposals**. |
 | [Alpin Express 3S](designs/3s-alpin-express.html) | Gangloff / Von Roll: **three cabin + three tower proposals**. |
-| [Rocharbois funitel](designs/funitel-rocharbois.html) | **Integrated in the game** — cabin A / Sotelem, Yumbo towers, timber return and drive terminal, moving-load cables and three independently supported cabin sections. [Notes](docs/funitel-rocharbois.md). |
-| [Chairlifts](designs/chairlifts.html) | **Classic** — four seats; **Ridge** — six seats. |
-| [Téléphériques](designs/telepheriques.html) | **Heritage** — compact; **Glacier** — panoramic. |
-| [Single-arm téléphérique](designs/single-arm.html) | **Solo** — the longer 4.5 m version. |
+| [Rocharbois funitel](designs/funitel-rocharbois.html) | **Integrated in the game**: cabin A / Sotelem, Yumbo towers, timber return and drive terminal, moving-load cables and three independently supported cabin sections. [Notes](docs/funitel-rocharbois.md). |
+| [Chairlifts](designs/chairlifts.html) | **Classic** - four seats; **Ridge** - six seats. |
+| [Téléphériques](designs/telepheriques.html) | **Heritage** - compact; **Glacier** - panoramic. |
+| [Single-arm téléphérique](designs/single-arm.html) | **Solo** - the longer 4.5 m version. |
 
 Design studies include model inspection and animation previews. The [three new 3S studies](docs/3s-studies.md) are separate proposals awaiting selection; use their **Cabins / Towers** buttons to inspect each group. **Buildable families: fixed-grip and detachable chairlifts; six detachable monocable gondola choices; the 12-person reversible aerial tramway (Solo); and the 75-person reversible funitel. All thirteen are buildable in `empty-map.html`.** Classic uses its approved compact terminal and constant fixed-grip speed; its [original station study](experiments/classic-chairlift.html) remains available. Heritage and Glacier remain design studies. Solo is buildable with its timber halls, inclined valley dock, flat or inclined upper dock, Heavy Portal pylons and twin haul circuits. Its arrival requires an open downhill approach; small station cuts are automatic. Circulating lifts have station cable-entry guides, yielding hold-down wheels and pylon floodlights. Solo retains its fixed carrying-rope saddles and recessed traction guides. New lines no longer generate ski slopes automatically. Chairlifts and gondolas support fixed-foot column tilt, closely placed towers on shared foundations, an adjustable grouping distance and gold highlighting for the selected tower.
 
@@ -41,9 +41,9 @@ Selected cabins: Arbois A, Jaillet C / Full shoulder, and Princesse A/C. The stu
 
 | Reference | Page | Variants |
 | --- | --- | --- |
-| Mont d’Arbois | [Cabin 1](designs/gondola-mont-arbois.html) | **A Lantern — selected**, reversed hanger, door ski pockets |
-| Jaillet | [Cabin 2](designs/gondola-jaillet.html) | **C Full shoulder — selected**, compact front/rear grilles |
-| Princesse | [Cabin 3](designs/gondola-princesse.html) | **A Panorama + C Touring — selected**, reversed hangers |
+| Mont d’Arbois | [Cabin 1](designs/gondola-mont-arbois.html) | **A Lantern - selected**, reversed hanger, door ski pockets |
+| Jaillet | [Cabin 2](designs/gondola-jaillet.html) | **C Full shoulder - selected**, compact front/rear grilles |
+| Princesse | [Cabin 3](designs/gondola-princesse.html) | **A Panorama + C Touring - selected**, reversed hangers |
 
 Jaillet V4 has a round footprint, a smaller base, fuller sides and curved shoulders that close over the roof. Shell and glazing share the same egg-shaped profile. The newest station photo and POMA patent drawing are included in the reference gallery. Its complete end shells slide around the fixed interior. Use **Slide the shell open** to inspect the proposal. The four selected cabins are now additional build options; the original Alpine cabin remains available as Classic. See [integration notes](docs/gondola-integration.md). [Reference and implementation notes](docs/gondola-megeve-studies.md).
 
@@ -69,7 +69,7 @@ Jaillet V4 has a round footprint, a smaller base, fuller sides and curved should
 
 ```text
 ski-lift/
-├── README.md                  Project navigation — this file
+├── README.md                  Project navigation - this file
 ├── index.html                 Original resort
 ├── empty-map.html             Large blank map / construction
 ├── designs/                   Approved lift design pages

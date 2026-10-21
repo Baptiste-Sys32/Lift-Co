@@ -1,7 +1,7 @@
 # Village milestone verification
 
 2026-10-20. Focused scenarios ran in headless Chrome with an isolated temporary
-profile on localhost. Existing browser profiles, resort slots and the VPS were
+profile on localhost. Existing browser profiles and resort slots were
 not used. No repository test suite was added or run.
 
 | Check | Result |
