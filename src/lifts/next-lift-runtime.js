@@ -18,6 +18,7 @@ window.LiftCoNextRuntime=(()=>{
   const spec=specFor(def),family=spec.family,isChair=!!spec.isChair,fixed=!!spec.fixedGrip,layout=layoutFor(def,ctx),path=layout.path,L=path.length,R=spec.railX||3.1,tail=fixed?12:26,turn=Math.PI*R,straight=L+2*tail,total=2*straight+2*turn;
   const root=new T.Group();root.name=def.name;ctx.scene.add(root);
   const study=window.LiftCoNextStudies.createFactory(T),structures=window.LiftCoNextStructures.createFactory(T,{makeCarrier:id=>study.make(id,1),runtime:true});
+  const standardPylons=[],pylonFactory=family==='princesse'?window.LiftCoGondolaPylons.createFactory(T):null;
   const stationRoofs=[],stationModels=[],spinners=[],supports=layout.nodes.map(n=>({...n,z:L/2-n.distance,number:n.kind==='tower'?n.sourceIndex+1:undefined}));
   const ground=ctx.terrain||ctx.ground;
   const floorOffset=fixed?.645:family==='princesse'?1.19:.26;
@@ -26,12 +27,15 @@ window.LiftCoNextRuntime=(()=>{
   function worldPoint(x,z){const p=path.at(L/2-z,x);return new T.Vector3(p.x,ground(p.x,p.z),p.z);}
   function addBox(parent,w,h,d,x,y,z,color){const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,roughness:.8}));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;parent.add(m);return m;}
   for(const frame of A.stationFrames(def)){
-   const mid=frame.end==='mid',model=structures.station(family,{role:mid?'intermediate':'terminal',angle:path.angle}),datum=stationDatum(frame.end);
+   const mid=frame.end==='mid',model=!mid&&def.stationStyle==='delta'?window.LiftCoStationArchitecture.create('delta',{fixed:true,radius:R,role:frame.end==='base'?'valley':'summit'}):structures.station(family,{role:mid?'intermediate':'terminal',angle:path.angle}),datum=stationDatum(frame.end);
+   if(!mid&&def.stationStyle==='princesse'){model.roof.removeFromParent();const architecture=window.LiftCoStationArchitecture.create('princesse',{length:26,boardingY:floorOffset,deckEnd:26,deckOuter:7.2});model.root.add(architecture.root);model.roof=architecture.roof;model.architecture=architecture;}
+
    model.root.position.set(frame.x,datum,frame.z);model.root.rotation.y=frame.yaw;
    if(fixed){model.root.position.add(new T.Vector3(Math.sin(frame.yaw)*tail,0,Math.cos(frame.yaw)*tail));}
-   model.root.userData.stationEnd=frame.end;root.add(model.root);stationRoofs.push(model.roof);stationModels.push({frame,model,datum});
+   model.root.userData.stationEnd=frame.end;root.add(model.root);if(!mid&&def.stationStyle&&def.stationStyle!=='default')window.LiftCoStationArchitecture.support(model.architecture||model,ground);stationRoofs.push(model.roof);stationModels.push({frame,model,datum});
    for(const roller of model.rollers||[]){const rotor=new T.Group();roller.add(rotor);for(const child of [...roller.children])if(child!==rotor)rotor.add(child);spinners.push({node:rotor,axis:'x',radius:.24,conveyor:true,roller,frame,model,speed:spec.stationSpeed,sign:-(roller.userData.laneSide||Math.sign(roller.position.x)||1)});}
    for(const [i,wheel]of (model.pulleys||[]).entries())spinners.push({node:wheel,axis:'y',radius:mid?.9:fixed?2.2:2.55,speed:null,sign:mid?(i?1:-1)*(Math.sign(path.angle)||1):-1});
+   for(const node of model.motorRotors||[])spinners.push({node,axis:'z',radius:R/48,speed:null,sign:-1});
    // Raised decks retain the hillside and carry their piers down to real ground.
    if(def.stationFoundations?.[frame.end]==='raised'){
     if(mid){const points=[],indices=[],inv=model.root.matrixWorld.clone();model.root.updateWorldMatrix(true,false);inv.copy(model.root.matrixWorld).invert();for(let i=0;i<=24;i++){const d=path.midStart+(path.midEnd-path.midStart)*i/24;for(const side of [-8,8]){const p=path.at(d,side),v=new T.Vector3(p.x,datum-.12,p.z).applyMatrix4(inv);points.push(v.x,v.y,v.z);}if(i<24){const k=i*2;indices.push(k,k+1,k+2,k+1,k+3,k+2);}}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(points,3));geo.setIndex(indices);geo.computeVertexNormals();model.root.add(new T.Mesh(geo,new T.MeshStandardMaterial({color:0xa8afa3,roughness:.8,side:T.DoubleSide})));}else addBox(model.root,16,.24,tail+13,0,-.12,fixed?-5:tail/2,0xa8afa3);
@@ -41,23 +45,38 @@ window.LiftCoNextRuntime=(()=>{
   }
   for(const group of layout.foundationGroups)if(group.shared){const centre=(group.start+group.end)/2,p=path.at(centre),g=new T.Group();g.position.set(p.x,0,p.z);g.rotation.y=Math.atan2(p.dx,p.dz);root.add(g);window.LiftCoFoundations.create(T,{parent:g,top:group.top,width:window.LiftCoFoundations.width(Math.max(...group.members.map(m=>m.tower.height)),group.width),depth:group.end-group.start,groundAt:(x,z)=>{const p=path.at(centre+z,-x);return ground(p.x,p.z);},material:new T.MeshStandardMaterial({color:0xaeb4aa,roughness:.95})});}
   for(const node of layout.nodes.filter(n=>n.kind==='tower')){
+   if(pylonFactory){
+    // Use the same procedural pylon as the straight gondolas. Its local +Z
+    // points towards A; sampling converts that axis to this span's distance.
+    const t=def.towers[node.sourceIndex],head=path.at(node.distance),foot=path.at(t.fraction*L),yaw=Math.atan2(-head.dx,-head.dz),g=new T.Group();g.name='Tower '+(node.sourceIndex+1);g.userData.towerId=t.id;g.position.set(head.x,0,head.z);g.rotation.y=yaw;root.add(g);
+    const delta=new T.Vector3(foot.x-head.x,0,foot.z-head.z).applyAxisAngle(new T.Vector3(0,1,0),-yaw),groundAt=(x,z)=>ground(head.x+Math.cos(yaw)*x+Math.sin(yaw)*z,head.z-Math.sin(yaw)*x+Math.cos(yaw)*z),groundY=groundAt(0,0),shared=layout.foundationGroups.some(f=>f.shared&&f.members.some(m=>m.tower.id===t.id)),gap=Math.min(...layout.nodes.filter(n=>n!==node).map(n=>Math.abs(n.distance-node.distance)));
+    const model=pylonFactory.create({parent:g,ropeY:node.height,ground:groundY,neighbourGap:gap,sideX:R,compression:node.compression,support:{number:node.sourceIndex+1,sharedFoundation:shared},towerDef:t,fixedFoot:{x:delta.x,y:node.footGround-(groundY-.25)-.05,z:delta.z,valid:node.columnValid!==false},groundAt,cableAt:z=>layout.heightAt(node.distance-z),preview:def.preview,lightFixtures:ctx.lightFixtures,lightingRoot:root,ropeContactRadius:.358});
+    // One selectable owner for merged structure and moving wheel parts.
+    delete model.root.userData.towerId;delete model.root.userData.number;
+    const moving=new Set([...model.wheels.map(w=>w.m),...model.wheels.filter(w=>w.compression).flatMap(w=>[w.axle,w.mount]),...model.pairs.map(p=>p.mesh)]);batch(g,moving);
+    for(const w of model.wheels)spinners.push({node:w.m,axis:'x',radius:.34,speed:null,sign:-w.dir,pylon:true});
+    model.root.updateWorldMatrix(true,true);standardPylons.push({model,inverse:model.root.matrixWorld.clone().invert(),points:[]});continue;
+   }
+
    const t=def.towers[node.sourceIndex],neighbours=layout.nodes.filter(n=>n.kind==='tower'&&n!==node),gap=Math.min(Infinity,...neighbours.map(n=>Math.abs(n.distance-node.distance))),normalCount=family==='alps5'?4:family==='princesse'?6:8,bankCount=Math.max(2,Math.min(normalCount,2*Math.floor(((gap-.7)/.76+1)/2))),model=structures.pylon(family,{count:bankCount,halfDeck:Math.min(family==='alps5'?.68:family==='princesse'?1.45:1.2,(gap-.12)/2)}),foot=path.at(t.fraction*L),head=path.at(node.distance),yaw=Math.atan2(head.dx,head.dz),g=new T.Group();g.name='Tower '+(node.sourceIndex+1);g.userData.towerId=t.id;g.position.set(head.x,0,head.z);g.rotation.y=yaw;root.add(g);
    // Keep the approved head at full size. The mast alone adapts in height/tilt,
    // with an explicit fixed footing and the saved shared-foundation datum.
    model.roof.removeFromParent();g.add(model.roof);model.roof.position.y=node.height-10.3;
    const delta=new T.Vector3(foot.x-head.x,0,foot.z-head.z).applyAxisAngle(new T.Vector3(0,1,0),-yaw);
-   const grade=layout.slopeAt(node.distance),normal=Math.sqrt(1+grade*grade),offset=family==='alps5'?1.05:family==='princesse'?1.37:1.65,shift=offset*grade/normal;const mast=window.LiftCoTowerMast.create(T,{parent:g,headY:node.height-offset/normal,groundAt:(x,z)=>{const px=head.x+Math.cos(yaw)*x+Math.sin(yaw)*(z+shift),pz=head.z-Math.sin(yaw)*x+Math.cos(yaw)*(z+shift);return ground(px,pz);},footOverride:{x:delta.x,y:node.footGround,z:delta.z-shift},steel:model.paint,concrete:new T.MeshStandardMaterial({color:0xaeb4aa}),dark:new T.MeshStandardMaterial({color:0x354342}),foundation:!layout.foundationGroups.find(f=>f.members.some(m=>m.tower.id===t.id))?.shared});mast.root.position.z=shift;
-   // Each bank follows the same smoothed grade as its rope. Hold-down banks
-   // invert around the contact datum without moving the tower foundation.
-   // Conform the approved head to the same rope profile. Wheel centres use
-   // the profile normal, so rubber and rope remain tangent on sloping banks.
-   const headMeshes=[];model.roof.traverse(o=>{if(o.isMesh&&!model.wheels.some(w=>{let p=o;while(p){if(p===w)return true;p=p.parent;}return false;}))headMeshes.push(o);});
-   model.roof.updateWorldMatrix(true,true);const inv=model.roof.matrixWorld.clone().invert();
-   for(const mesh of headMeshes){const geo=mesh.geometry.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inv,mesh.matrixWorld)),p=geo.attributes.position;for(let i=0;i<p.count;i++){let x=p.getX(i),y=p.getY(i),z=p.getZ(i);if(family==='alps5')x*=R/2.45;if(node.compression&&Math.abs(x)>R-.8&&y<10.4)y=20.6-y;const slope=layout.slopeAt(node.distance+z),n=Math.sqrt(1+slope*slope),dy=y-10.3;y=10.3+layout.heightAt(node.distance+z)-node.height+dy/n;z-=dy*slope/n;p.setXYZ(i,x,y,z);}geo.computeVertexNormals();geo.computeBoundingSphere();mesh.geometry=geo;model.roof.attach(mesh);mesh.position.set(0,0,0);mesh.rotation.set(0,0,0);mesh.scale.setScalar(1);}
-   for(const wheel of model.wheels){const z=wheel.position.z,s=node.distance+z,slope=layout.slopeAt(s),normal=Math.sqrt(1+slope*slope),sign=node.compression?1:-1;wheel.position.x*=family==='alps5'?R/2.45:1;wheel.position.y=10.3+layout.heightAt(s)-node.height+sign*.34/normal;wheel.position.z=z-sign*.34*slope/normal;}
+   const offset=family==='alps5'?1.05:family==='princesse'?1.37:1.65;
+   window.LiftCoTowerMast.create(T,{parent:g,headY:node.height-offset,groundAt:(x,z)=>ground(head.x+Math.cos(yaw)*x+Math.sin(yaw)*z,head.z-Math.sin(yaw)*x+Math.cos(yaw)*z),footOverride:{x:delta.x,y:node.footGround,z:delta.z},steel:model.paint,concrete:new T.MeshStandardMaterial({color:0xaeb4aa}),dark:new T.MeshStandardMaterial({color:0x354342}),foundation:!layout.foundationGroups.find(f=>f.members.some(m=>m.tower.id===t.id))?.shared});
+   // Keep the crossbeam, deck and rails rigid and level. Only the inboard
+   // sheave supports follow the cable, tapering to their fixed top attachments.
+   // Reflecting arbitrary vertices of a merged head tears triangles into panels.
+   const bankFrames=new Set(model.frames),headMeshes=[];
+   model.roof.traverse(o=>{if(!o.isMesh||model.wheels.some(w=>{for(let p=o;p;p=p.parent)if(p===w)return true;return false;}))return;let bank=false;for(let p=o;p;p=p.parent)if(bankFrames.has(p))bank=true;headMeshes.push({mesh:o,bank});});
+   model.roof.updateWorldMatrix(true,true);const inv=model.roof.matrixWorld.clone().invert(),attachment=family==='alps5'?10.95:family==='princesse'?13.05:12.25;
+   for(const {mesh,bank}of headMeshes){const geo=mesh.geometry.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inv,mesh.matrixWorld)),p=geo.attributes.position;for(let i=0;i<p.count;i++){let x=p.getX(i),y=p.getY(i),z=p.getZ(i);if(family==='alps5')x*=R/2.45;if(bank){const weight=clamp((attachment-y)/(attachment-9.96),0,1),s=node.distance+z,slope=layout.slopeAt(s),n=Math.hypot(1,slope),contact=layout.heightAt(s)-node.height,dy=y-10.3,compression=node.compression?.68:0;y+=weight*(contact+dy/n-dy+compression/n);z-=weight*(dy+compression)*slope/n;}p.setXYZ(i,x,y,z);}geo.computeVertexNormals();geo.computeBoundingSphere();mesh.geometry=geo;model.roof.attach(mesh);mesh.position.set(0,0,0);mesh.rotation.set(0,0,0);mesh.scale.setScalar(1);}
+   for(const wheel of model.wheels){const z=wheel.position.z,s=node.distance+z,slope=layout.slopeAt(s),normal=Math.hypot(1,slope),sign=node.compression?1:-1;wheel.position.x*=family==='alps5'?R/2.45:1;wheel.position.y=10.3+layout.heightAt(s)-node.height+sign*.34/normal;wheel.position.z=z-sign*.34*slope/normal;}
 
+   batch(model.roof,new Set(model.wheels));
    batch(g,new Set([model.roof]));
-   for(const wheel of model.wheels)spinners.push({node:wheel,axis:'x',radius:.322,speed:null,sign:wheel.position.x>0?1:-1});
+   for(const wheel of model.wheels)spinners.push({node:wheel,axis:'x',radius:.322,speed:null,sign:wheel.position.x>0?1:-1,pylon:true});
   }
   const guideAdapters=[];for(const span of layout.layouts){const a=path.at(span.start),b=path.at(span.end),group=new T.Group();group.position.set((a.x+b.x)/2,0,(a.z+b.z)/2);group.rotation.y=Math.atan2(a.x-b.x,a.z-b.z);root.add(group);const guide=window.LiftCoStationGuides.create(T,{root:group,layout:span.layout,half:(span.end-span.start)/2,railX:R,fixedGrip:fixed,ropeRadius:.018});batch(guide.group,new Set(guide.wheels.flatMap(w=>[w.carrier,w.slider].filter(Boolean))));for(const w of guide.wheels)spinners.push({node:w.m,axis:'x',radius:w.radius,speed:null,sign:-w.dir});guideAdapters.push({guide,root:group,carriers:[]});}
   function stationInfo(s){s=((s%total)+total)%total;const forward=s<straight,dist=forward?s-tail:L+tail-(s-straight-turn);
@@ -106,11 +125,11 @@ window.LiftCoNextRuntime=(()=>{
    for(let part=0;part<templateParts.length;part++){const source=templateParts[part],mesh=new T.InstancedMesh(source.geometry,source.material,count);mesh.frustumCulled=false;mesh.castShadow=!source.material.transparent;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);root.add(mesh);instanceSources.push({mesh,nodes:cabins.map(c=>c.parts[part])});}for(const c of cabins)for(const m of c.parts)m.visible=false;
   }
   // Repeated machinery parts share instanced geometry, but retain moving nodes.
-  const conveyorStations=new WeakMap(),wheelGroups=new Map();for(const spin of spinners)spin.node.traverse(o=>{if(!o.isMesh)return;if(spin.conveyor)conveyorStations.set(o,spin.model.root);const key=o.geometry.uuid+'|'+o.material.uuid;if(!wheelGroups.has(key))wheelGroups.set(key,[]);wheelGroups.get(key).push(o);});for(const nodes of wheelGroups.values()){const first=nodes[0],mesh=new T.InstancedMesh(first.geometry,first.material,nodes.length);mesh.frustumCulled=false;mesh.castShadow=true;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);root.add(mesh);instanceSources.push({mesh,nodes});for(const o of nodes)o.visible=false;}
+  const conveyorStations=new WeakMap(),wheelGroups=new Map();for(const spin of spinners){if(def.preview&&spin.pylon)continue;spin.node.traverse(o=>{if(!o.isMesh)return;if(spin.conveyor)conveyorStations.set(o,spin.model.root);const key=o.geometry.uuid+'|'+o.material.uuid;if(!wheelGroups.has(key))wheelGroups.set(key,[]);wheelGroups.get(key).push(o);});}for(const nodes of wheelGroups.values()){const first=nodes[0],mesh=new T.InstancedMesh(first.geometry,first.material,nodes.length);mesh.frustumCulled=false;mesh.castShadow=true;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);root.add(mesh);instanceSources.push({mesh,nodes});for(const o of nodes)o.visible=false;}
   function gateInfo(end,dest){
    const forward=end==='base'||end==='mid'&&dest!=='base',direction=forward?1:-1;
-   let loadD=end==='base'?-tail+10:end==='top'?L+tail-10:path.midDistance+direction*4;
-   let unloadD=end==='base'?-tail+10:end==='top'?L+tail-10:path.midDistance-direction*4;
+   let loadD=end==='base'?-tail+14:end==='top'?L+tail-14:path.midDistance+direction*4;
+   let unloadD=end==='base'?-tail+14:end==='top'?L+tail-14:path.midDistance-direction*4;
    if(fixed){loadD=end==='base'?-tail+6:L+tail-6;unloadD=loadD;}
    const toS=(d,fwd)=>fwd?tail+d:straight+turn+L+tail-d;
    const gate=toS(loadD,forward),unloadGate=toS(unloadD,!forward),p=path.at(loadD,-direction*(R+1.2)),q=path.at(unloadD,direction*(R+1.2)),y=stationDatum(end)+floorOffset;
@@ -128,10 +147,13 @@ window.LiftCoNextRuntime=(()=>{
     const info=stationInfo(c.s),release=fixed?0:info?info.end==='mid'?clamp(info.inside/2,0,1):1-clamp(info.distance/tail,0,1):0;c.detached=release;for(const jaw of c.gripJaws)jaw.position.x=-.16-release*.14;for(const wheel of c.runningWheels)wheel.rotation.x+=release*c.speed*dt/.09;
     const accel=dt?(c.speed-old)/dt:0;
     if(isChair&&!fixed)window.LiftCoChairSway.update(c,accel,dt);
-    else {const target=clamp(-accel*.025,-.09,.09);c.swayVelocity+=(target-c.sway)*10*dt-c.swayVelocity*4*dt;c.sway+=c.swayVelocity*dt;}
+    // Local +Z follows travel on both lanes; positive pitch moves the body
+    // behind its grip during acceleration, negative pitch forward on braking.
+    else {const target=clamp(accel*.025,-.09,.09);c.swayVelocity+=(target-c.sway)*10*dt-c.swayVelocity*4*dt;c.sway+=c.swayVelocity*dt;}
     c.suspension.rotation.x=c.sway;
     c.door=T.MathUtils.damp(c.door,openAt(c.s)&&(isChair||c.speed<1.15)?1:0,5,dt);if(dt===0)c.door=openAt(c.s)&&(isChair||c.speed<1.15)?1:0;if(c.bar)c.bar.rotation.x=-c.door*1.65;if(c.bubble&&isChair)c.bubble.rotation.x=-c.door*1.72;for(let seat=0;seat<c.rackSkis.length;seat++)c.rackSkis[seat].visible=!!c.riders[seat]&&['ride','board'].includes(c.riders[seat].state);for(let i=0;i<c.doors.length;i++)c.doors[i].position.x=(i===0?-1:1)*( (studyDoorWidth())/2+c.door*studyDoorWidth()*.92);
    }
+   for(const pylon of standardPylons){while(pylon.points.length<cabins.length)pylon.points.push(new T.Vector3());pylon.points.length=cabins.length;for(let i=0;i<cabins.length;i++)pylon.points[i].copy(cabins[i].g.position).applyMatrix4(pylon.inverse);pylon.model.updateHoldDown(pylon.points);}
    root.updateMatrixWorld(true);for(const adapter of guideAdapters){while(adapter.carriers.length<cabins.length)adapter.carriers.push({g:{position:new T.Vector3()}});for(let i=0;i<cabins.length;i++)adapter.root.worldToLocal(adapter.carriers[i].g.position.copy(cabins[i].g.position));adapter.guide.update(adapter.carriers);}root.updateMatrixWorld(true);for(const {mesh,nodes}of instanceSources){for(let i=0;i<nodes.length;i++){const station=conveyorStations.get(nodes[i]);if(station){const gfx=window.LiftCoGraphics;if(gfx&&station.userData.gfxFrame!==gfx.frame){station.userData.gfxFrame=gfx.frame;station.getWorldPosition(conveyorPoint);station.userData.animateDetail=gfx.animateDetail(conveyorPoint);}if(gfx&&!station.userData.animateDetail)continue;}let visible=true;for(let p=nodes[i].parent;p&&p!==root;p=p.parent)if(!p.visible){visible=false;break;}mesh.setMatrixAt(i,visible?nodes[i].matrixWorld:matrix.makeScale(0,0,0));}mesh.instanceMatrix.needsUpdate=true;}
   }
   function studyDoorWidth(){const v=window.LiftCoNextStudies.families[family].variants[1];return(v.w-2*v.round)/2;}

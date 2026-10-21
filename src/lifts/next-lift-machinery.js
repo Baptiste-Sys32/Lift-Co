@@ -60,7 +60,7 @@ window.LiftCoStudyMachinery={createFactory(T,h){
    let distance=0,last=-1;for(let i=1;i<samples.length-1;i++){
     distance+=Math.hypot(samples[i].x-samples[i-1].x,samples[i].z-samples[i-1].z);if(distance-last<spacing)continue;last=distance;
     const p=samples[i],x=p.x+side*(railX+.12)*p.nx,z=p.z+side*(railX+.12)*p.nz,cy=trackY+.33;
-    const wheel=tyre(parent,x,cy,z,p.yaw);rollers.push(wheel);const back=railX-.30,ax=p.x+side*back*p.nx,az=p.z+side*back*p.nz;
+    const wheel=tyre(parent,x,cy,z,p.yaw);wheel.userData.laneSide=side;rollers.push(wheel);const back=railX-.30,ax=p.x+side*back*p.nx,az=p.z+side*back*p.nz;
     beam(parent,[ax,cy,az],[x,cy,z],.055,.055,alloy);box(parent,.19,.22,.23,ax,cy,az,cast);beam(parent,[ax,cy,az],[ax,trackY+.60,az],.075,.11,steel);
     if(rollers.length%4===0){const g=new T.Group();g.position.set(ax,cy,az);g.rotation.y=p.yaw;parent.add(g);const pulley=mesh(g,geo('belt-pulley',()=>new T.TorusGeometry(.13,.022,6,20)),alloy);pulley.rotation.y=Math.PI/2;
      const previous=samples[Math.max(0,i-6)],a=new T.Vector3(previous.x+side*back*previous.nx,cy,previous.z+side*back*previous.nz),b=new T.Vector3(ax,cy,az);pipe(parent,[a.clone().add(new T.Vector3(0,.14,0)),b.clone().add(new T.Vector3(0,.14,0))],.014,rubber);pipe(parent,[a.clone().add(new T.Vector3(0,-.14,0)),b.clone().add(new T.Vector3(0,-.14,0))],.014,rubber);

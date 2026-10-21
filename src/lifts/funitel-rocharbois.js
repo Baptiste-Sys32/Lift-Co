@@ -337,9 +337,9 @@ window.LiftCoFunitelStudy={
    writeWheels();
   }};
  }
- function makeStation(index,{deck=0,stubs=true,role=null}={}){
+ function makeStation(index,{deck=0,stubs=true,role=null,steelGallery=false}={}){
   const v=window.LiftCoFunitelStudy.stations[index],kind=role||v.kind,root=new T.Group(),frame=new T.Group(),building=new T.Group(),roof=new T.Group(),machinery=new T.Group(),rollers=[];root.add(frame,building,roof,machinery);
-  const L=v.length,front=-L/2,back=L/2,H=deck+ropeHeight,roofY=H+1.45;
+  const L=v.length,front=-L/2,back=L/2,H=deck+ropeHeight,roofY=H+(steelGallery?1.8725:1.45);
   // Recessed channels leave the cabin floors level with the central platform.
   box(frame,3.75,.52,L,0,deck-.26,0,M.concrete);
   for(const side of [-1,1]){
@@ -350,28 +350,28 @@ window.LiftCoFunitelStudy={
   }
   box(frame,13.8,.52,2.4,0,deck-.26,back+1.0,M.concrete);
   for(const side of [-1,1]){
-   for(const z of [front+.7,back-3]){
-    const x=side*6.4;box(frame,.25,roofY-deck,.25,x,(roofY+deck)/2,z,index===0?M.wood:M.woodDark);
-    beam(frame,[x,roofY-2,z],[x-side*1.1,roofY,z],.17,.17,index===0?M.wood:M.woodDark);
-    beam(frame,[x,roofY-2,z],[x,roofY,z+1.5],.17,.17,index===0?M.wood:M.woodDark);
+   if(!steelGallery)for(const z of [front+.7,back-3]){
+    const x=side*6.4;box(frame,.25,roofY-deck,.25,x,(roofY+deck)/2,z,steelGallery?M.steel:index===0?M.wood:(steelGallery?M.steel:M.woodDark));
+    beam(frame,[x,roofY-2,z],[x-side*1.1,roofY,z],.17,.17,steelGallery?M.steel:index===0?M.wood:(steelGallery?M.steel:M.woodDark));
+    beam(frame,[x,roofY-2,z],[x,roofY,z+1.5],.17,.17,steelGallery?M.steel:index===0?M.wood:(steelGallery?M.steel:M.woodDark));
    }
-   beam(frame,[side*6.4,roofY,front],[side*6.4,roofY,back],.24,.29,M.woodDark);
+   if(!steelGallery)beam(frame,[side*6.4,roofY,front],[side*6.4,roofY,back],.24,.29,(steelGallery?M.steel:M.woodDark));
    for(const x of [side*2,side*5]){
     const receptor=new T.Group();receptor.position.z=front+.9;frame.add(receptor);
     for(let k=0;k<6;k++)rollers.push({root:wheel(receptor,x,H-.28,-2.9+k*.58,.28),radius:.28,direction:-Math.sign(x)});
     beam(receptor,[x,H-.65,-3.25],[x,H-.65,.35],.15,.25);
-    beam(frame,[side*6.4,roofY,front+.7],[x,H-.65,front+.7],.14,.14,M.woodDark);
+    beam(frame,[side*6.4,roofY,front+.7],[x,H-.65,front+.7],.14,.14,(steelGallery?M.steel:M.woodDark));
     if(stubs)ropeCurve(root,x,z=>{
      const end=front-2,r=.28,start=end-r*departureSlope/Math.hypot(1,departureSlope),contact=H-r+Math.sqrt(r*r-(start-end)**2),y=z<start?contact+departureSlope*(z-start):z>end?H:H-r+Math.sqrt(Math.max(0,r*r-(z-end)**2));return{z,y};
     },front-7,2.35,112);
    }
   }
-  for(const z of [front+.7,0,back-3])beam(frame,[-6.4,roofY,z],[6.4,roofY,z],.22,.27,M.woodDark);
+  for(const z of (steelGallery?[front+.7,back-3]:[front+.7,0,back-3]))beam(frame,[-6.4,roofY,z],[6.4,roofY,z],.22,.27,(steelGallery?M.steel:M.woodDark));
   if(!terminalFactory)terminalFactory=window.LiftCoFunitelTerminals.createFactory(T,{M,geo,mesh,box,beam,cylinder,batch,wheel});
   const mechanism=terminalFactory.make({parent:machinery,kind,H,back});
   if(index===0){
    const shape=new T.Shape();shape.moveTo(-7.1,roofY);shape.lineTo(0,roofY+2);shape.lineTo(7.1,roofY);shape.lineTo(7.1,roofY-.14);shape.lineTo(0,roofY+1.83);shape.lineTo(-7.1,roofY-.14);shape.closePath();
-   mesh(roof,new T.ExtrudeGeometry(shape,{depth:L+1,bevelEnabled:false}),M.woodDark,0,0,front-.5);
+   mesh(roof,new T.ExtrudeGeometry(shape,{depth:L+1,bevelEnabled:false}),(steelGallery?M.steel:M.woodDark),0,0,front-.5);
    for(const side of [-1,1])for(let z=front;z<=back;z+=1.3)beam(roof,[0,roofY+1.8,z],[side*7.05,roofY-.05,z],.12,.17,M.wood);
    // Enclosed timber hall: walls meet the eaves and both gables fill the roof.
    // Only the two cabin portals and central pedestrian entrances remain open.
@@ -399,21 +399,21 @@ window.LiftCoFunitelStudy={
    for(const z of [front,back+.12]){
     const gable=new T.Shape();gable.moveTo(-7.1,roofY-.02);gable.lineTo(0,roofY+1.97);gable.lineTo(7.1,roofY-.02);gable.closePath();
     mesh(building,new T.ExtrudeGeometry(gable,{depth:.16,bevelEnabled:false}),M.wood,0,0,z);
-    for(const x of [-.9,.9])box(building,.10,2.45,.25,x,deck+1.225,z,M.woodDark);
-    box(building,1.9,.12,.25,0,deck+2.45,z,M.woodDark);
+    for(const x of [-.9,.9])box(building,.10,2.45,.25,x,deck+1.225,z,(steelGallery?M.steel:M.woodDark));
+    box(building,1.9,.12,.25,0,deck+2.45,z,(steelGallery?M.steel:M.woodDark));
    }
   }else{
    // The open front retains the steel porch silhouette in the photographs.
-   box(roof,13.8,.20,6,0,roofY+.08,back-1.7,M.woodDark);
+   box(roof,13.8,.20,6,0,roofY+.08,back-1.7,(steelGallery?M.steel:M.woodDark));
    for(const side of [-1,1]){
-    if(index===2)box(roof,2.1,.14,L-5,side*5.9,roofY+.1,front+(L-5)/2,M.woodDark);
+    if(index===2)box(roof,2.1,.14,L-5,side*5.9,roofY+.1,front+(L-5)/2,(steelGallery?M.steel:M.woodDark));
     box(building,.16,3.6,5,side*6.4,deck+1.8,back-1.5,M.wood);
-    beam(frame,[side*6.4,deck+.2,front+3],[side*6.4,roofY,front-.3],.25,.25,M.woodDark);
+    beam(frame,[side*6.4,deck+.2,front+3],[side*6.4,roofY,front-.3],.25,.25,(steelGallery?M.steel:M.woodDark));
    }
    box(building,12.9,3.6,.15,0,deck+1.8,back+1,M.wood);
    for(let x=-5.6;x<6;x+=2.8)box(building,2.2,.95,.035,x,deck+2.6,back+1.10,M.glass);
   }
-  label(frame,'LIFT CO.  /  ROCHARBOIS',5.5,.29,0,roofY+.05,front-.08,Math.PI);
+  if(!steelGallery)label(frame,'LIFT CO.  /  ROCHARBOIS',5.5,.29,0,roofY+.05,front-.08,Math.PI);
   box(frame,.4,1,.35,0,deck+.5,front+2,M.steel);box(frame,.65,.08,.45,0,deck+1,front+2,M.yellow);
   batch(frame,rollers.map(r=>r.root));for(const roller of rollers)batch(roller.root);batch(building);batch(roof);
   return{root,roof,building,machinery,pulleys:mechanism.pulleys,v,deck,ropeY:H,front,back,

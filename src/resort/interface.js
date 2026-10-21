@@ -7,7 +7,7 @@ window.LiftCoInterface=function(){
  const undo=tools.querySelector('#sessionUndo').parentElement;undo.classList.add('history-actions');panel.append(undo);
  const operations=$('operations');operations.before(document.createComment('Operations follows selected line'));lines.append(operations);const explanation=operations.querySelector('p:last-child'),details=document.createElement('details');details.className='operations-help';details.innerHTML='<summary>How this line operates</summary>';details.append(explanation);operations.append(details);
  const entrance=$('entranceSelect');resort.append(tools.querySelector('label[for="entranceSelect"]'),entrance);
- const heading=document.createElement('div');heading.className='workspace-intro';heading.innerHTML='<h2>Shape your resort</h2><p class="small">Sculpt snow, draw pistes and connect the mountain.</p>';terrain.append(heading,tools.querySelector('.tool-menu'),$('featureList'),$('earthEditor'));
+ const heading=document.createElement('div');heading.className='workspace-intro';heading.innerHTML='<h2>Shape your resort</h2><p class="small">Sculpt snow, draw pistes and connect the mountain.</p>';terrain.append(heading,tools.querySelector('.tool-menu'),$('villagePanel'),$('featureList'),$('earthEditor'));
  for(const s of sections)resort.append(s);resort.append($('exportResort'),panel.querySelector('.sidebar-note'));tools.remove();panel.append(lines,terrain,resort);
  // Shared workbench styles apply after the former wrapper is removed.
  for(const el of [lines,terrain,resort])el.classList.add('workspace','resort-tools');

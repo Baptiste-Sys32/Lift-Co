@@ -1,0 +1,59 @@
+{
+  "retrieved": "2026-10-19",
+  "purpose": "Local architectural design research. Original author/manufacturer rights retained. No redistribution license asserted.",
+  "assets": [
+    {
+      "file": "satellit.pdf",
+      "url": "https://lacpse.remontees-mecaniques.net/pdf/grandmassifexpress.pdf",
+      "credit": "Poma, Grand Massif Express, two-page press brochure"
+    },
+    {
+      "file": "princesse.pdf",
+      "url": "https://membres.remontees-mecaniques.net/monchu/pdf/dpprincesse.pdf",
+      "credit": "Poma, La Princesse, January 2003, 14-page press dossier"
+    },
+    {
+      "file": "etale.pdf",
+      "url": "https://lacpse.remontees-mecaniques.net/pdf/etale.pdf",
+      "credit": "Poma, L Etale, product sheet"
+    },
+    {
+      "file": "multix.pdf",
+      "url": "https://membres.remontees-mecaniques.net/monchu/pdf/dp-chatel.pdf",
+      "credit": "Poma, Echo Alpin, January 2010 press dossier"
+    },
+    {
+      "file": "alpha.jpg",
+      "url": "https://i.servimg.com/u/f62/18/99/84/91/dscn3814.jpg",
+      "credit": "Original photo linked by the stationsdeski.net Alpha station thread; individual photographer not established"
+    },
+    {
+      "file": "leitner.jpg",
+      "url": "https://www.leitner.com/fileadmin/_processed_/a/1/csm_busa-fonda-melette-di-mezzo_e0cf6f9b68.jpg",
+      "credit": "Leitner, Busa Fonda, official component photograph"
+    }
+  ],
+  "derivedPreviews": [
+    {
+      "file": "princesse-station.jpg",
+      "source": "princesse.pdf",
+      "page": 6,
+      "method": "Whole page rasterized with Poppler; original photo credit retained"
+    },
+    {
+      "file": "etale.jpg",
+      "source": "etale.pdf",
+      "page": 1,
+      "method": "Whole page rasterized with Poppler"
+    },
+    {
+      "file": "multix.jpg",
+      "source": "multix.pdf",
+      "page": 2,
+      "method": "Whole page rasterized with Poppler"
+    }
+  ],
+  "separateAlphaSourcePage": "https://forum.stationsdeski.net/t2564-les-gares-alpha-telesieges-fixes-poma",
+  "primaryLeitnerSourcePage": "https://www.leitner.com/en/products/ropeway-components/detail/leitner-station/",
+  "retrievalLimits": "Direct Google request returned consent page. Nine RM report HTML requests returned 403. Research supplemented with web/image search, successfully retrieved manufacturer PDFs, official Leitner documentation and existing local RM photographs."
+}

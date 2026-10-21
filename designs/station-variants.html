@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. / Station workshop</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../src/styles/station-variants.css">
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
+</head>
+<body>
+<aside>
+ <a class="brand" href="../empty-map.html">LIFT CO<span>.</span><small>STATION WORKSHOP / 03</small></a>
+ <header><p class="eyebrow">ARCHITECTURE ON THE MOUNTAIN</p><h1>Built for<br>the mountain.</h1><p class="intro">Four designs locked in.<br>Structure, machinery and arrival refinements.</p></header>
+ <label class="eyebrow" for="lift">01 / STATION CATEGORY</label><select id="lift"></select>
+ <label class="carrier-label" for="carrier-model">Approved carrier, for scale</label><select id="carrier-model"></select>
+ <div class="role-row"><label for="role">Station position</label><select id="role"><option value="valley">Valley</option><option value="summit">Summit</option></select></div>
+ <nav id="variants" aria-label="Station alternatives"></nav>
+ <div class="actions"><button id="compare" aria-pressed="false">Compare A / B / C</button><button id="reference-open">Reference photo</button><button id="current" aria-pressed="false" hidden>Current</button></div>
+ <section class="inspection"><p class="eyebrow">02 / LOOK INSIDE</p><label><input type="checkbox" id="cutaway"> Remove building / cover</label><label><input type="checkbox" id="carrier" checked> Show approved carrier</label><label><input type="checkbox" id="motion" checked> Animate lift and machinery</label><label><input type="checkbox" id="rotate"> Rotate view</label></section>
+ <section id="references"><p class="eyebrow">03 / REFERENCE DESK</p><h4 id="reference-title"></h4><div id="photos"></div><p id="reference-basis"></p><div id="sources"></div><p id="reference-credit"></p><p class="reference-note">Reference images retain their credits. Photographs and manufacturer drawings are shown for comparison. Dimensions are estimated; architecture is adapted around the approved game machinery.</p></section>
+ <footer><button id="pick">Keep A for this category</button><button id="export">Export my choices</button><p id="saved" role="status">Selections stay in this browser, separate from resort saves.</p><a href="../docs/station-variants.md">Research and compatibility notes</a></footer>
+</aside>
+<main>
+ <div class="topbar"><div><p class="eyebrow" id="category">DESIGN STUDY</p><h2 id="title">Preparing the workshop...</h2></div><span class="study-tag">STUDY ONLY / GAME UNCHANGED</span></div>
+ <div id="viewport" aria-label="Interactive 3D station model"></div>
+ <div id="empty-state" hidden><strong>No detachable-chair designs kept.</strong><p>The previous A, B and C proposals have been removed.</p></div>
+ <nav class="views" aria-label="Camera views"><button data-view="quarter" aria-pressed="true">Perspective</button><button data-view="front">Cable entry</button><button data-view="side">Side</button><button data-view="top">Plan</button><button data-view="detail">Machinery</button></nav>
+ <div id="compare-labels"></div>
+ <div class="caption"><p class="eyebrow" id="variant-code">PROPOSAL A</p><h3 id="variant-name"></h3><p id="description"></p><div id="dimensions"></div><p id="mechanics"></p></div>
+ <div class="hint">Drag to orbit / scroll to zoom / right-drag to pan<span id="stats"></span></div>
+ <div id="loading" role="status">Building the first station...</div><pre id="error" role="alert" hidden></pre>
+</main>
+<dialog id="photo-dialog"><button id="close-photo">Close reference</button><img id="large-photo" alt="Station design reference"><p id="photo-credit"></p></dialog>
+<script src="../src/lifts/detachable-station.js"></script><script src="../src/lifts/tower-mast.js"></script><script src="../src/lifts/classic-station.js"></script>
+<script src="../src/lifts/next-lift-machinery.js"></script><script src="../src/lifts/next-lift-structures.js"></script><script src="../src/lifts/next-lift-studies.js"></script>
+<script src="../src/lifts/ridge-chair.js"></script><script src="../src/lifts/classic-chair.js"></script><script src="../src/lifts/gondola-studies.js"></script><script src="../src/lifts/gondola.js"></script>
+<script src="../src/lifts/solo.js"></script><script src="../src/lifts/solo-runtime.js"></script><script src="../src/lifts/solo-structures.js"></script><script src="../src/lifts/solo-machinery.js"></script>
+<script src="../src/lifts/funitel-terminals.js"></script><script src="../src/lifts/funitel-rocharbois.js"></script>
+<script type="module" src="../src/lifts/station-variants-viewer.js"></script>
+</body></html>

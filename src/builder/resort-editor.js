@@ -1,14 +1,40 @@
+// Pointer lock or cancellation can invalidate capture during a drag start.
+// Abort the gesture cleanly instead of leaving controls disabled.
+window.LiftCoCapturePointer=(element,pointerId)=>{
+ if(document.pointerLockElement||!element.isConnected)return false;
+ try{element.setPointerCapture(pointerId);return true;}catch(error){if(error.name==='InvalidStateError'||error.name==='NotFoundError')return false;throw error;}
+};
 // Shared placement rules for save loading and every construction entry point.
 window.LiftCoPlacement=(()=>{
  'use strict';
  const EPS=1e-6;
+ const transferMargin=14;
+ function transferZone(d,path=window.LiftCoNextAlignment?.make(d)){
+  return path?.midStart==null?null:{start:path.midStart-transferMargin,end:path.midEnd+transferMargin,structureStart:path.midStart,structureEnd:path.midEnd,margin:transferMargin};
+ }
+ function transferConflicts(d,path=window.LiftCoNextAlignment?.make(d),layout=null){
+  const zone=transferZone(d,path);if(!zone)return[];const ordered=(d.towers||[]).slice().sort((a,b)=>a.fraction-b.fraction),issues=[];
+  for(let index=0;index<ordered.length;index++){
+   const tower=ordered[index],node=layout?.nodes.find(n=>n.kind==='tower'&&n.id===tower.id),foot=tower.fraction*path.length,head=node?.distance;
+   const kind=foot>zone.start+EPS&&foot<zone.end-EPS?'foundation':Number.isFinite(head)&&head>zone.start+EPS&&head<zone.end-EPS?'wheel head':null;if(!kind)continue;
+   const distance=kind==='foundation'?foot:head,toA=distance-zone.start,toB=zone.end-distance,side=toA<=toB?'A':'B',move=Math.ceil(Math.min(toA,toB)*10)/10;
+   issues.push({towerId:tower.id,index:index+1,code:'transfer',distance,move,side,message:'T'+(index+1)+' '+kind+' enters the M clearance zone. Move at least '+move.toFixed(1)+' m towards '+side+(kind==='wheel head'?' or reduce its tilt.':'.')});
+  }return issues;
+ }
+
  const margins=(d,spec)=>({base:spec.terminalSpacing||14,top:d.type==='solo'&&d.arrivalProfile==='flat'?30:spec.terminalSpacing||14});
  function definitionReason(d,types,limits){
   const spec=types.find(t=>t.id===(d?.type||'gondola'));
   if(!d||!spec||typeof d.id!=='string'||!d.id||typeof d.name!=='string')return 'Choose a known lift type and name.';
+  if(window.LiftCoStationDesigns&&!window.LiftCoStationDesigns.valid(d))return 'Choose a station type compatible with this lift.';
   if(![d.base,d.top].every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)))return 'Place two finite station positions.';
   if([d.base,d.top].some(p=>p.some(v=>Math.abs(v)>limits.buildLimit)))return 'Move the stations inside the resort boundary.';
-  const length=Math.hypot(d.top[0]-d.base[0],d.top[1]-d.base[1]);
+  const special=window.LiftCoNextAlignment?.special(d);
+  if(special&&(!Array.isArray(d.mid)||d.mid.length!==2||!d.mid.every(Number.isFinite)))return 'Place a finite intermediate station position.';
+  if(special&&d.mid.some(v=>Math.abs(v)>limits.buildLimit))return 'Move the intermediate structure inside the resort boundary.';
+  const path=window.LiftCoNextAlignment?.make(d),length=special?path.length:Math.hypot(d.top[0]-d.base[0],d.top[1]-d.base[1]);
+  if(special&&(path.u.length<75||path.v.length<75))return 'Leave at least 75 m from the intermediate structure to each end station.';
+  if(special&&(Math.abs(path.angle)<5*Math.PI/180-1e-6||Math.abs(path.angle)>55*Math.PI/180+1e-6))return 'The dedicated intermediate structure needs a turn between 5° and 55°. Drag its middle ring.';
   if(length<60-EPS||length>limits.maxLineLength+EPS)return 'Lift length must be 60–'+limits.maxLineLength+' m.';
   if(!Array.isArray(d.towers)||d.towers.length>60)return 'A line supports at most 60 towers.';
   const ids=new Set(),margin=margins(d,spec),gap=spec.reversible?10:1.7;
@@ -19,19 +45,22 @@ window.LiftCoPlacement=(()=>{
    if([t.leanAlong,t.leanAcross].some(a=>a!==undefined&&(!Number.isFinite(a)||Math.abs(a)>20)))return 'Tower tilt must stay within ±20°.';
    if(t.id!==undefined){if(ids.has(t.id))return 'Each tower needs a distinct identity.';ids.add(t.id);}
    const distance=t.fraction*length;
+   if(special){const issue=transferConflicts(d,path).find(issue=>issue.index===i+1);if(issue)return issue.message;}
    if(distance<margin.base-EPS||distance>length-margin.top+EPS||i>0&&(t.fraction-towers[i-1].fraction)*length<gap-EPS)return 'Tower foundations need '+gap+' m spacing, '+margin.base+' m from A and '+margin.top+' m from B.';
   }
   if(d.arrivalProfile!==undefined&&!['inclined','flat'].includes(d.arrivalProfile))return 'Choose Inclined or Flat for the arrival profile.';
   if(d.groupDistance!==undefined&&(!Number.isFinite(d.groupDistance)||d.groupDistance<0||d.groupDistance>15))return 'Foundation grouping must stay within 0–15 m.';
   if(!Number.isFinite(d.sag)||d.sag<0||d.sag>1.5)return 'Cable sag must stay within 0–1.5 m.';
-  if(d.stationElevations&&['base','top'].some(end=>d.stationElevations[end]!==undefined&&!Number.isFinite(d.stationElevations[end])))return 'Station elevations must be finite.';
-  if(d.stationFoundations&&['base','top'].some(end=>d.stationFoundations[end]!==undefined&&!['terrace','raised'].includes(d.stationFoundations[end])))return 'Choose Terrace or Raised for each station.';
+  if(d.stationElevations&&['base','mid','top'].some(end=>d.stationElevations[end]!==undefined&&!Number.isFinite(d.stationElevations[end])))return 'Station elevations must be finite.';
+  if(d.stationFoundations&&['base','mid','top'].some(end=>d.stationFoundations[end]!==undefined&&!['terrace','raised'].includes(d.stationFoundations[end])))return 'Choose Terrace or Raised for each station.';
   return '';
  }
  function terminalBoxes(def,spec,station){
+  if(spec.nextModel)return window.LiftCoNextAlignment.stationFrames(def).map(f=>{const along={x:Math.sin(f.yaw),z:Math.cos(f.yaw)},across={x:Math.cos(f.yaw),z:-Math.sin(f.yaw)},points=window.LiftCoNextAlignment.footprint(def,f,10),xx=points.map(p=>(p.x-f.x)*across.x+(p.z-f.z)*across.z),zz=points.map(p=>(p.x-f.x)*along.x+(p.z-f.z)*along.z),x=(Math.min(...xx)+Math.max(...xx))/2,z=(Math.min(...zz)+Math.max(...zz))/2;return{x:f.x+across.x*x+along.x*z,z:f.z+across.z*x+along.z*z,along,across,halfLength:(Math.max(...zz)-Math.min(...zz))/2+4,halfWidth:(Math.max(...xx)-Math.min(...xx))/2};});
   const dx=def.top[0]-def.base[0],dz=def.top[1]-def.base[1],length=Math.hypot(dx,dz),along={x:dx/length,z:dz/length},across={x:along.z,z:-along.x};
-  return ['base','top'].map(end=>{const sign=end==='base'?-1:1,p=def[end],offset=spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?-1.25:spec.id==='solo'?.25:spec.funitel?2:station.straight/2;return{x:p[0]+along.x*sign*offset,z:p[1]+along.z*sign*offset,along,across,halfLength:spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?17.5:spec.id==='solo'?16:spec.funitel?15:station.straight/2+10,halfWidth:spec.id==='solo'?11:10};});
+  return ['base','top'].map(end=>{const sign=end==='base'?-1:1,p=def[end],offset=spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?-1.25:spec.id==='solo'?.25:spec.funitel?2:station.straight/2;return{x:p[0]+along.x*sign*offset,z:p[1]+along.z*sign*offset,along,across,halfLength:spec.id==='solo'&&def.stationStyle==='faron'?20:spec.id==='solo'&&end==='top'&&def.arrivalProfile==='flat'?17.5:spec.id==='solo'?16:spec.funitel?15:station.straight/2+10,halfWidth:spec.id==='solo'?(def.stationStyle==='faron'?17:11):10};});
  }
+ function boxDistance(box,x,z){const dx=x-box.x,dz=z-box.z,a=Math.abs(dx*box.along.x+dz*box.along.z)-box.halfLength,b=Math.abs(dx*box.across.x+dz*box.across.z)-box.halfWidth;return Math.hypot(Math.max(a,0),Math.max(b,0))+Math.min(Math.max(a,b),0);}
  function boxesOverlap(a,b){
   const dx=b.x-a.x,dz=b.z-a.z,dot=(u,v)=>u.x*v.x+u.z*v.z;
   for(const axis of [a.along,a.across,b.along,b.across]){
@@ -48,15 +77,22 @@ window.LiftCoPlacement=(()=>{
  // parallel/coincident lines, which have no line-intersection denominator.
  function linesTooClose(a,b,layoutA,layoutB,types,defaultRail=3.1){
   const spec=d=>types.find(t=>t.id===(d.type||'gondola')),sa=spec(a),sb=spec(b);
-  const ax=a.top[0]-a.base[0],az=a.top[1]-a.base[1],bx=b.top[0]-b.base[0],bz=b.top[1]-b.base[1],la=Math.hypot(ax,az),lb=Math.hypot(bx,bz);
   const width=(sa.railX||defaultRail)+sa.halfWidth+(sb.railX||defaultRail)+sb.halfWidth;
-  const conflict=s=>{const x=a.base[0]+ax*s/la,z=a.base[1]+az*s/la,t=((x-b.base[0])*bx+(z-b.base[1])*bz)/lb;if(t<4||t>lb-4)return false;const ox=b.base[0]+bx*t/lb,oz=b.base[1]+bz*t/lb;return Math.hypot(x-ox,z-oz)<width&&Math.abs(layoutA.heightAt(s)-layoutB.heightAt(t))<7-EPS;};
-  const den=ax*bz-az*bx;
-  if(Math.abs(den)>EPS){const dx=b.base[0]-a.base[0],dz=b.base[1]-a.base[1],u=(dx*bz-dz*bx)/den;if(u*la>=4&&u*la<=la-4&&conflict(u*la))return true;}
-  for(let s=4;s<=la-4;s+=2)if(conflict(s))return true;
-  return conflict(la-4);
+  // Segment pairs include the actual transfer curve. Test closest points and
+  // exact crossings, including parallel spans, using each cable's own height.
+  const segments=l=>{const out=[];for(let s=4;s<l.length-4;s+=4){const end=Math.min(s+4,l.length-4);out.push({a:l.pointAt(s),b:l.pointAt(end),s,end});}return out;};
+  const closest=(p,a,b)=>{const dx=b.x-a.x,dz=b.z-a.z,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/(dx*dx+dz*dz||1)));return{t,x:a.x+dx*t,z:a.z+dz*t};};
+  for(const x of segments(layoutA))for(const y of segments(layoutB)){
+   if(Math.max(x.a.x,x.b.x)+width<Math.min(y.a.x,y.b.x)||Math.min(x.a.x,x.b.x)-width>Math.max(y.a.x,y.b.x)||Math.max(x.a.z,x.b.z)+width<Math.min(y.a.z,y.b.z)||Math.min(x.a.z,x.b.z)-width>Math.max(y.a.z,y.b.z))continue;
+   const pairs=[];for(const t of [0,.5,1]){const p={x:x.a.x+(x.b.x-x.a.x)*t,z:x.a.z+(x.b.z-x.a.z)*t},q=closest(p,y.a,y.b);pairs.push([t,q.t,p,q]);const r={x:y.a.x+(y.b.x-y.a.x)*t,z:y.a.z+(y.b.z-y.a.z)*t},s=closest(r,x.a,x.b);pairs.push([s.t,t,s,r]);}
+   const sample=t=>{const p={x:x.a.x+(x.b.x-x.a.x)*t,z:x.a.z+(x.b.z-x.a.z)*t},q=closest(p,y.a,y.b);return{t,u:q.t,p,q,delta:layoutA.heightAt(x.s+t*(x.end-x.s))-layoutB.heightAt(y.s+q.t*(y.end-y.s))};};
+   for(const [lo,hi]of [[0,.5],[.5,1]]){let a=sample(lo),b=sample(hi);if(a.delta*b.delta<0){for(let i=0;i<24;i++){const m=sample((a.t+b.t)/2);if(a.delta*m.delta<=0)b=m;else a=m;}const m=sample((a.t+b.t)/2);pairs.push([m.t,m.u,m.p,m.q]);}}
+   const ax=x.b.x-x.a.x,az=x.b.z-x.a.z,bx=y.b.x-y.a.x,bz=y.b.z-y.a.z,den=ax*bz-az*bx;
+   if(Math.abs(den)>EPS){const dx=y.a.x-x.a.x,dz=y.a.z-x.a.z,t=(dx*bz-dz*bx)/den,u=(dx*az-dz*ax)/den;if(t>=0&&t<=1&&u>=0&&u<=1){const p={x:x.a.x+t*ax,z:x.a.z+t*az};pairs.push([t,u,p,p]);}}
+   for(const [t,u,p,q]of pairs)if(Math.hypot(p.x-q.x,p.z-q.z)<width&&Math.abs(layoutA.heightAt(x.s+t*(x.end-x.s))-layoutB.heightAt(y.s+u*(y.end-y.s)))<7-EPS)return true;
+  }return false;
  }
- return{definitionReason,terminalsOverlap,linesTooClose,margins};
+ return{transferZone,transferConflicts,definitionReason,terminalsOverlap,linesTooClose,margins,terminalBoxes,boxesOverlap,boxDistance};
 })();
 
 // Construction tools for the resort. Layouts are saved as data, then reconstructed
@@ -66,7 +102,7 @@ window.createResortBuilder=function(ctx){
 const {THREE:T,scene,camera,controls,renderer,app,lifts,skiers,RESORT,terrainY,prepareStationGround,createLift,liftFrame,planPoint,STATION,seed,SAVE_KEY,enterFreeCamera}=ctx;
 const liftTypes=ctx.liftTypes||[{id:'gondola',label:'Alpine gondola',shortName:'Gondola',bottomDrop:4.99,halfWidth:1.1,halfLength:1.15}];
 const carrierSpec=()=>liftTypes.find(t=>t.id===(draft?.type||'gondola'))||liftTypes[0];
-const boardingOffset=()=>carrierSpec().id==='solo'?.6:carrierSpec().fixedGrip?0:.52;
+const boardingOffset=()=>selectedStation==='mid'&&carrierSpec().layout==='turn'?8.2:carrierSpec().nextModel?(carrierSpec().fixedGrip?.645:carrierSpec().family==='princesse'?1.19:.26):carrierSpec().id==='solo'?.6:carrierSpec().fixedGrip?0:.52;
 const towerHeightLimit=()=>carrierSpec().maxTowerHeight??40;
 const canGroup=()=>!!ctx.columnLean&&!carrierSpec().reversible;
 const minimumTowerGap=()=>canGroup()?1.7:10;
@@ -86,7 +122,28 @@ if(typeSelector){
 function suggestedName(type){const spec=liftTypes.find(t=>t.id===type)||liftTypes[0];return 'New '+(spec.shortName||spec.label)+' '+(lifts.length+1);}
 let uiHidden=false;
 let active=false,draft=null,editing=null,preview=null,selected=null,tool='base',nextId=1,oldSpeed=1,history=[],redo=[],copiedTower=null,selectedStation=null,projectionOrigin=null,liveBefore=null,drag=null,down=null,rebuildTimer=null,profileTransform=null,minimum=Infinity,invalidReason='',lastHover=null;
-let validationDefinitions=null,layoutError='';
+let validationDefinitions=null,layoutError='',towerConflicts=[],clearanceSpan=null;
+const draftStore=window.LiftCoDraftStore?.create({storage:()=>localStorage,saveKey:SAVE_KEY,types:liftTypes,coordinateLimit:buildLimit+maxLineLength});
+let recoveredRecords=[],draftWriteTimer=null,lastDraftText='',draftStorageMessage='';
+const recovery=document.createElement('section');recovery.className='panel-section draft-recovery';recovery.hidden=true;recovery.innerHTML='<h2>Unfinished lifts</h2><p class="small">Drafts are separate from your built resort. Conflicts can be fixed after resuming.</p><label for="savedLiftDraft">Saved draft</label><select id="savedLiftDraft"></select><div class="row"><button id="resumeLiftDraft" type="button">Resume</button><button id="downloadSavedDraft" type="button">Download</button><button id="discardLiftDraft" type="button">Discard</button></div><p id="draftRecoveryNotice" class="small" role="status"></p>';
+if(draftStore)$('resortPanel').prepend(recovery);
+const draftActions=document.createElement('div');draftActions.className='draft-actions';draftActions.hidden=!draftStore;draftActions.innerHTML='<p id="liftDraftStatus" class="small" role="status">An unfinished lift will be saved as you edit.</p><div class="row"><button id="downloadLiftDraft" type="button">Download draft</button><button id="importLiftDraft" type="button">Import draft</button></div><input id="liftDraftFile" type="file" accept=".json,application/json" hidden>';$('cancelBuild').parentElement.after(draftActions);
+const idleImport=document.createElement('button');idleImport.type='button';idleImport.textContent='Import lift draft';idleImport.className='draft-import';if(draftStore)$('resortPanel').append(idleImport);
+function draftRecord(){const definition=JSON.parse(snapshot()),name=$('lineName').value.trim().slice(0,32),pendingBefore=liveBefore||(name&&name!==draft.name?snapshot():null),past=history.slice();if(name)definition.name=name;delete definition.preview;delete definition.stationGround;if(pendingBefore&&past.at(-1)!==pendingBefore)past.push(pendingBefore);return{format:'lift-co-construction-draft',version:1,slot:SAVE_KEY,definition,editId:editing?.def.id||null,selected,selectedStation,tool,history:past.slice(-10),redo:pendingBefore?[]:redo.slice(-10),updated:Date.now()};}
+function downloadDraft(record){const url=URL.createObjectURL(new Blob([JSON.stringify(record,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='lift-draft-'+record.definition.id.replace(/[^a-zA-Z0-9_-]/g,'_')+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function refreshRecovery(){if(!draftStore)return;const old=$('savedLiftDraft').value;recoveredRecords=draftStore.list();$('savedLiftDraft').replaceChildren();for(const record of recoveredRecords){const option=document.createElement('option');option.value=record.definition.id;option.textContent=record.definition.name+' / '+new Date(record.updated).toLocaleString();$('savedLiftDraft').append(option);}if(recoveredRecords.some(r=>r.definition.id===old))$('savedLiftDraft').value=old;recovery.hidden=!recoveredRecords.length&&!draftStore.error;for(const id of ['resumeLiftDraft','downloadSavedDraft','discardLiftDraft'])$(id).disabled=!recoveredRecords.length;$('draftRecoveryNotice').textContent=draftStorageMessage||draftStore.error||'';}
+function saveDraft(){clearTimeout(draftWriteTimer);draftWriteTimer=null;if(!draftStore||!active||!draft)return;const record=draftRecord(),d=record.definition,text=JSON.stringify(d);if(text===lastDraftText)return;if(!d.base&&!d.top&&!d.mid&&!d.towers.length&&d.type==='gondola'&&d.name===suggestedName('gondola'))return;const result=draftStore.save(record);if(result){lastDraftText=text;$('liftDraftStatus').textContent='Draft saved on this device. Apply saves the built lift.';}else $('liftDraftStatus').textContent=draftStore.error+' Download the draft to keep a copy.';}
+function scheduleDraft(){if(!draftStore||!active)return;clearTimeout(draftWriteTimer);draftWriteTimer=setTimeout(saveDraft,180);}
+function resumeDraft(record){begin(lifts.find(l=>l.def.id===(record.editId||record.definition.id))||null,record);}
+function chosenDraft(){return recoveredRecords.find(r=>r.definition.id===$('savedLiftDraft').value);}
+if(draftStore){
+ $('resumeLiftDraft').onclick=()=>{const r=chosenDraft();if(r)resumeDraft(r);};$('downloadSavedDraft').onclick=()=>{const r=chosenDraft();if(r)downloadDraft(r);};$('discardLiftDraft').onclick=()=>{const r=chosenDraft();if(r)draftStore.remove(r.definition.id);draftStorageMessage='';refreshRecovery();};
+ $('downloadLiftDraft').onclick=()=>{if(active){saveDraft();downloadDraft(draftRecord());}};
+ const importClick=()=>$('liftDraftFile').click();$('importLiftDraft').onclick=idleImport.onclick=importClick;
+ $('liftDraftFile').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>2000000)throw Error('The draft file is too large.');const record=draftStore.read(await file.text());if(active)saveDraft();draftStore.save(record);resumeDraft(record);}catch(error){if(active)message(error.message,true);else{draftStorageMessage=error.message;recovery.hidden=false;$('draftRecoveryNotice').textContent=error.message;}}finally{e.target.value='';}};
+ window.addEventListener('pagehide',saveDraft);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveDraft();});refreshRecovery();
+}
+
 const definitions=()=>validationDefinitions||ctx.getDefinitions?.()||RESORT.lifts;
 const ray=new T.Raycaster(),pointer=new T.Vector2(),groundMeshes=scene.children.filter(o=>o.userData.terrain);
 const overlay=new T.Group();scene.add(overlay);const ghost=new T.Group();scene.add(ghost);ghost.visible=false;
@@ -120,9 +177,16 @@ const ringGeometry=new T.RingGeometry(1.8,2.1,36);ringGeometry.rotateX(-Math.PI/
 const ghostRing=new T.Mesh(ringGeometry,ghostMat);ghost.add(ghostRing);
 const ghostPole=new T.Mesh(new T.CylinderGeometry(.13,.13,8,8),ghostMat);ghostPole.position.y=4;ghost.add(ghostPole);
 const canvas=renderer.domElement;
-const stationPanel=document.createElement('div');stationPanel.className='panel-section';stationPanel.innerHTML=`<span class="eyebrow">STATION PLATFORMS</span><div class="row"><button id="inspectBase">Station A</button><button id="inspectTop">Station B</button></div><div id="stationControls" hidden><label for="stationElevation">Boarding floor elevation · m</label><input id="stationElevation" type="number" step=".25"><label for="stationFoundation">Foundation</label><select id="stationFoundation"><option value="terrace">Terrace · cut & fill</option><option value="raised">Raised · preserve hillside</option></select><div id="arrivalControls" hidden><label for="arrivalProfile">Upper station arrival</label><select id="arrivalProfile"><option value="flat">Flat inside · cliff approach</option><option value="inclined">Inclined · 20°</option></select><p class="small">Flat through the hall; compact entrance transition over the cliff, supported by an embedded lattice portal. Keep the last pylon at least 30 m away.</p></div><p id="stationEarthworks" class="small"></p><p class="small">Drag the station ring to move it. Towers project onto the new straight alignment.</p></div>`;$('buildHelp').after(stationPanel);
-for(const end of ['base','top'])$('inspect'+(end==='base'?'Base':'Top')).onclick=()=>{selectedStation=end;selected=null;tool='select';refresh(false);};
-$('stationElevation').onchange=e=>{if(!selectedStation||!draft?.[selectedStation])return;change(()=>{draft.stationElevations??={};const datum=draft.stationGround[selectedStation==='base'?1:-1];draft.stationElevations[selectedStation]=datum+Math.round((Number(e.target.value)-datum-boardingOffset())*4)/4;if(carrierSpec().funitel)draft.stationElevations.base=draft.stationElevations.top=draft.stationElevations[selectedStation];});};
+const transferHelp=document.createElement('p');transferHelp.id='transferClearanceHelp';transferHelp.className='small';transferHelp.hidden=true;transferHelp.textContent='Red shaded corridor: transfer machinery plus 14 m beyond each end. Keep both tower feet and tilted wheel heads outside it.';$('buildHelp').after(transferHelp);
+const conflictList=document.createElement('div');conflictList.id='buildConflictList';conflictList.setAttribute('aria-label','Tower conflicts. Select one to focus its tower.');$('buildClearance').after(conflictList);
+const stationPanel=document.createElement('div');stationPanel.className='panel-section';stationPanel.innerHTML=`<div id="stationStyleControls"><label for="stationStyle">Station type</label><select id="stationStyle"></select><p class="small" id="stationStyleHelp">Applies to both end stations. Dedicated middle structures keep their design.</p></div><span class="eyebrow">STATION PLATFORMS</span><div class="row"><button id="inspectBase">Station A</button><button id="inspectTop">Station B</button><button id="inspectMid" hidden>Middle structure</button></div><div id="stationControls" hidden><label for="stationElevation">Boarding floor elevation · m</label><input id="stationElevation" type="number" step=".25"><label for="stationFoundation">Foundation</label><select id="stationFoundation"><option value="terrace">Terrace · cut & fill</option><option value="raised">Raised · preserve hillside</option></select><div id="arrivalControls" hidden><label for="arrivalProfile">Upper station arrival</label><select id="arrivalProfile"><option value="flat">Flat inside · cliff approach</option><option value="inclined">Inclined · 20°</option></select><p class="small">Flat through the hall; compact entrance transition over the cliff, supported by an embedded lattice portal. Keep the last pylon at least 30 m away.</p></div><p id="stationEarthworks" class="small"></p><p class="small">Drag the station ring to move it. Towers project onto the edited alignment. The middle ring moves the dedicated transfer structure.</p></div>`;$('buildHelp').after(stationPanel);
+$('stationStyle').onchange=e=>change(()=>{if(e.target.value==='default')delete draft.stationStyle;else draft.stationStyle=e.target.value;});
+function stationDatum(end){
+ const key=end==='base'?1:end==='mid'?'mid':-1;
+ return (draft.base&&draft.top?draft.stationGround?.[key]:undefined)??draft.stationElevations?.[end]??terrainY(...draft[end]);
+}
+for(const end of ['base','mid','top'])$('inspect'+(end==='base'?'Base':end==='mid'?'Mid':'Top')).onclick=()=>{selectedStation=end;selected=null;tool='select';refresh(false);};
+$('stationElevation').onchange=e=>{if(!selectedStation||!draft?.[selectedStation])return;change(()=>{draft.stationElevations??={};const datum=stationDatum(selectedStation);draft.stationElevations[selectedStation]=datum+Math.round((Number(e.target.value)-datum-boardingOffset())*4)/4;if(carrierSpec().funitel)draft.stationElevations.base=draft.stationElevations.top=draft.stationElevations[selectedStation];});};
 $('stationFoundation').onchange=e=>{if(!selectedStation)return;change(()=>{draft.stationFoundations??={};draft.stationFoundations[selectedStation]=e.target.value;});};
 $('arrivalProfile').onchange=e=>{if(carrierSpec().id==='solo'&&selectedStation==='top')change(()=>{draft.arrivalProfile=e.target.value;});};
 const copyRow=document.createElement('div');copyRow.className='row';copyRow.innerHTML='<button id="copyTower">Copy tower settings</button><button id="pasteTower">Paste settings</button>';$('removeTower').parentElement.after(copyRow);
@@ -134,7 +198,8 @@ function moveStation(end,p){
  const old=JSON.parse(JSON.stringify(draft)),oldFrame=old.base&&old.top?liftFrame(old):null;
  if(!projectionOrigin&&oldFrame)projectionOrigin=old;
  draft[end]=p;
- if(oldFrame&&draft.base&&draft.top&&frame().length>1e-6){const f=frame(),dx=draft.top[0]-draft.base[0],dz=draft.top[1]-draft.base[1];for(const t of draft.towers){const source=old.towers.find(o=>o.id===t.id),point=planPoint(old,0,oldFrame.length/2-source.fraction*oldFrame.length);t.fraction=((point.x-draft.base[0])*dx+(point.z-draft.base[1])*dz)/(f.length*f.length);}}
+ window.LiftCoNextAlignment.ensureMid(draft);
+ if(oldFrame&&draft.base&&draft.top&&frame().length>1e-6){const f=frame();for(const t of draft.towers){const source=old.towers.find(o=>o.id===t.id),point=planPoint(old,0,oldFrame.length/2-source.fraction*oldFrame.length);t.fraction=project(point).distance/f.length;}}
 }
 
 const levelButton=document.createElement('button');levelButton.id='levelLift';levelButton.type='button';levelButton.textContent='Level lift';levelButton.style.marginTop='10px';levelButton.hidden=true;$('buildHelp').before(levelButton);
@@ -172,7 +237,7 @@ function highlightSelectedTower(){
   const id=tower.userData.towerId??(tower.userData.number!==undefined?ordered()[tower.userData.number-1]?.id:undefined);if(id===undefined)return;
   tower.traverse(node=>{
    if(!node.isMesh)return;if(node.userData.selectionOriginalMaterial)node.material=node.userData.selectionOriginalMaterial;
-   if(id!==chosen||issues.has(id))return;
+   if(id!==chosen||issues.has(id)){if(towerConflicts.some(i=>i.towerId===id)||issues.has(id)){node.userData.selectionOriginalMaterial=node.material;preview.conflictMaterial??=new T.MeshStandardMaterial({color:0xc95243,roughness:.7});node.material=preview.conflictMaterial;}return;}
    const goldMaterial=original=>{if(!preview.selectionMaterials.has(original)){const m=original.clone();m.color?.lerp(new T.Color(0xd6a344),.82);if(m.emissive){m.emissive.set(0x704915);m.emissiveIntensity=.35;}preview.selectionMaterials.set(original,m);}return preview.selectionMaterials.get(original);};
    node.userData.selectionOriginalMaterial=node.material;node.material=Array.isArray(node.material)?node.material.map(goldMaterial):goldMaterial(node.material);
   });
@@ -189,7 +254,7 @@ function frame(){return draft?.base&&draft?.top?liftFrame(draft):null;}
 function selectedTower(){return draft?.towers.find(t=>t.id===selected);}
 function resize(){camera.aspect=app.clientWidth/app.clientHeight;camera.updateProjectionMatrix();renderer.setSize(app.clientWidth,app.clientHeight);}
 function disposeRoot(root){if(!root)return;root.parent?.remove(root);const geometries=new Set(),materials=new Set(),textures=new Set();root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])materials.add(m);const original=o.userData.selectionOriginalMaterial;for(const m of Array.isArray(original)?original:original?[original]:[])materials.add(m);});materials.forEach(m=>{for(const value of Object.values(m))if(value?.isTexture)textures.add(value);m.dispose();});textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());}
-function disposePreview(){if(preview){for(const m of preview.selectionMaterials?.values()||[])m.dispose();disposeRoot(preview.root);preview=null;}}
+function disposePreview(){if(preview){for(const m of preview.selectionMaterials?.values()||[])m.dispose();preview.conflictMaterial?.dispose();disposeRoot(preview.root);preview=null;}}
 function clearOverlay(){for(const child of [...overlay.children]){overlay.remove(child);child.traverse(o=>{if(o.geometry&&o.geometry!==ringGeometry)o.geometry.dispose();if(o.material&&o.material!==gold&&o.material!==ghostMat&&o.material!==dimensionMaterial&&o.material!==invalidTowerM)o.material.dispose();});}}
 function localGround(x,z){return terrainY(x,z,draft?.base&&draft?.top?draft:null);}
 function calculationDraft(){
@@ -205,17 +270,20 @@ function buildLayout(){
  }catch(error){layoutError=error.message;return null;}
 }
 function clearance(layout){
+ towerConflicts=draft?.base&&draft?.top?window.LiftCoPlacement.transferConflicts(draft,window.LiftCoNextAlignment?.make(draft),layout):[];clearanceSpan=null;
  minimum=Infinity;invalidReason='';if(!layout){if(draft.base&&draft.top)invalidReason=layoutError||'Leave at least 60 m between stations.';return;}
  const f0=frame(),spec0=carrierSpec();
  const definitionError=window.LiftCoPlacement.definitionReason(draft,liftTypes,{buildLimit,maxLineLength});
  if(definitionError){invalidReason=definitionError;return;}
+ const own=window.LiftCoPlacement.terminalBoxes(draft,spec0,ctx.stationSettings?.(draft)||STATION);if(own.some((a,i)=>own.slice(i+1).some(b=>window.LiftCoPlacement.boxesOverlap(a,b)))){invalidReason='Stations or transfer structures overlap. Move them farther apart.';return;}
  if(!spec0.horizontal&&draft.stationGround[-1]<draft.stationGround[1]+2-1e-6){invalidReason='Place the mountain platform at least 2 m above the valley platform.';return;}
  if(f0.length<60||f0.length>maxLineLength)invalidReason='Lift length must be 60–'+maxLineLength+' m.';
  if([draft.base,draft.top].some(p=>p.some(v=>Math.abs(v)>buildLimit)))invalidReason='Move the stations inside the resort boundary.';
  const feet=ordered().map(t=>t.fraction*f0.length),margin=window.LiftCoPlacement.margins(draft,spec0);
  if(feet.some((d,i)=>d<margin.base-1e-6||d>f0.length-margin.top+1e-6||i&&d-feet[i-1]<minimumTowerGap()-1e-6))invalidReason='Tower foundations are too close to a station or each other. Drag them apart.';
- for(const end of ['base','top'])if(draft.stationFoundations?.[end]==='raised'){
-  const sign=end==='base'?1:-1,settings=ctx.stationSettings?.(draft)||STATION;
+ for(const end of (carrierSpec().nextModel?window.LiftCoNextAlignment.stationFrames(draft).map(f=>f.end):['base','top']))if(draft.stationFoundations?.[end]==='raised'){
+  const sign=end==='base'?1:end==='mid'?'mid':-1,settings=ctx.stationSettings?.(draft)||STATION;
+  if(spec0.nextModel){const frame=window.LiftCoNextAlignment.stationFrames(draft).find(f=>f.end===end);for(const p of window.LiftCoNextAlignment.footprint(draft,frame))if(draft.stationGround[sign]<(ctx.rawTerrainY||terrainY)(p.x,p.z)-.05)invalidReason='A raised platform intersects the hillside. Raise it or use a terrace.';continue;}
   for(const x of [-8,0,8])for(const out of (spec0.id==='solo'?[-15.5,0,12]:[0,settings.straight/2,settings.straight])){const p=planPoint(draft,x,sign*(f0.length/2+out));if(draft.stationGround[sign]<(ctx.rawTerrainY||terrainY)(p.x,p.z)-.05)invalidReason='A raised platform intersects the hillside. Raise it or use a terrace.';}
  }
 
@@ -223,7 +291,7 @@ function clearance(layout){
  // Decks occupy the ends; measure cabin clearance along both exposed rope lanes.
  const spec=carrierSpec();
  for(let s=4;s<=layout.length-4;s+=1.5)for(const side of [-(spec.railX||STATION.railX),(spec.railX||STATION.railX)])for(const dx of [-spec.halfWidth,0,spec.halfWidth])for(const dz of [-spec.halfLength,0,spec.halfLength]){
-  const p=layout.pointAt(s,side+dx),ground=localGround(p.x+layout.dx*dz,p.z+layout.dz*dz),clear=p.y-spec.bottomDrop-ground;minimum=Math.min(minimum,clear);
+  const p=layout.pointAt(s,side+dx),tangent=layout.path?.at(s)||{dx:layout.dx,dz:layout.dz},ground=localGround(p.x+tangent.dx*dz,p.z+tangent.dz*dz),clear=p.y-spec.bottomDrop-ground;if(clear<minimum){minimum=clear;clearanceSpan={distance:s};}
  }
  if(minimum<-.08)invalidReason=((spec.isChair||spec.id==='ridge')?'A chair or its skis':'A cabin')+' would touch the snow. Raise a tower or shorten a span.';
  for(const def of definitions()){
@@ -234,37 +302,53 @@ function clearance(layout){
  }
 
  if(spec.id==='solo'){const reason=window.LiftCoSoloPlacement.reason(draft,layout,ctx.rawTerrainY||terrainY,localGround);if(reason)invalidReason=reason;}
+ if(towerConflicts.length)invalidReason=towerConflicts[0].message;
  if(canLean()){
   const heads=ordered().map(t=>towerHeadDistance(t,layout));
   if(heads.some((d,i)=>d<14||d>layout.length-14||i>0&&d-heads[i-1]<1.7-1e-6))invalidReason='Tilting puts wheel heads too close together or to a station. Reduce the tilt or move a foundation.';
  }
  if(canGroup()&&layout.foundationGroups?.some(g=>!g.valid))invalidReason='A shared foundation reaches too close to a wheel head. Raise its towers, reduce grouping distance or move a footing.';
+ const append=(t,index,code,text)=>{if(!towerConflicts.some(i=>i.towerId===t.id&&i.code===code))towerConflicts.push({towerId:t.id,index:index+1,code,message:'T'+(index+1)+': '+text});};
+ const sorted=ordered();for(let i=0;i<sorted.length;i++){const t=sorted[i],d=t.fraction*layout.length,h=towerHeadDistance(t,layout);if(d<margin.base-1e-6||d>layout.length-margin.top+1e-6)append(t,i,'terminal','foundation is too close to an end station.');if(i&&(d-sorted[i-1].fraction*layout.length<minimumTowerGap()-1e-6)){append(sorted[i-1],i-1,'spacing','move the neighbouring foundations apart.');append(t,i,'spacing','move the neighbouring foundations apart.');}if(h<14-1e-6||h>layout.length-14+1e-6)append(t,i,'head','tilted wheel head enters an end-station approach.');}
+ if(minimum<-.08&&clearanceSpan){const nearby=layout.nodes.filter(n=>n.kind==='tower').sort((a,b)=>Math.abs(a.distance-clearanceSpan.distance)-Math.abs(b.distance-clearanceSpan.distance)).slice(0,2);for(const n of nearby){const i=sorted.findIndex(t=>t.id===n.id);if(i>=0)append(sorted[i],i,'snow','nearby cabin / skis touch the snow. Raise a support or shorten the span.');}}
  const issues=levelInfo(layout).issues;if(issues.size)invalidReason='Red towers cannot reach the level cable height within 3–'+towerHeightLimit()+' m. Move or remove them, or relocate station A.';
 }
 function rebuildPreview(){
  clearTimeout(rebuildTimer);rebuildTimer=null;if(!active)return;disposePreview();
  if(draft.base&&draft.top&&frame().length>=30){prepareStationGround(draft);try{preview=createLift({...calculationDraft(),preview:true,manual:true},editing?.index??lifts.length);preview.update(0);tintInvalidTowers(preview.layout);}catch(e){message('Could not render this alignment: '+e.message,true);}}
 }
+function drawTransferZone(layout){
+ const zone=window.LiftCoPlacement.transferZone(draft,layout.path);$('transferClearanceHelp').hidden=!zone;if(!zone)return;
+ const points=[],indices=[],left=[],right=[];
+ for(let i=0;i<=32;i++){const d=zone.start+(zone.end-zone.start)*i/32;for(const [j,side]of [-10,10].entries()){const p=layout.pointAt(d,side),v=new T.Vector3(p.x,localGround(p.x,p.z)+.22,p.z);points.push(v.x,v.y,v.z);(j?right:left).push(v);}if(i<32){const k=i*2;indices.push(k,k+1,k+2,k+1,k+3,k+2);}}
+ const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));geometry.setIndex(indices);geometry.computeVertexNormals();const fill=new T.Mesh(geometry,new T.MeshBasicMaterial({color:0xc45240,side:T.DoubleSide,transparent:true,opacity:.12,depthWrite:false}));overlay.add(fill);
+ const outline=new T.LineLoop(new T.BufferGeometry().setFromPoints([...left,...right.reverse()]),new T.LineBasicMaterial({color:0xc45240,transparent:true,opacity:.8}));overlay.add(outline);
+}
 function refresh(immediate=true){
- clearOverlay();const layout=buildLayout();ctx.previewTerrain?.(draft);clearance(layout);const level=levelInfo(layout);
+ scheduleDraft();$('transferClearanceHelp').hidden=true;clearOverlay();const layout=buildLayout();ctx.previewTerrain?.(draft);clearance(layout);const level=levelInfo(layout);
  if(layout){
-  for(const end of ['base','top']){const marker=new T.Mesh(new T.RingGeometry(4,4.6,40),gold);marker.geometry.rotateX(-Math.PI/2);marker.position.set(draft[end][0],draft.stationGround[end==='base'?1:-1]+.7,draft[end][1]);marker.userData.stationEnd=end;overlay.add(marker);}
+  drawTransferZone(layout);for(const end of (carrierSpec().nextModel?window.LiftCoNextAlignment.stationFrames(draft).map(f=>f.end):['base','top'])){const marker=new T.Mesh(new T.RingGeometry(4,4.6,40),gold);marker.geometry.rotateX(-Math.PI/2);marker.position.set(draft[end][0],draft.stationGround[end==='base'?1:end==='mid'?'mid':-1]+.7,draft[end][1]);marker.userData.stationEnd=end;overlay.add(marker);}
   if(projectionOrigin?.base&&projectionOrigin?.top){const original=liftFrame(projectionOrigin);for(const tower of draft.towers){const old=projectionOrigin.towers.find(t=>t.id===tower.id);if(!old)continue;const a=planPoint(projectionOrigin,0,original.length/2-old.fraction*original.length),b=planPoint(draft,0,layout.length/2-tower.fraction*layout.length);a.y=terrainY(a.x,a.z)+.3;b.y=terrainY(b.x,b.z)+.3;const line=new T.Line(new T.BufferGeometry().setFromPoints([a,b]),dimensionMaterial);overlay.add(line);const ring=new T.Mesh(ringGeometry,ghostMat);ring.position.copy(a);overlay.add(ring);}}
   const p1=layout.pointAt(0,0,0),p2=layout.pointAt(layout.length,0,0),points=[];for(let s=0;s<=layout.length;s+=2){const p=layout.pointAt(s,0,0);points.push(new T.Vector3(p.x,localGround(p.x,p.z)+.15,p.z));}
   const line=new T.Line(new T.BufferGeometry().setFromPoints(points),new T.LineDashedMaterial({color:0x84946b,dashSize:2,gapSize:1}));line.computeLineDistances();overlay.add(line);
   for(const tower of ordered()){
-   const p=columnFoot(tower,layout),ground=p.y,marker=new T.Mesh(ringGeometry,level.issues.has(tower.id)?invalidTowerM:gold);marker.position.set(p.x,ground+.12,p.z);marker.userData.towerId=tower.id;overlay.add(marker);
+   const p=columnFoot(tower,layout),ground=p.y,marker=new T.Mesh(ringGeometry,level.issues.has(tower.id)||towerConflicts.some(i=>i.towerId===tower.id)?invalidTowerM:gold);marker.position.set(p.x,ground+.12,p.z);marker.userData.towerId=tower.id;overlay.add(marker);
    if(tower.id===selected){const handle=new T.Mesh(new T.SphereGeometry(.65,14,10),gold),side=layout.pointAt(towerHeadDistance(tower,layout),6.5);handle.position.set(side.x,side.y+1.1,side.z);handle.userData={towerId:tower.id,heightHandle:true};overlay.add(handle);const dim=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(side.x,ground,side.z),handle.position]),dimensionMaterial);overlay.add(dim);}
   }
- }else if(draft.base){const marker=new T.Mesh(ringGeometry,gold);marker.position.set(draft.base[0],terrainY(...draft.base)+.2,draft.base[1]);overlay.add(marker);}
+ }else if(draft.base){$('transferClearanceHelp').hidden=true;const marker=new T.Mesh(ringGeometry,gold);marker.position.set(draft.base[0],terrainY(...draft.base)+.2,draft.base[1]);overlay.add(marker);}
  if(immediate)rebuildPreview();else{if(!rebuildTimer)rebuildTimer=setTimeout(rebuildPreview,100);}
  refreshUI(layout);
 }
 function refreshUI(layout=buildLayout()){
+ $('buildConflictList').replaceChildren();for(const issue of towerConflicts.slice(0,8)){const button=document.createElement('button');button.type='button';button.textContent=issue.message;button.onclick=()=>{selected=issue.towerId;selectedStation=null;tool='select';refresh(false);$('focusTower').click();};$('buildConflictList').append(button);}
+
+ $('stationStyleControls').hidden=!window.LiftCoStationDesigns;const styles=window.LiftCoStationDesigns?.options(draft.type)||[],selector=$('stationStyle');selector.replaceChildren();for(const style of [{id:'default',label:'Original station'},...styles]){const option=document.createElement('option');option.value=style.id;option.textContent=style.label;selector.append(option);}selector.value=draft.stationStyle||'default';selector.disabled=!styles.length;$('stationStyleHelp').textContent=styles.length?'Applies to both end stations. Dedicated middle structures keep their design.':'Original station only. No new station designs approved for this lift category.';
+
  if(!active)return;
+ $('inspectMid').hidden=!window.LiftCoNextAlignment.special(draft);$('inspectMid').textContent=carrierSpec().layout==='turn'?'Angle structure':'Station M';
  $('arrivalControls').hidden=carrierSpec().id!=='solo'||selectedStation!=='top';$('arrivalProfile').value=draft.arrivalProfile||'inclined';
- $('stationControls').hidden=!selectedStation||!draft[selectedStation];
- if(selectedStation&&draft[selectedStation]){const sign=selectedStation==='base'?1:-1,y=draft.stationGround?.[sign]??terrainY(...draft[selectedStation]),ground=(ctx.rawTerrainY||terrainY)(...draft[selectedStation]);$('stationElevation').value=(y+boardingOffset()).toFixed(4);$('stationElevation').min=y+boardingOffset()-5000;$('stationFoundation').value=draft.stationFoundations?.[selectedStation]||'terrace';$('stationEarthworks').textContent='Boarding floor '+(y+boardingOffset()).toFixed(2)+' m · '+(y>=ground?'Fill / foundation depth ':'Excavation ')+Math.abs(y-ground).toFixed(2)+' m at centre · pedestrian access on outer platform.';}
+ $('stationControls').hidden=!selectedStation||!draft[selectedStation];stationPanel.querySelector('label[for=stationElevation]').textContent=selectedStation==='mid'&&carrierSpec().layout==='turn'?'Transfer rope elevation · m':'Boarding floor elevation · m';
+ if(selectedStation&&draft[selectedStation]){const y=stationDatum(selectedStation),ground=(ctx.rawTerrainY||terrainY)(...draft[selectedStation]);$('stationElevation').value=(y+boardingOffset()).toFixed(4);$('stationElevation').min=y+boardingOffset()-5000;$('stationFoundation').value=draft.stationFoundations?.[selectedStation]||'terrace';$('stationEarthworks').textContent=(selectedStation==='mid'&&carrierSpec().layout==='turn'?'Transfer rope ':'Boarding floor ')+(y+boardingOffset()).toFixed(2)+' m · '+(y>=ground?'Fill / foundation depth ':'Excavation ')+Math.abs(y-ground).toFixed(2)+' m at centre'+(selectedStation==='mid'&&carrierSpec().layout==='turn'?' · machinery only; no pedestrian access.':' · pedestrian access on outer platform.');}
  $('buildRedo').disabled=!redo.length;
  updateElevationGuide();highlightSelectedTower();const f=frame(),tower=selectedTower(),spec=carrierSpec();if(typeSelector)typeSelector.value=spec.id;if($('profileLegend'))$('profileLegend').textContent='Snow — Rope — '+((spec.isChair||spec.id==='ridge')?'Chair / skis':'Cabin floor');if($('typeHelp'))$('typeHelp').textContent=spec.description||'';if(document.activeElement!==$('lineName'))$('lineName').value=draft.name;
  groupPanel.hidden=!canGroup();if(!groupPanel.hidden){const gap=draft.groupDistance??7;$('towerGroupDistance').value=gap;$('towerGroupDistanceValue').textContent=gap===0?'Off':gap.toFixed(1)+' m';const groups=layout?.foundationGroups||[],shared=groups.filter(g=>g.shared);$('towerGroupReport').textContent=!layout?'Nearby towers will share one concrete foundation.':groups.length+' foundations · '+shared.length+' shared. Minimum tower spacing: 1.7 m.';}
@@ -277,7 +361,7 @@ function refreshUI(layout=buildLayout()){
  $('towerTitle').textContent=tower?'Tower '+(ordered().findIndex(t=>t.id===selected)+1):'Your line';
  const helps={base:'Click the snow for the valley station. Leave room behind it for the terminal.',top:spec.id==='solo'?'Place the arrival over a downhill cliff. Station B offers a flat hall or an inclined dock; small approach cuts are automatic.':spec.funitel?'Choose teal terrain for a destination at the same elevation as station A.':spec.horizontal?'Click a destination across the valley or plateau. Equal-height terminals are allowed.':'Click higher on the mountain for the arrival station.',tower:'Click along the dashed line. Tower positions snap to the alignment.',select:'Drag a station ring or tower foundation. Gold side handles and profile dots adjust tower height.'};$('buildHelp').textContent=helps[tool];
  if(tower){$('towerHeight').max=towerHeightLimit();$('towerHeightNumber').max=towerHeightLimit();$('towerHeight').value=tower.height;$('towerHeightNumber').value=+tower.height.toFixed(2);$('towerPosition').value=tower.fraction*100;$('towerDistance').textContent=Math.round(tower.fraction*f.length)+' m';const n=layout?.nodes.find(n=>n.id===selected);$('towerType').textContent=spec.funitel?'Four support banks · two ropes per cabin'+(tower.height>30?' · Reinforced pillar and foundation':'')+(level.issues.has(tower.id)?' · Cannot level: needs '+level.issues.get(tower.id).required.toFixed(2)+' m ('+level.issues.get(tower.id).reason+')':''):spec.id==='solo'?'Heavy Portal · fixed carrying-rope saddle and twin haul guides':spec.reversible?(n?.compression?'Upper haul-rope hold-down · fixed running rope below':'Support head · running rope over lower wheels'):(n?.compression?'Hold-down · cable below both wheel banks':'Support · cable above both wheel banks');}
- $('builderSupports').replaceChildren();for(const t of ordered()){const b=document.createElement('button');b.classList.toggle('selected',t.id===selected);if(level.issues.has(t.id)){b.style.color='#c13e36';b.style.borderColor='#d85a50';b.title='Level height required: '+level.issues.get(t.id).required.toFixed(2)+' m; allowed 3–'+towerHeightLimit()+' m.';}const name=document.createElement('span');name.textContent='T'+(ordered().findIndex(n=>n.id===t.id)+1)+' · '+Math.round(t.fraction*(f?.length||0))+' m';const value=document.createElement('span');value.textContent=t.height.toFixed(1)+' m';b.append(name,value);b.onclick=()=>{selected=t.id;tool='select';refresh(false);};$('builderSupports').append(b);}
+ $('builderSupports').replaceChildren();for(const t of ordered()){const b=document.createElement('button');b.classList.toggle('selected',t.id===selected);if(level.issues.has(t.id)||towerConflicts.some(i=>i.towerId===t.id)){b.style.color='#c13e36';b.style.borderColor='#d85a50';b.title=towerConflicts.filter(i=>i.towerId===t.id).map(i=>i.message).join(' ')||(level.issues.has(t.id)?'Level height required: '+level.issues.get(t.id).required.toFixed(2)+' m.':'');}const name=document.createElement('span');name.textContent='T'+(ordered().findIndex(n=>n.id===t.id)+1)+' · '+Math.round(t.fraction*(f?.length||0))+' m';const value=document.createElement('span');value.textContent=t.height.toFixed(1)+' m';b.append(name,value);b.onclick=()=>{selected=t.id;tool='select';refresh(false);};$('builderSupports').append(b);}
  $('ropeSag').value=draft.sag;$('ropeSagText').textContent=spec.id==='solo'?(layout?layout.maxSag.toFixed(2)+' m actual span sag'+(layout.tensionAdjusted?' · adjusted for pylon contact':''):'Requested sag '+draft.sag.toFixed(2)):draft.sag.toFixed(2)+' m / 50 m';
  $('ropeSag').title=spec.id==='solo'?'Requested sag factor. Actual sag is shown above; a low pylon can require looser ropes to keep saddle contact. Raise or move that pylon.':'';
  $('buildClearance').textContent=invalidReason||(!layout?'Choose two stations to see the cable profile.':Math.max(0,minimum).toFixed(1)+' m minimum '+((spec.isChair||spec.id==='ridge')?'chair / ski':'cabin')+' clearance.'+(ctx.terminalGuides?' Terminal guide wheels included.':''));if(!invalidReason&&spec.id==='solo'&&layout?.tensionAdjusted)$('buildClearance').textContent+=' A low pylon requires looser ropes; raise or move it to reduce sag.';$('buildClearance').classList.toggle('bad',!!invalidReason);
@@ -288,29 +372,40 @@ function drawProfile(layout){
  const svg=$('mountainProfile');const level=levelInfo(layout);profileTransform=null;if(!layout){svg.innerHTML='<text x="500" y="95" text-anchor="middle" fill="#8b927d" font-family="Georgia" font-size="18">Choose a valley and a destination.</text>';return;}
  const samples=[];let low=Infinity,high=-Infinity;for(let i=0;i<=220;i++){const s=layout.length*i/220,p=layout.pointAt(s),g=localGround(p.x,p.z);samples.push({s,g,h:p.y});low=Math.min(low,g,p.y-carrierSpec().bottomDrop);high=Math.max(high,g,p.y);}
  low=Math.floor((low-4)/10)*10;high=Math.ceil((high+10)/10)*10;if(drag?.kind==='profile'){low=drag.scale.low;high=drag.scale.high;}const x=s=>40+s/layout.length*935,y=h=>145-(h-low)/(high-low)*122;profileTransform={low,high};
- let html='';for(let i=0;i<=4;i++){const h=low+(high-low)*i/4;html+='<path d="M40 '+y(h)+'H975" stroke="#dedfd2"/><text x="32" y="'+(y(h)+3)+'" text-anchor="end" font-size="9" font-family="monospace" fill="#89907c">'+h.toFixed(0)+'</text>';}
+ let html='';const zone=window.LiftCoPlacement.transferZone(draft,layout.path);if(zone){html+='<rect x="'+x(zone.start)+'" y="18" width="'+(x(zone.end)-x(zone.start))+'" height="127" fill="#c45240" opacity=".12"/><rect x="'+x(zone.structureStart)+'" y="18" width="'+(x(zone.structureEnd)-x(zone.structureStart))+'" height="127" fill="#c99040" opacity=".17"/><text x="'+x((zone.start+zone.end)/2)+'" y="29" text-anchor="middle" font-size="9" fill="#994636">M + 14 m clearance</text>';}
+ for(let i=0;i<=4;i++){const h=low+(high-low)*i/4;html+='<path d="M40 '+y(h)+'H975" stroke="#dedfd2"/><text x="32" y="'+(y(h)+3)+'" text-anchor="end" font-size="9" font-family="monospace" fill="#89907c">'+h.toFixed(0)+'</text>';}
  const path=key=>samples.map((p,i)=>(i?'L':'M')+x(p.s).toFixed(1)+','+y(p[key]).toFixed(1)).join(' ');
  if(layout.terminalGuides){for(const [a,b] of [[0,layout.guideLengths.start],[layout.length-layout.guideLengths.end,layout.length]])html+='<rect x="'+x(a)+'" y="18" width="'+(x(b)-x(a))+'" height="127" fill="#c98f3f" opacity=".13"/>';}
 
  html+='<path d="'+path('g')+'L975 145H40Z" fill="#dce0ce"/><path d="'+path('g')+'" fill="none" stroke="#9da98b"/><path d="'+samples.map((p,i)=>(i?'L':'M')+x(p.s).toFixed(1)+','+y(p.h-carrierSpec().bottomDrop).toFixed(1)).join(' ')+'" fill="none" stroke="'+(minimum<0?'#b97c5a':'#b7b69e')+'" stroke-dasharray="4 4"/><path d="'+path('h')+'" fill="none" stroke="#3f5545" stroke-width="2.5"/>';
- for(const n of layout.nodes){const p=layout.pointAt(n.distance),foot=n.kind==='tower'?columnFoot(draft.towers.find(t=>t.id===n.id),layout):{distance:n.distance,y:localGround(p.x,p.z)},ground=foot.y,id=n.kind==='tower'?' data-id="'+n.id+'"':'',color=level.issues.has(n.id)?'#e04e44':n.id===selected?'#d39a44':n.compression?'#b67b55':'#64816c';html+='<path d="M'+x(n.distance)+' '+y(n.height)+' L'+x(foot.distance)+' '+y(ground)+'" stroke="#9aab8b"/><circle'+id+' cx="'+x(n.distance)+'" cy="'+y(n.height)+'" r="7" fill="'+color+'" stroke="#faf7ea" stroke-width="2"/>';}
+ for(const n of layout.nodes){const p=layout.pointAt(n.distance),foot=n.kind==='tower'?columnFoot(draft.towers.find(t=>t.id===n.id),layout):{distance:n.distance,y:localGround(p.x,p.z)},ground=foot.y,id=n.kind==='tower'?' data-id="'+n.id+'"':'',color=level.issues.has(n.id)||towerConflicts.some(i=>i.towerId===n.id)?'#e04e44':n.id===selected?'#d39a44':n.compression?'#b67b55':'#64816c';html+='<path d="M'+x(n.distance)+' '+y(n.height)+' L'+x(foot.distance)+' '+y(ground)+'" stroke="#9aab8b"/><circle'+id+' cx="'+x(n.distance)+'" cy="'+y(n.height)+'" r="7" fill="'+color+'" stroke="#faf7ea" stroke-width="2"/>';}
  for(let i=0;i<=4;i++)html+='<text x="'+x(i/4*layout.length)+'" y="169" text-anchor="middle" font-family="monospace" font-size="9" fill="#89907c">'+Math.round(i/4*layout.length)+' m</text>';
- svg.innerHTML=html;
+ if(drag?.kind==='profile'){
+  // Keep the pressed dot connected while updating its position and cable path.
+  const next=document.createElementNS('http://www.w3.org/2000/svg','svg');next.innerHTML=html;
+  const old=[...svg.children],fresh=[...next.children];
+  if(old.length===fresh.length&&old.every((node,i)=>node.tagName===fresh[i].tagName))for(let i=0;i<old.length;i++){
+   for(const name of old[i].getAttributeNames())if(!fresh[i].hasAttribute(name))old[i].removeAttribute(name);
+   for(const name of fresh[i].getAttributeNames())old[i].setAttribute(name,fresh[i].getAttribute(name));
+   if(old[i].tagName==='text')old[i].textContent=fresh[i].textContent;
+  }
+ }else svg.innerHTML=html;
 }
 function setTool(value){tool=value;ghost.visible=false;refreshUI();}
-function begin(line=null){
+function begin(line=null,recovered=null){
  if(active)cancel();enterFreeCamera();oldSpeed=ctx.getSimulation().speed;ctx.setSpeed(0);editing=line;selected=null;history=[];redo=[];selectedStation=null;projectionOrigin=null;liveBefore=null;nextId=1;
  if(line){const f=liftFrame(line.def);draft=JSON.parse(JSON.stringify({...line.def,manual:true,sag:line.def.sag??.55,towers:line.def.manual?line.def.towers:line.supports.slice(1,-1).map(s=>{const p=planPoint(line.def,0,s.z);return{fraction:(f.length/2-s.z)/f.length,height:line.cableHeight(s.z)-terrainY(p.x,p.z)};})}));draft.towers.forEach(t=>{t.id??=draft.id+'-tower-'+nextId++;});line.root.visible=false;tool='select';}else{draft={id:'line-'+Date.now().toString(36),type:'gondola',name:suggestedName('gondola'),base:null,top:null,towers:[],sag:.55,color:0xd94f4f,autoPiste:ctx.autoPistes!==false,cabins:0,manual:true};tool='base';}
- draft.type=draft.type||'gondola';active=true;ctx.onConstructionBegin?.();for(const s of skiers)s.g.visible=false;for(const id of ['btnPause','btnPlay','btnFast','btnAdd'])$(id).disabled=true;$('lineName').value=draft.name;$('buildHeading').textContent=line?'01 / EDIT '+line.def.name.toUpperCase():'01 / PLAN A NEW LINE';$('buildPanel').hidden=false;$('resortPanel').hidden=true;$('buildProfile').hidden=false;document.body.classList.add('building');$('btnBuild').classList.add('on');$('tabResort').classList.remove('on');resize();message('');refresh();
+ if(recovered){draft=JSON.parse(JSON.stringify(recovered.definition));history=recovered.history.slice();redo=recovered.redo.slice();selected=draft.towers.some(t=>t.id===recovered.selected)?recovered.selected:null;selectedStation=['base','mid','top'].includes(recovered.selectedStation)&&draft[recovered.selectedStation]?recovered.selectedStation:null;tool=draft.top?'select':draft.base?'top':'base';nextId=draft.towers.length+1;}
+ lastDraftText='';draft.type=draft.type||'gondola';active=true;ctx.onConstructionBegin?.();for(const s of skiers)s.g.visible=false;for(const id of ['btnPause','btnPlay','btnFast','btnAdd'])$(id).disabled=true;$('lineName').value=draft.name;$('buildHeading').textContent=line?'01 / EDIT '+line.def.name.toUpperCase():'01 / PLAN A NEW LINE';$('buildPanel').hidden=false;$('resortPanel').hidden=true;$('buildProfile').hidden=false;document.body.classList.add('building');$('btnBuild').classList.add('on');$('tabResort').classList.remove('on');resize();message(recovered?'Recovered draft. Review the highlighted conflicts before applying.':'');refresh();
 }
 function cancel(){
- if(!active)return;finishDrag();clearTimeout(rebuildTimer);rebuildTimer=null;disposePreview();clearOverlay();ghost.visible=false;if(editing)editing.root.visible=true;active=false;elevationLayer.visible=false;elevationLegend.hidden=true;for(const s of skiers)s.g.visible=true;draft=null;editing=null;liveBefore=null;ctx.previewTerrain?.(null);
- document.body.classList.remove('building');$('buildPanel').hidden=true;$('resortPanel').hidden=false;$('buildProfile').hidden=true;$('btnBuild').classList.remove('on');$('tabResort').classList.add('on');$('hint').textContent=ctx.freeCameraHint||'drag = orbit · right-drag = pan · scroll = zoom to cursor';for(const id of ['btnPause','btnPlay','btnFast','btnAdd'])$(id).disabled=!!ctx.pendingConstruction?.()||id==='btnAdd'&&!lifts.length;ctx.setSpeed(oldSpeed);resize();ctx.onConstructionEnd?.();
+ if(!active)return;finishDrag();saveDraft();clearTimeout(draftWriteTimer);clearTimeout(rebuildTimer);rebuildTimer=null;disposePreview();clearOverlay();ghost.visible=false;if(editing)editing.root.visible=true;active=false;elevationLayer.visible=false;elevationLegend.hidden=true;for(const s of skiers)s.g.visible=true;draft=null;editing=null;liveBefore=null;ctx.previewTerrain?.(null);
+ document.body.classList.remove('building');$('buildPanel').hidden=true;$('resortPanel').hidden=false;$('buildProfile').hidden=true;$('btnBuild').classList.remove('on');$('tabResort').classList.add('on');$('hint').textContent=ctx.freeCameraHint||'drag = orbit · right-drag = pan · scroll = zoom to cursor';for(const id of ['btnPause','btnPlay','btnFast','btnAdd'])$(id).disabled=!!ctx.pendingConstruction?.()||id==='btnAdd'&&!lifts.length;ctx.setSpeed(oldSpeed);resize();ctx.onConstructionEnd?.();refreshRecovery();
 }
 function pointerRay(e){const r=canvas.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pointer,camera);}
 function groundPoint(e){pointerRay(e);return ray.intersectObjects(groundMeshes,false)[0]?.point||null;}
 function picked(e){pointerRay(e);for(const hit of ray.intersectObjects([...overlay.children,...(preview?[preview.root]:[])],true)){let o=hit.object;while(o){if(o.userData.stationEnd)return{station:o.userData.stationEnd};if(o.userData.towerId!==undefined)return{id:o.userData.towerId,handle:!!o.userData.heightHandle};if(o.userData.towerIds?.length){const distance=project(hit.point).distance;const tower=ordered().filter(t=>o.userData.towerIds.includes(t.id)).sort((a,b)=>Math.abs(a.fraction*frame().length-distance)-Math.abs(b.fraction*frame().length-distance))[0];if(tower)return{id:tower.id};}if(o.userData.number!==undefined){const tower=ordered()[o.userData.number-1];if(tower)return{id:tower.id};}o=o.parent;}}return null;}
-function project(point){const dx=draft.top[0]-draft.base[0],dz=draft.top[1]-draft.base[1],length=Math.hypot(dx,dz),x=point.x-draft.base[0],z=point.z-draft.base[1];return{distance:(x*dx+z*dz)/length,lateral:(x*dz-z*dx)/length,length};}
+function project(point){if(window.LiftCoNextAlignment.special(draft)&&draft.mid)return window.LiftCoNextAlignment.make(draft).project(point.x,point.z);const dx=draft.top[0]-draft.base[0],dz=draft.top[1]-draft.base[1],length=Math.hypot(dx,dz),x=point.x-draft.base[0],z=point.z-draft.base[1];return{distance:(x*dx+z*dz)/length,lateral:(x*dz-z*dx)/length,length};}
 function addTower(point){const p=project(point);if(Math.abs(p.lateral)>15)throw Error('Click closer to the dashed lift alignment.');const margin=window.LiftCoPlacement.margins(draft,carrierSpec());if(p.distance<margin.base||p.distance>p.length-margin.top)throw Error('Keep pylons '+margin.base+' m from A and '+margin.top+' m from B.');if(draft.towers.some(t=>Math.abs(t.fraction*p.length-p.distance)<minimumTowerGap()))throw Error('Leave at least '+minimumTowerGap()+' m between tower foundations.');const tower={id:draft.id+'-tower-'+Date.now().toString(36)+'-'+nextId++,fraction:p.distance/p.length,height:carrierSpec().defaultTowerHeight||8};draft.towers.push(tower);if(draft.levelLift&&carrierSpec().funitel)applyLevelHeights();selected=tower.id;}
 function setHeight(height){const tower=selectedTower();if(!tower)return;tower.height=clamp(Math.round((+height||3)*4)/4,3,towerHeightLimit());refresh(false);}
 function finishDrag(){if(drag){drag=null;controls.enabled=true;down=null;finishLive();if(active)refresh();}}
@@ -319,14 +414,14 @@ canvas.addEventListener('pointerdown',e=>{if(!active||uiHidden||ctx.isCameraLook
   e.stopImmediatePropagation();e.preventDefault();startLive();
   if(hit.station){selectedStation=hit.station;selected=null;drag={kind:'station',end:hit.station,pointer:e.pointerId,origin:JSON.parse(JSON.stringify(draft))};}
   else {selected=hit.id;selectedStation=null;drag={kind:'foundation',pointer:e.pointerId};}
-  controls.enabled=false;canvas.setPointerCapture(e.pointerId);refresh(false);return;
+  controls.enabled=false;if(!window.LiftCoCapturePointer(canvas,e.pointerId)){finishDrag();return;}refresh(false);return;
  }
- if(hit?.handle){e.stopImmediatePropagation();e.preventDefault();selected=hit.id;const layout=buildLayout(),p=layout.pointAt(towerHeadDistance(selectedTower(),layout),6.5),normal=camera.getWorldDirection(new T.Vector3());normal.y=0;if(normal.lengthSq()<.01)normal.set(0,0,1);normal.normalize();const plane=new T.Plane().setFromNormalAndCoplanarPoint(normal,new T.Vector3(p.x,p.y,p.z));pointerRay(e);const contact=ray.ray.intersectPlane(plane,new T.Vector3());if(!contact)return;startLive();drag={kind:'world',pointer:e.pointerId,plane,offset:p.y-contact.y};controls.enabled=false;canvas.setPointerCapture(e.pointerId);}},true);
+ if(hit?.handle){e.stopImmediatePropagation();e.preventDefault();selected=hit.id;const layout=buildLayout(),p=layout.pointAt(towerHeadDistance(selectedTower(),layout),6.5),normal=camera.getWorldDirection(new T.Vector3());normal.y=0;if(normal.lengthSq()<.01)normal.set(0,0,1);normal.normalize();const plane=new T.Plane().setFromNormalAndCoplanarPoint(normal,new T.Vector3(p.x,p.y,p.z));pointerRay(e);const contact=ray.ray.intersectPlane(plane,new T.Vector3());if(!contact)return;startLive();drag={kind:'world',pointer:e.pointerId,plane,offset:p.y-contact.y};controls.enabled=false;if(!window.LiftCoCapturePointer(canvas,e.pointerId)){finishDrag();return;}}},true);
 canvas.addEventListener('pointermove',e=>{
  if(!active||uiHidden||ctx.isCameraLooking?.())return;if((drag?.kind==='station'||drag?.kind==='foundation')&&drag.pointer===e.pointerId){const p=groundPoint(e);if(p){if(drag.kind==='station'){const origin=drag.origin;draft=JSON.parse(JSON.stringify(origin));moveStation(drag.end,[Math.round(p.x),Math.round(p.z)]);}else{const t=selectedTower();if(t)t.fraction=clamp(project(p).distance/frame().length,.001,.999);}refresh(false);}return;}
  if(drag?.kind==='world'&&drag.pointer===e.pointerId){pointerRay(e);const p=ray.ray.intersectPlane(drag.plane,new T.Vector3()),tower=selectedTower();if(p&&tower){const f=frame(),groundPoint=planPoint(draft,0,f.length/2-tower.fraction*f.length);setHeight(p.y+drag.offset-localGround(groundPoint.x,groundPoint.z));}return;}
  ghost.visible=false;if(tool==='select')return;const point=groundPoint(e);if(!point)return;lastHover=point.clone();let p=point;
- if(tool==='tower'&&frame()){const projection=project(point),f=frame();p=planPoint(draft,0,f.length/2-clamp(projection.distance,0,f.length));p.y=terrainY(p.x,p.z);ghostPole.visible=true;ghostMat.color.set(Math.abs(projection.lateral)<=15?0x6c8c69:0xb37552);}else{ghostPole.visible=false;ghostMat.color.set(0x6c8c69);}ghost.position.copy(p);ghost.position.y+=.15;ghost.visible=true;updateElevationGuide(point);
+ if(tool==='tower'&&frame()){const projection=project(point),f=frame();p=planPoint(draft,0,f.length/2-clamp(projection.distance,0,f.length));p.y=terrainY(p.x,p.z);ghostPole.visible=true;const zone=window.LiftCoPlacement.transferZone(draft);ghostMat.color.set(Math.abs(projection.lateral)<=15&&(!zone||projection.distance<=zone.start||projection.distance>=zone.end)?0x6c8c69:0xb37552);}else{ghostPole.visible=false;ghostMat.color.set(0x6c8c69);}ghost.position.copy(p);ghost.position.y+=.15;ghost.visible=true;updateElevationGuide(point);
 });
 canvas.addEventListener('pointerup',e=>{if(!active||uiHidden||ctx.isCameraLooking?.())return;if(drag&&drag.kind!=='profile'){finishDrag();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);return;}if(!down||Math.hypot(e.clientX-down.x,e.clientY-down.y)>5){down=null;return;}down=null;
  const hit=picked(e);if(hit?.station){selectedStation=hit.station;tool='select';refresh(false);return;}if(hit&&tool!=='base'&&tool!=='top'){selected=hit.id;tool='select';refresh(false);return;}const point=groundPoint(e);if(!point)return;
@@ -334,13 +429,13 @@ canvas.addEventListener('pointerup',e=>{if(!active||uiHidden||ctx.isCameraLookin
  else if(tool==='tower')change(()=>addTower(point));else{selected=null;refresh(false);}ghost.visible=false;
 },true);
 canvas.addEventListener('pointercancel',finishDrag);canvas.addEventListener('lostpointercapture',()=>{if(drag)finishDrag();});window.addEventListener('blur',finishDrag);
-$('mountainProfile').addEventListener('pointerdown',e=>{if(!active||e.target.dataset.id===undefined)return;e.preventDefault();selected=draft.towers.find(t=>String(t.id)===e.target.dataset.id)?.id;startLive();drag={kind:'profile',pointer:e.pointerId,scale:{...profileTransform}};$('mountainProfile').setPointerCapture(e.pointerId);tool='select';refresh(false);});
+$('mountainProfile').addEventListener('pointerdown',e=>{if(!active||e.target.dataset.id===undefined)return;e.preventDefault();selected=draft.towers.find(t=>String(t.id)===e.target.dataset.id)?.id;startLive();drag={kind:'profile',pointer:e.pointerId,scale:{...profileTransform}};if(!window.LiftCoCapturePointer($('mountainProfile'),e.pointerId)){finishDrag();return;}tool='select';refresh(false);});
 $('mountainProfile').addEventListener('pointermove',e=>{if(drag?.kind!=='profile'||drag.pointer!==e.pointerId)return;const y=new DOMPoint(e.clientX,e.clientY).matrixTransform($('mountainProfile').getScreenCTM().inverse()).y,absolute=drag.scale.low+(145-y)/122*(drag.scale.high-drag.scale.low),f=frame(),tower=selectedTower(),p=planPoint(draft,0,f.length/2-tower.fraction*f.length);setHeight(absolute-localGround(p.x,p.z));});
 $('mountainProfile').addEventListener('pointerup',finishDrag);$('mountainProfile').addEventListener('pointercancel',finishDrag);
 $('placeBase').onclick=()=>setTool('base');$('placeTop').onclick=()=>setTool('top');$('placeTower').onclick=()=>setTool('tower');$('selectTower').onclick=()=>setTool('select');$('cancelBuild').onclick=cancel;
 if(typeSelector)typeSelector.onchange=e=>{if(!active)return;change(()=>{
  const previous=carrierSpec(),autoNamed=draft.name===suggestedName(draft.type)||draft.name==='New gondola '+(lifts.length+1);
- draft.type=e.target.value;const next=carrierSpec();if(next.id==='solo')draft.arrivalProfile??='flat';
+ draft.type=e.target.value;if(window.LiftCoStationDesigns&&!window.LiftCoStationDesigns.valid(draft))delete draft.stationStyle;const next=carrierSpec();if(!window.LiftCoNextAlignment.special(draft)){delete draft.mid;if(selectedStation==='mid')selectedStation=null;}else window.LiftCoNextAlignment.ensureMid(draft);if(next.id==='solo')draft.arrivalProfile??='flat';
  if(draft.towers.some(t=>t.height>towerHeightLimit()))throw Error(next.label+' towers are limited to '+towerHeightLimit()+' m. Lower the taller towers before changing lift type.');
  if(draft.towers.length&&next.reversible){const length=frame()?.length||Infinity;if(draft.towers.some(t=>Math.min(t.fraction,1-t.fraction)*length<(next.terminalSpacing||24)))throw Error(next.label+' needs '+(next.terminalSpacing||24)+' m between pylons and terminals. Move the end pylons first.');}
  if(previous.id!==next.id)delete draft.levelLift;
@@ -348,6 +443,7 @@ if(typeSelector)typeSelector.onchange=e=>{if(!active)return;change(()=>{
  if(autoNamed)draft.name=suggestedName(draft.type);
  if(draft.color===(previous.defaultColor??0xd94f4f))draft.color=next.defaultColor??0xd94f4f;
 });};
+$('lineName').addEventListener('input',()=>{if(active)scheduleDraft();});
 $('lineName').onchange=e=>{if(active)change(()=>draft.name=e.target.value.trim().slice(0,32)||'New gondola');};
 $('towerHeight').oninput=e=>{startLive();setHeight(e.target.value);};$('towerHeight').onchange=()=>{finishLive();refresh();};$('towerHeightNumber').onchange=e=>change(()=>{selectedTower().height=clamp(+e.target.value||3,3,towerHeightLimit());});
 $('towerPosition').oninput=e=>{if(!selectedTower())return;startLive();const f=frame(),tower=selectedTower(),d=tower.fraction*f.length,others=ordered().filter(t=>t.id!==selected).map(t=>t.fraction*f.length),lo=Math.max(window.LiftCoPlacement.margins(draft,carrierSpec()).base,...others.filter(v=>v<d).map(v=>v+minimumTowerGap())),hi=Math.min(f.length-window.LiftCoPlacement.margins(draft,carrierSpec()).top,...others.filter(v=>v>d).map(v=>v-minimumTowerGap()));tower.fraction=clamp(+e.target.value/100*f.length,lo,hi)/f.length;refresh(false);};$('towerPosition').onchange=()=>{finishLive();refresh();};
@@ -356,15 +452,15 @@ $('focusTower').onclick=()=>{const tower=selectedTower();if(!tower)return;const 
 $('ropeSag').oninput=e=>{startLive();draft.sag=+e.target.value;refresh(false);};$('ropeSag').onchange=()=>{finishLive();refresh();};
 $('buildUndo').onclick=()=>{finishLive();if(history.length){redo.push(snapshot());draft=JSON.parse(history.pop());selected=null;tool=draft.top?'select':draft.base?'top':'base';refresh();}};
 $('buildRedo').onclick=()=>{finishLive();if(redo.length){history.push(snapshot());draft=JSON.parse(redo.pop());selected=null;refresh();}};
-$('buildReset').onclick=()=>change(()=>{draft.base=null;draft.top=null;draft.towers=[];delete draft.levelLift;selected=null;tool='base';});
+$('buildReset').onclick=()=>change(()=>{draft.base=null;draft.top=null;delete draft.mid;draft.towers=[];delete draft.levelLift;selected=null;tool='base';});
 $('openLine').onclick=()=>{
  finishLive();const layout=buildLayout();clearance(layout);if(!layout||invalidReason){message(invalidReason||'Place both stations first.',true);refreshUI(layout);return;}
  draft.name=$('lineName').value.trim().slice(0,32)||'New lift';
- draft.stationElevations??={base:draft.stationGround[1],top:draft.stationGround[-1]};
+ draft.stationElevations??={};draft.stationElevations.base??=draft.stationGround[1];draft.stationElevations.top??=draft.stationGround[-1];if(window.LiftCoNextAlignment.special(draft))draft.stationElevations.mid??=draft.stationGround.mid;
  const definition=JSON.parse(JSON.stringify({...draft,manual:true,autoPiste:false,towers:ordered()}));delete definition.preview;
- try{if(ctx.commit){ctx.commit(definition);cancel();}else throw Error('Live resort commit unavailable.');}catch(e){message('Could not apply: '+e.message,true);}
+ try{if(ctx.commit){ctx.commit(definition);cancel();if(!ctx.pendingConstruction?.())draftStore?.remove(definition.id);refreshRecovery();}else throw Error('Live resort commit unavailable.');}catch(e){message('Could not apply: '+e.message,true);}
 
 };
 window.addEventListener('keydown',e=>{if(!active||uiHidden||e.target instanceof HTMLInputElement||e.target instanceof HTMLSelectElement)return;if(e.key==='Escape'){finishDrag();setTool('select');}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();$('removeTower').click();}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();(e.shiftKey?$('buildRedo'):$('buildUndo')).click();}});
-return{begin,cancel,setUIHidden(value){finishDrag();uiHidden=!!value;down=null;ghost.visible=false;overlay.visible=!uiHidden;updateElevationGuide();highlightSelectedTower();},get active(){return active;},get resumeSpeed(){return oldSpeed;},validate(definition,others=null){const old=draft,oldDefinitions=validationDefinitions,oldReason=invalidReason,oldMinimum=minimum;draft=definition;validationDefinitions=others;try{const structural=window.LiftCoPlacement.definitionReason(definition,liftTypes,{buildLimit,maxLineLength});if(structural)return structural;clearance(buildLayout());return invalidReason;}catch(error){return 'Could not validate the lift: '+error.message;}finally{draft=old;validationDefinitions=oldDefinitions;invalidReason=oldReason;minimum=oldMinimum;}},update(dt){if(active&&preview)preview.update(dt);}};
+return{begin,cancel,exportDrafts(){saveDraft();return draftStore?.list()||[];},get draft(){return active?JSON.parse(snapshot()):null;},setUIHidden(value){finishDrag();uiHidden=!!value;down=null;ghost.visible=false;overlay.visible=!uiHidden;updateElevationGuide();highlightSelectedTower();},get active(){return active;},get resumeSpeed(){return oldSpeed;},validate(definition,others=null){const old=draft,oldDefinitions=validationDefinitions,oldReason=invalidReason,oldMinimum=minimum,oldConflicts=towerConflicts,oldSpan=clearanceSpan;draft=definition;validationDefinitions=others;try{const structural=window.LiftCoPlacement.definitionReason(definition,liftTypes,{buildLimit,maxLineLength});if(structural)return structural;clearance(buildLayout());return invalidReason;}catch(error){return 'Could not validate the lift: '+error.message;}finally{draft=old;validationDefinitions=oldDefinitions;invalidReason=oldReason;minimum=oldMinimum;towerConflicts=oldConflicts;clearanceSpan=oldSpan;}},update(dt){if(active&&preview)preview.update(dt);}};
 };

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lift Co. / Vehicle workshop</title><link rel="icon" href="data:,"><link rel="stylesheet" href="../src/styles/vehicle-workshop.css"><script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script></head>
+<body>
+<aside id="sidebar">
+<a class="brand" href="../empty-map.html">LIFT CO<span>.</span><small>VEHICLE WORKSHOP / 01</small></a>
+<header><p class="eyebrow">FROM THE VALLEY TO THE SNOW</p><h1>A mountain<br>in motion.</h1><p class="intro">Original low-poly vehicles for the villages, roads and pistes ahead.</p></header>
+<label class="eyebrow" for="category">01 / THE FLEET</label><select id="category"><option>Buses</option><option>Cars</option><option>Winter service</option></select>
+<nav id="fleet" aria-label="Vehicle models"></nav>
+<section><p class="eyebrow">02 / INSPECT THE MODEL</p><label for="paint">Body colour <input id="paint" type="color" value="#c76043"></label><label><input id="snow" type="checkbox"> Light snow on the roof</label><label><input id="moving" type="checkbox" checked> Run wheels / tracks</label><label id="door-control"><input id="doors" type="checkbox"> Open passenger doors</label><label for="steering" id="steering-label">Front-wheel steering <output id="steer-value">0°</output></label><input id="steering" type="range" min="-28" max="28" value="0"><label for="blade" id="blade-label" hidden>Blade angle</label><input id="blade" type="range" min="-24" max="24" value="0" hidden><label><input id="wireframe" type="checkbox"> Wireframe</label><label><input id="rotate" type="checkbox"> Rotate view</label></section>
+<footer><p id="status" role="status">Preparing the fleet...</p><a href="../docs/vehicles.md">Model notes and reference credits</a><p class="small">Design study only. Resort saves and the live game are unchanged.</p></footer>
+</aside>
+<main>
+<div class="topbar"><div><p class="eyebrow" id="model-code">BUS / 01</p><h2 id="title">Village shuttle</h2></div><span class="badge">ORIGINAL ASSETS / LOCAL STUDY</span></div>
+<div id="viewport" aria-label="Interactive 3D vehicle preview"></div>
+<button id="toggle" aria-label="Hide controls" aria-expanded="true">‹</button>
+<nav class="views" aria-label="Camera views"><button data-view="quarter" aria-pressed="true">Perspective</button><button data-view="side" aria-pressed="false">Side</button><button data-view="front" aria-pressed="false">Front</button><button data-view="rear" aria-pressed="false">Rear</button><button data-view="top" aria-pressed="false">Plan</button></nav>
+<div class="caption"><p class="eyebrow">FLEET STUDY</p><p id="description"></p><div id="measurements"></div></div>
+<div class="hint">Drag to orbit / scroll or pinch to zoom / right-drag to pan<span id="stats"></span></div>
+<pre id="error" role="alert" hidden></pre>
+</main>
+<script type="module" src="../src/vehicles/workshop.js"></script>
+</body></html>

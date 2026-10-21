@@ -32,7 +32,7 @@ window.LiftCoFunitelRuntime=(()=>{
   const cabins=[],towers=[],stations=[],ropes=[],stationRoofs=[];
   const groundAt=s=>{const p=ctx.planPoint(def,0,half-s);return ctx.ground(p.x,p.z);};
   for(const [end,variant,z,rotation] of [[1,0,-2,Math.PI],[-1,0,L+2,0]]){
-   const station=factory.makeStation(variant,{deck:def.stationGround[end]+.52,stubs:false,role:'return'});station.root.position.z=z;station.root.rotation.y=rotation;line.add(station.root);stations.push(station);stationRoofs.push(station.roof,station.building);
+   const station=factory.makeStation(variant,{deck:def.stationGround[end]+.52,stubs:false,role:'return',steelGallery:def.stationStyle==='bouquetin'});station.root.position.z=z;station.root.rotation.y=rotation;line.add(station.root);stations.push(station);if(def.stationStyle==='bouquetin'){station.roof.removeFromParent();station.building.removeFromParent();const model=window.LiftCoStationArchitecture.create('bouquetin');model.root.position.y=def.stationGround[end]+.2925;station.root.add(model.root);station.roof=model.roof;station.building=new T.Group();window.LiftCoStationArchitecture.support(model,ctx.ground);}stationRoofs.push(station.roof,station.building);
    // Solid foundation under each deck, with recessed channels for the cabin floors.
    const g=def.stationGround[end],p=ctx.planPoint(def,0,end*half),foot=Math.min(g-1,ctx.ground(p.x,p.z)-1);
    for(const [x,w]of [[0,3.75],[-6.1,1.6],[6.1,1.6]])factory.box(station.root,w,g-foot,station.v.length,x,(g+foot)/2,0,factory.M.concrete);

@@ -27,9 +27,9 @@ window.LiftCoOperations={
   }
   lift.estimatedCycleSeconds=()=>{if(lift.LIFT.reversible)return shuttleCatalogCycle*max/lift.def.operations.speed;const old=lift.LIFT.cableSpeed;lift.LIFT.cableSpeed=lift.def.operations.speed;try{return segments.reduce((sum,s)=>sum+s.distance/lift.targetSpeedAt(s.at),0);}finally{lift.LIFT.cableSpeed=old;}};
   // Reserve before the boarding gate and board only while doors/bars are open.
-  lift.boardingWindow=(carrier,end,phase='reserve')=>{const gate=lift.endInfo(end).gate,total=lift.LOOP.total,delta=((carrier.s-gate+total/2)%total+total)%total-total/2;const last=lift.LIFT.isChair?.25:-.2;return carrier.door>.7&&delta>=(phase==='reserve'?-4:-2)&&delta<=last;};
+  lift.boardingWindow=(carrier,end,phase='reserve',dest)=>{const gate=lift.endInfo(end,dest).gate,total=lift.LOOP.total,delta=((carrier.s-gate+total/2)%total+total)%total-total/2;const last=lift.LIFT.isChair?.25:-.2;return carrier.door>.7&&delta>=(phase==='reserve'?-4:-2)&&delta<=last;};
   lift.cameraCabin=lift.cabins[lift.LIFT.reversible?1:0];if(lift.cameraCabin)lift.cameraCabin.cameraOnly=true;
-  lift.dispose=()=>{lift.root.removeFromParent();const geometries=new Set(),materials=new Set();lift.root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])materials.add(m);});geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());};
+  lift.dispose=()=>{lift.root.removeFromParent();const geometries=new Set(),materials=new Set();lift.root.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])materials.add(m);});geometries.forEach(g=>g.dispose());materials.forEach(m=>{if(m.map?.userData.stationOwned)m.map.dispose();m.dispose();});};
   return lift;
  }
 };

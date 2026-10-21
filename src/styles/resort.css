@@ -45,3 +45,14 @@ body.ui-hidden #err{left:24px}
 #stationControls input,#stationControls select{width:100%;box-sizing:border-box;padding:7px;border:1px solid var(--line);background:#faf7ed;color:var(--ink)}
 #stationControls label{display:block;margin:10px 0 5px}
 #earthEditor[hidden],#routeSettings[hidden],#pointSettings[hidden],#stationControls[hidden],#brushSettings[hidden],#operations[hidden]{display:none}
+
+/* Village uses the existing responsive workbench. */
+#villagePanel { border-top:1px solid var(--line); margin-top:18px; padding-top:12px; }
+#villageList { display:grid; gap:5px; margin:10px 0; }
+#villagePanel .row { flex-wrap:wrap; }
+#villagePanel .row button { flex:1 1 82px; }
+#villageEditor { border:1px solid var(--line); padding:12px; margin:10px 0; }
+#villageEditor .row > label { min-width:0; flex:1; }
+#villageEditor input,#villageEditor select { width:100%; box-sizing:border-box; }
+#shuttleStats { white-space:pre-line; }
+@media (max-width:900px) { #villagePanel .row button { padding:9px 5px; } }

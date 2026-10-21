@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lift Co. V1 — Upper Snowfields</title>
-<link rel="stylesheet" href="./src/styles/resort.css">
+<title>Lift Co. V3 — Upper Snowfields</title>
+<link rel="stylesheet" href="./src/styles/resort.css?v=3">
+<link rel="stylesheet" href="./src/styles/resort-v3.css?v=polish-20261020-1">
 <style>
 .empty-network{padding:19px 15px 16px;border:1px solid var(--line);background:#ebece1;border-top:2px solid var(--gold)}.empty-network h2{font-size:25px;margin:9px 0}.empty-network p{font:11px/1.8 sans-serif;color:#7b8472}.empty-network button{width:100%;margin-top:16px;background:var(--ink);border-color:var(--ink);color:#fff8e8}.empty-network .empty-symbol{font:24px Georgia;color:#c49b57}.map-area{margin-top:14px;display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font:10px monospace;color:#7b8472}#btnAdd:disabled{opacity:.4}.place-title #viewTitle{max-width:430px}
 </style>
@@ -18,7 +19,7 @@
 <body>
 <div id="app"></div>
 <aside id="hud">
-  <header class="brand"><span class="eyebrow">UPPER SNOWFIELDS / V1</span><h1>Lift Co<span>.</span></h1><p>Twin Summit Pass. Your high mountain resort.</p></header>
+  <header class="brand"><span class="eyebrow">UPPER SNOWFIELDS / V3</span><h1>Lift Co<span>.</span></h1><p>Twin Summit Pass. Your high mountain resort.</p></header>
   <nav class="mode-tabs"><button id="tabResort" class="on">Your resort</button><button id="btnBuild">Build a lift <span>＋</span></button></nav>
   <section id="resortPanel">
     <div class="section-heading"><span class="eyebrow">01 / YOUR LIFT NETWORK</span><span id="networkCount" class="mono"></span></div>
@@ -43,7 +44,7 @@
   </section>
 </aside>
 <button id="toggleInterface" type="button" aria-label="Hide interface" title="Hide interface" aria-expanded="true" aria-controls="hud resortBar transport hint buildProfile">‹</button>
-<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">Upper Snowfields / V1</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span><span id="stAbility" style="max-width:220px;white-space:normal">Green 0 · Blue 0 · Red 0 · Black 0</span><span id="stEntranceWaiting">0 waiting at entrance</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
+<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">Upper Snowfields / V3</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span><span id="stAbility" style="max-width:220px;white-space:normal">Green 0 · Blue 0 · Red 0 · Black 0</span><span id="stEntranceWaiting">0 waiting at entrance</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
 <footer id="transport"><div class="row"><button id="btnPause" aria-label="Pause">Ⅱ</button><button id="btnPlay" class="on">1×</button><button id="btnFast">2×</button><span class="divider"></span><button id="btnAdd">＋ Skiers</button></div><div class="row"><button id="btnCam">Free camera</button><button id="btnHome">Overview ↗</button></div></footer>
 <div id="hint">WASD = fly · right-drag / Space + mouse = look · Shift = faster · drag = orbit · scroll = zoom</div>
 <section id="buildProfile" hidden><div class="row spread"><span class="eyebrow">LINE PROFILE / DRAG A DOT TO SET TOWER HEIGHT</span><span id="profileLegend" class="mono">Snow — Rope — Cabin floor</span></div><svg id="mountainProfile" viewBox="0 0 1000 180" role="img" aria-label="Terrain and editable lift profile"></svg></section>
@@ -51,35 +52,53 @@
 <div id="err"></div>
 <script src="./assets/generated/tree-pack.js"></script>
 <script src="./assets/data/terrain-heightmap.js"></script>
-<script src="./src/terrain/mountain-designs.js"></script>
-<script src="./src/terrain/twin-summit-variants.js"></script>
-<script src="./src/lifts/gondola-studies.js"></script>
-<script src="./src/lifts/gondola-runtime.js"></script>
-<script src="./src/lifts/funitel-terminals.js"></script>
-<script src="./src/lifts/funitel-rocharbois.js"></script>
-<script src="./src/lifts/funitel-loaded-rope.js"></script>
-<script src="./src/lifts/funitel-runtime.js"></script>
-<script src="./src/lifts/tower-mast.js"></script>
-<script src="./src/lifts/solo.js"></script>
-<script src="./src/lifts/solo-structures.js"></script>
-<script src="./src/lifts/solo-machinery.js"></script>
-<script src="./src/lifts/solo-runtime.js"></script>
-<script src="./src/lifts/solo-placement.js"></script>
-<script src="./src/lifts/catalog.js"></script>
-<script src="./src/lifts/ridge-chair.js"></script>
-<script src="./src/lifts/classic-chair.js"></script>
-<script src="./src/lifts/classic-station.js"></script>
-<script src="./src/lifts/station-guides.js"></script>
-<script src="./src/lifts/detachable-station.js"></script>
-<script src="./src/builder/layout.js"></script>
-<script src="./src/builder/resort-editor.js"></script>
-<script src="./src/resort/document.js"></script>
-<script src="./src/resort/operations.js"></script>
-<script src="./src/resort/guest-network.js"></script>
-<script src="./src/resort/resort-tools.js"></script>
+<script src="./src/terrain/mountain-designs.js?v=3"></script>
+<script src="./src/terrain/twin-summit-variants.js?v=3"></script>
+<script src="./src/lifts/gondola-studies.js?v=3"></script>
+<script src="./src/lifts/gondola-runtime.js?v=3"></script>
+<script src="./src/lifts/funitel-terminals.js?v=3"></script>
+<script src="./src/lifts/funitel-rocharbois.js?v=3"></script>
+<script src="./src/lifts/funitel-loaded-rope.js?v=3"></script>
+<script src="./src/lifts/funitel-runtime.js?v=3"></script>
+<script src="./src/resort/terrain-surface.js?v=3"></script>
+<script src="./src/resort/foundations.js?v=3"></script>
+<script src="./src/resort/graphics.js?v=3"></script>
+<script src="./src/resort/interface.js?v=3"></script>
+<script src="./src/lifts/tower-mast.js?v=3"></script>
+<script src="./src/lifts/gondola-pylons.js?v=placed-wheel-parts-1"></script>
+<script src="./src/lifts/solo.js?v=3"></script>
+<script src="./src/lifts/solo-structures.js?v=3"></script>
+<script src="./src/lifts/solo-machinery.js?v=3"></script>
+<script src="./src/lifts/solo-runtime.js?v=3"></script>
+<script src="./src/lifts/solo-placement.js?v=3"></script>
+<script src="./src/lifts/next-lift-alignment.js?v=3"></script>
+<script src="./src/lifts/next-lift-machinery.js?v=3"></script>
+<script src="./src/lifts/next-lift-structures.js?v=polish-20261020-1"></script>
+<script src="./src/lifts/next-lift-studies.js?v=3"></script>
+<script src="./src/lifts/chair-sway.js?v=3.0.2"></script>
+<script src="./src/lifts/next-lift-runtime.js?v=polish-20261020-1"></script>
+<script src="./src/lifts/catalog.js?v=3"></script>
+<script src="./src/lifts/ridge-chair.js?v=3"></script>
+<script src="./src/lifts/classic-chair.js?v=3"></script>
+<script src="./src/lifts/classic-station.js?v=3"></script>
+<script src="./src/lifts/station-guides.js?v=polish-20261020-1"></script>
+<script src="./src/lifts/detachable-station.js?v=3"></script>
+<script src="./src/builder/layout.js?v=3"></script>
+<script src="./src/lifts/station-designs.js?v=1"></script>
+<script src="./src/builder/draft-store.js?v=polish-20261020-1"></script>
+<script src="./src/builder/resort-editor.js?v=polish-20261020-1"></script>
+<script src="./src/resort/document.js?v=3"></script>
+<script src="./src/resort/roads.js?v=village-1"></script>
+<script src="./src/resort/village.js?v=village-1"></script>
+<script src="./src/resort/shuttle.js?v=village-1"></script>
+<script src="./src/resort/village-tools.js?v=village-1"></script>
+<script src="./src/resort/operations.js?v=3"></script>
+<script src="./src/resort/guest-network.js?v=3"></script>
+<script src="./src/resort/resort-tools.js?v=polish-20261020-1"></script>
 <script type="module">
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import './src/lifts/station-architecture.js?v=polish-20261020-1';
+import { OrbitControls } from './assets/vendor/three/OrbitControls.js?v=pointer-capture-1';
 
 const errBox = document.getElementById('err');
 window.addEventListener('error', e => {
@@ -196,24 +215,31 @@ try{const original=localStorage.getItem(SAVE_KEY);if(original!==null&&localStora
 // Snapshot existing slots before Solo becomes buildable again. A failed backup
 // uses the same blocking gate as all earlier migrations.
 try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-solo-integration-20261018:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Solo integration backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-next-lifts-20261018:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('New lift integration backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-station-styles-20261020:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Station design backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-v3-20261018:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('V3 save backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-before-village-20261020:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Village backup unavailable; saving is disabled.');}
 let savedResort=null;
 try{savedResort=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');}catch(error){console.warn('Resort save unavailable.');}
 function validLiftDefinition(d){return !window.LiftCoPlacement.definitionReason(d,window.LiftCoLiftTypes,MAP);}
 
 let resortTools=null;
 const RESORT={lifts:[]};
-if([1,2].includes(savedResort?.version)&&Array.isArray(savedResort.lifts))for(const d of savedResort.lifts.filter(validLiftDefinition)){
+if([1,2,3].includes(savedResort?.version)&&Array.isArray(savedResort.lifts))for(const d of savedResort.lifts.filter(validLiftDefinition)){
  const index=RESORT.lifts.findIndex(l=>l.id===d.id);if(index>=0)RESORT.lifts[index]=d;else RESORT.lifts.push(d);
 }
+window.LiftCoThree=THREE;
 const resortDocument=window.LiftCoResort.migrate(savedResort,RESORT.lifts);
 RESORT.lifts=resortDocument.lifts;
 const resortHistory=new window.LiftCoResort.History();
 function liftFrame(def) {
+  if(window.LiftCoNextAlignment.special(def)&&def.mid){const p=window.LiftCoNextAlignment.make(def);return{length:p.length,angle:Math.atan2(def.base[0]-def.top[0],def.base[1]-def.top[1]),x:(def.base[0]+def.top[0])/2,z:(def.base[1]+def.top[1])/2};}
   const dx = def.base[0] - def.top[0], dz = def.base[1] - def.top[1];
   const length = Math.hypot(dx, dz), angle = Math.atan2(dx, dz);
   return { length, angle, x: (def.base[0] + def.top[0]) / 2, z: (def.base[1] + def.top[1]) / 2 };
 }
 function planPoint(def, x, z) {
+  if(window.LiftCoNextAlignment.special(def)&&def.mid){const path=window.LiftCoNextAlignment.make(def),p=path.at(path.length/2-z,x);return new THREE.Vector3(p.x,0,p.z);}
   const f = liftFrame(def);
   return new THREE.Vector3(f.x + Math.cos(f.angle) * x + Math.sin(f.angle) * z, 0,
     f.z - Math.sin(f.angle) * x + Math.cos(f.angle) * z);
@@ -235,7 +261,7 @@ for (const [i, def] of RESORT.lifts.entries()) {
       width: def.manual?10:side < 0 ? 15 : 12, color: side < 0 ? 0x357ba7 : 0xd35c50, samples, distances, length: distances.at(-1) });
   }
 }
-if(savedResort?.version!==2)for(const r of routes){const entity={id:window.LiftCoResort.id('piste'),name:r.name,width:r.width,sign:'blue',open:true,points:r.samples.filter((_,i)=>i%10===0).map(p=>({x:p.x,z:p.z})),connections:[null,null]};resortDocument.pistes.push(entity);}
+if(![2,3].includes(savedResort?.version))for(const r of routes){const entity={id:window.LiftCoResort.id('piste'),name:r.name,width:r.width,sign:'blue',open:true,points:r.samples.filter((_,i)=>i%10===0).map(p=>({x:p.x,z:p.z})),connections:[null,null]};resortDocument.pistes.push(entity);}
 routes.length=0;
 function routePoint(route, distance, out) {
   const d = THREE.MathUtils.clamp(distance, 0, route.length);
@@ -266,6 +292,9 @@ function rawTerrainY(x,z){return terrainService.sample(x,z);}
 // Small station platforms follow the local shoulder. No flattening of the lift corridor
 // or piste profile: hills, saddle and upper face remain the chosen landscape.
 function prepareStationGround(def){
+  if(window.LiftCoNextAlignment.isNext(def)){
+    const result={};for(const frame of window.LiftCoNextAlignment.stationFrames(def)){let elevation=-Infinity;for(const p of window.LiftCoNextAlignment.footprint(def,frame))elevation=Math.max(elevation,rawTerrainY(p.x,p.z));result[frame.end==='base'?1:frame.end==='top'?-1:'mid']=def.stationElevations?.[frame.end]??elevation;}def.stationGround=result;return;
+  }
   const half=liftFrame(def).length/2,STATION=stationSettings(def);
   def.stationGround={};
   for(const end of [-1,1]){
@@ -287,20 +316,31 @@ function terrainY(x,z,extraDef=null){
   const definitions=resortTools?.terrainLifts||RESORT.lifts;
   for(const def of extraDef?[...definitions.filter(d=>d.id!==extraDef.id),extraDef]:definitions){
     if(!def.base||!def.top||!def.stationGround)continue;
+    if(window.LiftCoNextAlignment.isNext(def)){
+      const path=window.LiftCoNextAlignment.make(def);
+      for(const frame of window.LiftCoNextAlignment.stationFrames(def)){
+        if(def.stationFoundations?.[frame.end]==='raised')continue;
+        const dx=x-frame.x,dz=z-frame.z;if(Math.abs(dx)>100||Math.abs(dz)>100)continue;const lx=Math.cos(frame.yaw)*dx-Math.sin(frame.yaw)*dz,lz=Math.sin(frame.yaw)*dx+Math.cos(frame.yaw)*dz;
+        let blend;if(frame.end==='mid'){const q=path.project(x,z);const along=path.midDistance+(q.distance-path.midDistance);blend=window.LiftCoTerrainSurface.terrace(q.lateral,along,8,path.midStart,path.midEnd,def.stationGround.mid,y);}else blend=window.LiftCoTerrainSurface.terrace(lx,lz,9,-4,def.stationStyle==='princesse'?34:def.type==='chair-alps5'?18:30,def.stationGround[frame.end==='base'?1:-1],y);
+        y=THREE.MathUtils.lerp(y,def.stationGround[frame.end==='base'?1:frame.end==='top'?-1:'mid'],blend);
+      }continue;
+    }
     const STATION=stationSettings(def),f=liftFrame(def),dx=x-f.x,dz=z-f.z;
     const lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz;
     const lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
     for(const end of [-1,1]){
-      if(def.type==='solo'){const out=end*(lz-end*f.length/2);y=window.LiftCoSoloPlacement.height(y,lx,out,def.stationGround[end],end===1?'base':'top',def.stationFoundations?.[end===1?'base':'top']==='raised',def.arrivalProfile);continue;}
+      if(def.type==='solo'){const out=end*(lz-end*f.length/2),raised=def.stationFoundations?.[end===1?'base':'top']==='raised';y=window.LiftCoSoloPlacement.height(y,lx,out,def.stationGround[end],end===1?'base':'top',raised,def.arrivalProfile);
+       // The public wing has its own small pad, clear of the cliff approach.
+       if(def.stationStyle==='faron'&&!raised){const side=-end*lx,pad=window.LiftCoTerrainSurface.terrace(side-12.95,-out,3.75,-5.5,12.3,def.stationGround[end],y);y=THREE.MathUtils.lerp(y,def.stationGround[end],pad);}continue;}
       if(def.stationFoundations?.[end===1?'base':'top']==='raised')continue;
       const out=end*(lz-end*f.length/2);
       if(def.type==='funitel-rocharbois'){
-        const pad=(1-smoothstep(7.2,18,Math.abs(lx)))*smoothstep(-18,-10,out)*(1-smoothstep(15,27,out));
+        const pad=window.LiftCoTerrainSurface.terrace(lx,out,7.2,-10,15,def.stationGround[end],y);
         y=THREE.MathUtils.lerp(y,def.stationGround[end],pad);
         const pit=(1-smoothstep(1.48,1.72,Math.abs(Math.abs(lx)-3.5)))*smoothstep(-11,-8,out)*(1-smoothstep(11,14,out));
         y-=.8*pit*pad;continue;
       }
-      const pad=(1-smoothstep(9,28,Math.abs(lx)))*smoothstep(-37,-4,out)*(1-smoothstep(STATION.straight+4,STATION.straight+23,out));
+      const pad=window.LiftCoTerrainSurface.terrace(lx,out,9,-4,STATION.straight+(def.stationStyle==='princesse'?8:4),def.stationGround[end],y);
       y=THREE.MathUtils.lerp(y,def.stationGround[end],pad);
       const straightPit=(1-smoothstep(1.2,1.65,Math.abs(Math.abs(lx)-STATION.railX)))*smoothstep(-1,2,out)*(1-smoothstep(STATION.straight-1,STATION.straight+1,out));
       const turnPit=(1-smoothstep(1.2,1.65,Math.abs(Math.hypot(lx,out-STATION.straight)-STATION.railX)))*smoothstep(STATION.straight-1,STATION.straight+1,out);
@@ -321,15 +361,13 @@ const snowBump=new THREE.DataTexture(snowPixels,128,128,THREE.RGBAFormat);
 snowBump.wrapS=snowBump.wrapT=THREE.RepeatWrapping;snowBump.repeat.set(46,46);
 snowBump.magFilter=THREE.LinearFilter;snowBump.minFilter=THREE.LinearMipmapLinearFilter;snowBump.generateMipmaps=true;snowBump.needsUpdate=true;
 // ---------- sculpted snow, groomed pistes and summit aprons ----------
-const terrainChunks=[];
+const terrainChunks=[];let initialHeight=window.LiftCoTerrainSurface.sampler(terrainY),initialRefinement=window.LiftCoTerrainSurface.regions(RESORT.lifts,liftFrame,planPoint);
 for(let iz=0;iz<12;iz++)for(let ix=0;ix<12;ix++){
  const x=-1650+ix*300,z=-1650+iz*300;
- const near=RESORT.lifts.some(d=>[d.base,d.top].some(p=>Math.abs(p[0]-x)<210&&Math.abs(p[1]-z)<210));
- const g=new THREE.PlaneGeometry(300,300,near?150:30,near?150:30);g.rotateX(-Math.PI/2);g.translate(x,0,z);
- const pos=g.attributes.position,colors=[];for(let i=0;i<pos.count;i++){const px=pos.getX(i),pz=pos.getZ(i);pos.setY(i,terrainY(px,pz)-.08);colors.push(.94,.93,.90);}
- g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));g.computeVertexNormals();
+ const g=window.LiftCoTerrainSurface.build(THREE,x,z,initialHeight,initialRefinement);
  const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.97,bumpMap:snowBump,bumpScale:.055}));mesh.receiveShadow=true;mesh.userData.terrain=true;scene.add(mesh);terrainChunks.push({mesh,x,z});
 }
+initialHeight=null;
 // Continue the snow beyond the detailed resort so its square mesh edge disappears
 // into a broad, quiet valley and atmospheric haze.
 {
@@ -425,12 +463,13 @@ function leaveSkiTracks(skier){
   }
   liveTracksDirty=true;a.copy(b);
 }
-const rockClearings=[];
+const rockClearings=[],stationClearings=RESORT.lifts.flatMap(d=>window.LiftCoPlacement.terminalBoxes(d,window.LiftCoLiftTypes.find(t=>t.id===d.type),stationSettings(d)));
 // Dark rock ribs emerge through thick snow caps, away from all groomed routes.
 function corridorClearance(x,z) {
-  let d=Infinity;
+  let d=Infinity;for(const box of stationClearings)d=Math.min(d,window.LiftCoPlacement.boxDistance(box,x,z)-4);
   for(const r of routes)d=Math.min(d,routeDistance(x,z,r)-r.width/2);
   for(const def of RESORT.lifts) {
+    if(specIsNext(def)){const path=window.LiftCoNextAlignment.make(def),q=path.project(x,z);d=Math.min(d,q.error-10);continue;}
     const STATION=stationSettings(def),f=liftFrame(def),dx=x-f.x,dz=z-f.z;
     const lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
     if(Math.abs(lz)<f.length/2+STATION.straight+15)d=Math.min(d,Math.abs(lx)-(def.type==='solo'?(Math.abs(lz)>f.length/2-35?14:10):9));
@@ -519,7 +558,7 @@ const forestPlacements=[],forestPrototypes=[];
   forestPrototypes.push({geometry,material});
   const trees=new THREE.InstancedMesh(geometry,material,buckets[i].length);
   buckets[i].forEach((tree,j)=>{dummy.position.set(tree.x,tree.y-.08,tree.z);dummy.rotation.set(0,tree.angle,0);dummy.scale.set(tree.height*tree.width,tree.height,tree.height*tree.width);dummy.updateMatrix();trees.setMatrixAt(j,dummy.matrix);});
-  trees.castShadow=false;trees.receiveShadow=true;trees.instanceMatrix.needsUpdate=true;scene.add(trees);
+  trees.userData.scenery='vegetation';trees.castShadow=false;trees.receiveShadow=true;trees.instanceMatrix.needsUpdate=true;scene.add(trees);
  }
 }
 // Fresh powder piles around tree roots and boulders, leaving the groomed runs smooth.
@@ -655,6 +694,7 @@ function columnLiftLayout(def,world=false){
 }
 function createLiftGeometry(def,index) {
   const f=liftFrame(def),half=f.length/2,spec=window.LiftCoLiftTypes.find(t=>t.id===(def.type||'gondola'))||window.LiftCoLiftTypes[0],isRidge=spec.id==='ridge',isChair=!!spec.isChair,isClassic=!!spec.fixedGrip;
+  if(spec.nextModel)return window.LiftCoNextRuntime.create(THREE,def,index,{scene,ground:rawTerrainY,terrain:(x,z)=>worldTerrainY(x,z,def),prepare:prepareStationGround,lightFixtures:towerLightFixtures});
   if(spec.id==='solo')return window.LiftCoSoloRuntime.create(THREE,def,index,{scene,frame:liftFrame,planPoint,ground:rawTerrainY,terrain:worldTerrainY,prepare:prepareStationGround,routes});
   if(spec.funitel)return window.LiftCoFunitelRuntime.create(THREE,def,index,{scene,frame:liftFrame,planPoint,ground:rawTerrainY,terrain:worldTerrainY,prepare:prepareStationGround,lightFixtures:towerLightFixtures});
   const STATION=stationSettings(def);
@@ -694,7 +734,7 @@ const cableTransitions=def.manual?[]:supports.slice(1,-1).map(support=>{
 const stationGuides=manualLayout?window.LiftCoStationGuides.create(THREE,{root,layout:manualLayout,half,railX:STATION.railX,fixedGrip:isClassic}):null;
 const towerWheels = []; // spinning sheaves; hold-down bearings yield to passing grips
 const holdDownPairs = [];
-const stationRoofs=[],stationTyres=[];let conveyorMeshes=null;
+const stationRoofs=[],stationTyres=[],stationMotors=[];let conveyorMeshes=null;
 // Cabin running tracks stay aligned from the rope into each terminal.
 const LOOP=(()=>{
   const zB=half+STATION.straight,zT=-half-STATION.straight,straight=zB-zT,turn=Math.PI*STATION.railX,total=2*straight+2*turn;
@@ -762,7 +802,9 @@ if(!isClassic){ // The rope moves inwards and down; the detached cabin track sta
 }
 
 if(isClassic){
- const station=window.LiftCoClassicStation.create(THREE,{root,half,straight:STATION.straight,railX:STATION.railX,base:LIFT.base,top:LIFT.top});
+ const station=def.stationStyle==='delta'?(()=>{
+  const roofs=[],bullwheels={};for(const end of ['base','top']){const p=LIFT[end],out=end==='base'?1:-1,model=window.LiftCoStationArchitecture.create('delta',{fixed:true,radius:STATION.railX,role:end==='base'?'valley':'summit'});model.root.position.set(0,p.y-5.2,p.z+out*STATION.straight);model.root.rotation.y=out<0?Math.PI:0;root.add(model.root);window.LiftCoStationArchitecture.support(model,rawTerrainY);roofs.push(model.roof);bullwheels[end]=model.pulleys[0];stationMotors.push(...model.motorRotors.map(node=>({node,wheel:model.pulleys[0]})));}return{roofs,bullwheels};
+ })():window.LiftCoClassicStation.create(THREE,{root,half,straight:STATION.straight,railX:STATION.railX,base:LIFT.base,top:LIFT.top});
  stationRoofs.push(...station.roofs);LIFT.baseWheel=station.bullwheels.base;LIFT.topWheel=station.bullwheels.top;
  const points=[];for(let s=0;s<LOOP.total;s+=.22)points.push(LOOP.pos(s,new THREE.Vector3()));
  root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points,true),Math.ceil(LOOP.total/.28),.055,8,true),new THREE.MeshStandardMaterial({color:0x30353a,metalness:.5,roughness:.65})));
@@ -789,7 +831,9 @@ if(isClassic){
       const rg=new THREE.BufferGeometry();rg.setAttribute('position',new THREE.Float32BufferAttribute([x0,y0,z0,x1,y0,z0,x0,y1,z1,x1,y1,z1],3));rg.setIndex(side*out>0?[0,1,2,1,3,2]:[0,2,1,1,2,3]);rg.computeVertexNormals();const ramp=new THREE.Mesh(rg,new THREE.MeshStandardMaterial({color:0x929994,roughness:1,side:THREE.DoubleSide}));ramp.receiveShadow=true;g.add(ramp);
     }
     const shell=window.LiftCoDetachableStation.create(THREE,{parent:g,color:0xb7352c,name:def.name,straight:STATION.straight,out});
-    stationRoofs.push(shell.root);
+    if(def.stationStyle==='princesse'){
+     shell.root.removeFromParent();const model=window.LiftCoStationArchitecture.create('princesse',{length:STATION.straight});model.root.rotation.y=out<0?Math.PI:0;g.add(model.root);window.LiftCoStationArchitecture.support(model,rawTerrainY);stationRoofs.push(model.roof);
+    }else stationRoofs.push(shell.root);
     const wheel=new THREE.Mesh(new THREE.CylinderGeometry(STATION.railX-.55,STATION.railX-.55,.45,32),frameM);wheel.position.set(0,4.35,out*STATION.straight);wheel.add(new THREE.Mesh(new THREE.BoxGeometry(4,.14,.32),pitM),new THREE.Mesh(new THREE.BoxGeometry(.32,.14,4),pitM));g.add(wheel);LIFT[end+'Wheel']=wheel;
     const hub=new THREE.Mesh(new THREE.CylinderGeometry(.4,.4,1.1,12),pitM);hub.position.copy(wheel.position);g.add(hub);
     const pitPoints=[],pitIndices=[];
@@ -832,135 +876,21 @@ if(isClassic){
   }
   {
   // support pillars with real sheave trains (roller assemblies the cable rides on)
-  const towerM = new THREE.MeshStandardMaterial({ color: 0x9aa5a7, metalness: 0.55, roughness: 0.47 });
-  const wheelM = new THREE.MeshStandardMaterial({ color: 0x2c313a, metalness: 0.55, roughness: 0.35 });
-  // A single grooved sheave is centred on each rope, rather than two offset
-  // rows with the rope floating between them. The groove's running radius is .34 m.
-  const rimProfile=[[.12,-.16],[.34,-.16],[.38,-.13],[.38,-.07],[.34,-.045],
-    [.34,.045],[.38,.07],[.38,.13],[.34,.16],[.12,.16]];
-  const wheelG=new THREE.LatheGeometry(rimProfile.map(([r,x])=>new THREE.Vector2(r,x)),18);
-  wheelG.rotateZ(Math.PI/2);
-  const hubG=new THREE.CylinderGeometry(.12,.12,.4,10);hubG.rotateZ(Math.PI/2);
-  const axleG=new THREE.CylinderGeometry(.055,.055,.68,8);axleG.rotateZ(Math.PI/2);
-  const contactRadius=.34+.055;
-  const platformM=new THREE.MeshStandardMaterial({color:0x667578,metalness:.6,roughness:.6});
-  const rimM=new THREE.MeshStandardMaterial({color:0xd1d5ce,metalness:.65,roughness:.35});
-  const darkM=new THREE.MeshStandardMaterial({color:0x4b585d,metalness:.6,roughness:.5});
-  const concreteM=new THREE.MeshStandardMaterial({color:0x92948a,roughness:1});
+  const pylonFactory=window.LiftCoGondolaPylons.createFactory(THREE),concreteM=pylonFactory.materials.concrete,darkM=pylonFactory.materials.dark;
   const invalidFoundationM=new THREE.MeshStandardMaterial({color:0xc65b4d,roughness:.85});
-  const silverHubG=new THREE.CylinderGeometry(.27,.27,.35,14);silverHubG.rotateZ(Math.PI/2);
   if(manualLayout)for(const group of manualLayout.foundationGroups.filter(g=>g.shared)){
     const foundation=new THREE.Group();foundation.name='Shared tower foundation';foundation.userData.towerIds=group.members.map(m=>m.tower.id??m.sourceIndex+1);root.add(foundation);
     const z=half-(group.start+group.end)/2,depth=group.end-group.start;
-    const plinth=new THREE.Mesh(new THREE.BoxGeometry(group.width,group.top-group.bottom,depth),group.valid?concreteM:invalidFoundationM);plinth.position.set(0,(group.top+group.bottom)/2,z);plinth.castShadow=plinth.receiveShadow=true;foundation.add(plinth);
+    window.LiftCoFoundations.create(THREE,{parent:foundation,z,top:group.top,width:window.LiftCoFoundations.width(Math.max(...group.members.map(m=>m.tower.height)),group.width),depth,groundAt:terrainY,material:group.valid?concreteM:invalidFoundationM});
     const cap=new THREE.Mesh(new THREE.BoxGeometry(group.width+.12,.08,depth+.12),group.valid?darkM:invalidFoundationM);cap.position.set(0,group.top-.04,z);cap.castShadow=cap.receiveShadow=true;foundation.add(cap);
   }
   for(let i=1;i<supports.length-1;i++){
-    const support=supports[i],z=support.z,ropeY=cableY(z,1),ground=terrainY(0,z),bottom=ground-.25;
-    // Both lines bend the same way here. They share one mirrored head assembly.
-    const compression=manualLayout?support.compression:cableY(z+2,1)+cableY(z-2,1)-2*cableY(z,1)>.012;
-    const sign=compression?1:-1,floorY=ropeY-bottom-1.22,headY=ropeY-bottom+2.85;
-    const tower=new THREE.Group();tower.position.set(0,bottom,z);
-    const neighbourGap=Math.min(supports[i-1].z-z,z-supports[i+1].z),deckHalf=Math.min(1.45,Math.max(.45,(neighbourGap-.25)/2));
-    tower.userData={number:support.number,towerId:def.manual?def.towers[support.sourceIndex]?.id:undefined,compression};
-    function box(w,h,d,x,y,z,material=towerM){
-      const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);mesh.castShadow=mesh.receiveShadow=true;tower.add(mesh);return mesh;
-    }
-    function bar(a,b,width=.09,depth=width,material=towerM){
-      const start=new THREE.Vector3(...a),end=new THREE.Vector3(...b),delta=end.clone().sub(start);
-      const mesh=new THREE.Mesh(new THREE.BoxGeometry(width,delta.length(),depth),material);
-      mesh.position.copy(start).add(end).multiplyScalar(.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());mesh.castShadow=true;tower.add(mesh);return mesh;
-    }
-    function girder(a,b,width=.24,depth=.26){
-      const mesh=bar(a,b,width,depth,darkM);
-      for(const side of [-1,1]){
-        const flange=new THREE.Mesh(new THREE.BoxGeometry(width*1.6,mesh.geometry.parameters.height,.045),towerM);
-        flange.position.z=side*depth/2;mesh.add(flange);
-      }
-      return mesh;
-    }
-    // Columns pivot on their fixed individual or shared foundation; heads follow the cable.
-    const towerDef=def.manual?def.towers[support.sourceIndex]:null;
-    const fixedFoot=towerDef?{x:0,y:support.footGround-bottom-.05,z:half-support.footDistance-z,valid:support.columnValid!==false}:null;
-    const column=window.LiftCoTowerMast.create(THREE,{parent:tower,headY:floorY,groundAt:(x,dz)=>terrainY(x,z+dz)-bottom,along:towerDef?.leanAlong??0,across:0,footOverride:fixedFoot,foundation:!support.sharedFoundation,steel:towerM,concrete:concreteM,dark:darkM});
-    tower.userData.columnFoot=column.foot;
-    // Reference 1: a grating platform, perimeter handrails and a ladder on the mast.
-    for(const x of [-2.25,2.25])bar([x,floorY-.12,-deckHalf-.10],[x,floorY-.12,deckHalf+.10],.14,.18,darkM);
-    for(const zz of [-deckHalf,deckHalf])bar([-2.3,floorY-.12,zz],[2.3,floorY-.12,zz],.14,.18,darkM);
-    for(let x=-2.2;x<=2.21;x+=.22)box(.11,.04,2*deckHalf,x,floorY,0,platformM);
-    for(const x of [-2.25,2.25]){
-      for(const zz of [-deckHalf,0,deckHalf])bar([x,floorY,zz],[x,floorY+1.02,zz],.045);
-      for(const h of [.5,1.02])bar([x,floorY+h,-deckHalf],[x,floorY+h,deckHalf],.045);
-    }
-    for(const zz of [-deckHalf,deckHalf])for(const side of [-1,1]){
-      bar([side*.5,floorY,zz],[side*.5,floorY+1.02,zz],.045);
-      for(const h of [.5,1.02])bar([side*.5,floorY+h,zz],[side*2.25,floorY+h,zz],.045);
-    }
-    // Wide trapezoidal overhead frame, with identical suspension arms on both sides.
-    for(const side of [-1,1]){
-      girder([side*2.05,floorY-.05,0],[side*3.95,headY,0],.24,.29);
-      bar([side*.55,floorY-.5,0],[side*2.1,floorY-.1,0],.12,.16,darkM);
-    }
-    girder([-4.35,headY,0],[4.35,headY,0],.27,.3);
-    // Head access rungs and a small central inspection hoop.
-    for(const side of [-1,1])bar([side*.37,floorY,.12],[side*.37,headY+.2,.12],.045);
-    for(let y=floorY+.3;y<headY;y+=.32)bar([-.37,y,.12],[.37,y,.12],.04);
-    for(const side of [1,-1]){
-      const nominal=support.long?8:6,bankHalf=Math.min((nominal-1)*.84/2,Math.max(.40,(neighbourGap-.80)/2)),count=Math.max(2,Math.min(nominal,2*Math.floor((2*bankHalf/.80+1)/2))),wheelPitch=2*bankHalf/(count-1),frameOffset=-side*.38,sx=side*LIFT.sideX,beamPoints=[],axlePoints=[],wheelStates=[];
-      const frame=new THREE.Group();frame.position.set(sx,0,0);tower.add(frame);
-      for(let k=0;k<count;k++){
-        const contactZ=z+(k-(count-1)/2)*wheelPitch;
-        const slope=(cableY(contactZ+.025,side)-cableY(contactZ-.025,side))/.05;
-        const normalY=1/Math.hypot(1,slope),normalZ=-slope*normalY;
-        const contactY=cableY(contactZ,side);
-        const cy=contactY+sign*contactRadius*normalY-bottom;
-        const cz=contactZ+sign*contactRadius*normalZ-z;
-        const wheel=new THREE.Mesh(wheelG,wheelM);wheel.position.set(0,cy,cz);wheel.castShadow=true;frame.add(wheel);
-        const hub=new THREE.Mesh(silverHubG,rimM);wheel.add(hub);
-        const centre=new THREE.Mesh(hubG,darkM);wheel.add(centre);
-        const spoke=new THREE.Mesh(new THREE.BoxGeometry(.36,.5,.045),darkM);wheel.add(spoke);
-        const axle=new THREE.Mesh(axleG,towerM);axle.position.copy(wheel.position);frame.add(axle);
-        const beamPoint=new THREE.Vector3(frameOffset,contactY-bottom-.75,contactZ-z);
-        const axlePoint=new THREE.Vector3(frameOffset,cy,cz);beamPoints.push(beamPoint);axlePoints.push(axlePoint);
-        const delta=beamPoint.clone().sub(axlePoint);
-        const mount=new THREE.Mesh(new THREE.BoxGeometry(.1,delta.length(),.14),towerM);
-        mount.position.copy(axlePoint).add(beamPoint).multiplyScalar(.5);mount.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize());frame.add(mount);
-        const state={m:wheel,dir:(side>0?-1:1)*(compression?-1:1),compression,side,contactZ,
-          restY:cy,axle,mount,beamPoint,axlePoint,mountLength:mount.geometry.parameters.height};
-        towerWheels.push(state);wheelStates.push(state);
-      }
-      // Long, box-section bogie beams and articulated pairs, as in the reference.
-      for(let k=1;k<count;k++){
-        const a=beamPoints[k-1],b=beamPoints[k],delta=b.clone().sub(a);
-        const mesh=new THREE.Mesh(new THREE.BoxGeometry(.2,.24,delta.length()+.08),towerM);
-        mesh.position.copy(a).add(b).multiplyScalar(.5);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),delta.normalize());frame.add(mesh);
-      }
-      for(let k=0;k<count;k+=2){
-        const a=axlePoints[k],b=axlePoints[k+1],delta=b.clone().sub(a);
-        const pair=new THREE.Mesh(new THREE.BoxGeometry(.13,.15,delta.length()+.15),platformM);
-        pair.position.copy(a).add(b).multiplyScalar(.5);pair.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),delta.normalize());frame.add(pair);
-        if(compression)holdDownPairs.push({mesh:pair,a:wheelStates[k],b:wheelStates[k+1],length:pair.geometry.parameters.depth});
-        const pivot=new THREE.Mesh(hubG,rimM);pivot.scale.set(.65,.65,.65);pivot.position.copy(beamPoints[k]).add(beamPoints[k+1]).multiplyScalar(.5);frame.add(pivot);
-      }
-      const linkX=sx+frameOffset,linkY=ropeY-bottom-.75;
-      girder([linkX,linkY,0],[linkX,headY,0],.14,.18);
-      for(const zz of [-.65,.65])bar([linkX,linkY,0],[linkX,headY-.4,zz],.07);
-    }
-    // Two downward floodlights, one on each side of the pylon crosshead.
-    for(const side of [-1,1]){
-      const x=side*4.05,y=headY-.28;
-      bar([x,headY,0],[x,y,.45],.065);
-      const lamp=new THREE.Group();lamp.position.set(x,y,.45);tower.add(lamp);
-      const target=new THREE.Object3D();target.position.set(side*4.8,terrainY(side*4.8,z+2)-bottom+.1,2);tower.add(target);
-      lamp.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),target.position.clone().sub(lamp.position).normalize());
-      const housing=new THREE.Mesh(new THREE.BoxGeometry(.66,.36,.2),darkM);housing.castShadow=true;lamp.add(housing);
-      const lensMaterial=new THREE.MeshStandardMaterial({color:0xf0e8d5,emissive:0xffdf9f,emissiveIntensity:towerNight*3,roughness:.35});
-      const lens=new THREE.Mesh(new THREE.BoxGeometry(.54,.25,.025),lensMaterial);lens.position.z=.112;lamp.add(lens);
-      if(!def.preview)towerLightFixtures.push({node:lamp,target,root,lensMaterial});
-    }
-    root.add(tower);
+   const support=supports[i],z=support.z,ground=terrainY(0,z),bottom=ground-.25,towerDef=def.manual?def.towers[support.sourceIndex]:null;
+   const compression=manualLayout?support.compression:cableY(z+2,1)+cableY(z-2,1)-2*cableY(z,1)>.012;
+   const fixedFoot=towerDef?{x:0,y:support.footGround-bottom-.05,z:half-support.footDistance-z,valid:support.columnValid!==false}:null;
+   const model=pylonFactory.create({parent:root,z,ropeY:cableY(z,1),ground,neighbourGap:Math.min(supports[i-1].z-z,z-supports[i+1].z),sideX:LIFT.sideX,compression,support,towerDef,fixedFoot,groundAt:terrainY,cableAt:cableY,preview:def.preview,lightFixtures:towerLightFixtures,lightingRoot:root,night:towerNight});
+   towerWheels.push(...model.wheels);holdDownPairs.push(...model.pairs);
   }
-
 }
 // Unrounded free-span height, with no sag in the station approach spans.
 function freeSpanY(z){
@@ -1194,18 +1124,20 @@ if(!def.preview&&spec.cabinFamily){
   function update(dt){
     phaseTime+=dt;
     for(let i=0;i<stationTyres.length;i++){
-      const tyre=stationTyres[i];tyre.angle+=targetSpeedAt(tyre.s)*dt/.24;wheelObject.position.copy(tyre.position);yawQ.setFromAxisAngle(upAxis,tyre.yaw);spinQ.setFromAxisAngle(axle,tyre.angle);wheelObject.quaternion.copy(yawQ).multiply(spinQ);wheelObject.updateMatrix();
+      const tyre=stationTyres[i];tyre.angle+=targetSpeedAt(tyre.s)*dt/.24;wheelObject.position.copy(tyre.position);root.localToWorld(direction.copy(tyre.position));if(!window.LiftCoGraphics.animateDetail(direction))continue;yawQ.setFromAxisAngle(upAxis,tyre.yaw);spinQ.setFromAxisAngle(axle,tyre.angle);wheelObject.quaternion.copy(yawQ).multiply(spinQ);wheelObject.updateMatrix();
       for(const mesh of Object.values(conveyorMeshes))mesh.setMatrixAt(i,wheelObject.matrix);
     }
     if(conveyorMeshes)for(const mesh of Object.values(conveyorMeshes))mesh.instanceMatrix.needsUpdate=true;
     for(const w of towerWheels)w.m.rotation.x+=w.dir*dt*LIFT.cableSpeed/.34;
     if(stationGuides)for(const w of stationGuides.wheels)w.m.rotation.x+=w.dir*dt*LIFT.cableSpeed/w.radius;
+    for(const m of stationMotors)m.node.rotation.z=m.wheel.rotation.y*48;
     LIFT.baseWheel.rotation.y+=dt*LIFT.cableSpeed/(STATION.railX-(isClassic?0:.55));LIFT.topWheel.rotation.y+=dt*LIFT.cableSpeed/(STATION.railX-(isClassic?0:.55));
     for(const c of cabins){
       const oldSpeed=c.speed;
       // Integrate distance on the existing loop: changing speed never rephases a carrier.
       for(let remaining=dt;remaining>0;){const step=Math.min(.02,remaining);LOOP.pos(c.s,direction);LOOP.pos(c.s+.05,wheelObject.position);const metric=Math.max(.5,direction.distanceTo(wheelObject.position)/.05);c.s=(c.s+targetSpeedAt(c.s)*step/metric)%LOOP.total;remaining-=step;}
-      c.speed=targetSpeedAt(c.s);updateCabinSway(c,dt>0?(c.speed-oldSpeed)/dt:0,dt);
+      c.speed=targetSpeedAt(c.s);const acceleration=dt>0?(c.speed-oldSpeed)/dt:0;
+      if(isChair&&!isClassic)window.LiftCoChairSway.update(c,acceleration,dt);else updateCabinSway(c,acceleration,dt);
       LOOP.pos(c.s,c.g.position);LOOP.dir(c.s,direction);const yaw=Math.atan2(direction.x,direction.z);let delta=yaw-c.yaw;while(delta>Math.PI)delta-=Math.PI*2;while(delta<-Math.PI)delta+=Math.PI*2;c.yaw+=delta*Math.min(1,dt*5);c.g.rotation.y=c.yaw;
       // A short, damped rattle as each trolley traverses the sheave train.
       let vibration=0;
@@ -1238,9 +1170,10 @@ if(!def.preview&&spec.cabinFamily){
     endInfo(end){const top=end==='top',sign=top?-1:1,gate=top?LOOP.straight+LOOP.turn+S_LOAD:S_LOAD;return{end,gate,unloadGate:top?2*LOOP.straight+LOOP.turn-(isClassic?6:10):S_UNLOAD,queuePoint:i=>worldPoint(sign*5.65,sign*(half+STATION.straight-S_LOAD+1.4-i*1.12)),load:worldPoint(sign*(STATION.railX+1.25),sign*(half+STATION.straight-S_LOAD)),unload:worldPoint(sign*(STATION.railX+1.25),-sign*(half+STATION.straight-(isClassic?6:10)))};},
     queueSlots,queuePoint,skiOff,load,boardingPoint:isChair?(seat=>worldPoint(5.0+Math.floor(seat/3)*.62,half+STATION.straight-S_LOAD-(seat%3)*.8)):null,unload,exit,worldPoint,routes:routes.filter(r=>r.liftIndex===index)};
 }
+function specIsNext(def){return window.LiftCoNextAlignment.isNext(def);}
 function createLift(def,index){
  const lift=createLiftGeometry(def,index);
- if(!lift.LIFT.reversible){const f=liftFrame(def),settings=stationSettings(def);for(const end of ['base','top'])if(def.stationFoundations?.[end]==='raised'){
+ if(!lift.LIFT.reversible&&!specIsNext(def)){const f=liftFrame(def),settings=stationSettings(def);for(const end of ['base','top'])if(def.stationFoundations?.[end]==='raised'){
   const sign=end==='base'?1:-1,datum=def.stationGround[sign];
   const foundationM=new THREE.MeshStandardMaterial({color:0x9ca399,roughness:.95});
   if(lift.LIFT.fixedGrip){
@@ -1248,7 +1181,7 @@ function createLift(def,index){
    for(const side of [-1,1]){const z0=sign*(f.length/2-7),z1=z0-sign*10,x0=side*5,x1=side*7,p=planPoint(def,(x0+x1)/2,z1),y=rawTerrainY(p.x,p.z),g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute([x0,datum,z0,x1,datum,z0,x0,y,z1,x1,y,z1],3));g.setIndex([0,1,2,1,3,2]);g.computeVertexNormals();lift.root.add(new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:0x9ca399,roughness:.95,side:THREE.DoubleSide})));}
   }
   for(const x of (lift.LIFT.fixedGrip?[-7,0,7]:[-6,6]))for(const out of [3,settings.straight-4]){
-   const z=sign*(f.length/2+out),p=planPoint(def,x,z),foot=rawTerrainY(p.x,p.z)-.5,height=Math.max(.5,datum-foot),mesh=new THREE.Mesh(new THREE.BoxGeometry(1.2,height,1.6),foundationM);mesh.position.set(x,datum-height/2,z);lift.root.add(mesh);
+   const z=sign*(f.length/2+out);window.LiftCoFoundations.create(THREE,{parent:lift.root,x,z,top:datum,width:1.2,depth:1.6,groundAt:(x,z)=>{const p=planPoint(def,x,z);return rawTerrainY(p.x,p.z);},material:foundationM});
   }
  }}
  return window.LiftCoOperations.attach(lift);
@@ -1293,7 +1226,7 @@ const lifts=RESORT.lifts.map(createLift);
   forestPlacements.push(tree);closeTrees.push(tree);buckets[variant].push(tree);return true;
  }
  for(const lift of lifts){
-  if(lift.LIFT.type==='solo')continue;
+  if(lift.LIFT.type==='solo'||specIsNext(lift.def))continue;
   const frame=liftFrame(lift.def),half=frame.length/2;
   for(let attempt=0;attempt<440&&closeTrees.length<60;attempt++){
    const t=.12+random()*.78;
@@ -1313,7 +1246,7 @@ const lifts=RESORT.lifts.map(createLift);
   if(!trees.length)return;
   const prototype=forestPrototypes[i],mesh=new THREE.InstancedMesh(prototype.geometry,prototype.material,trees.length);
   trees.forEach((tree,j)=>{dummy.position.set(tree.x,tree.y-.08,tree.z);dummy.rotation.set(0,tree.angle,0);dummy.scale.set(tree.height*tree.width,tree.height,tree.height*tree.width);dummy.updateMatrix();mesh.setMatrixAt(j,dummy.matrix);});
-  mesh.castShadow=mesh.receiveShadow=true;mesh.instanceMatrix.needsUpdate=true;scene.add(mesh);
+  mesh.userData.scenery='vegetation';mesh.castShadow=mesh.receiveShadow=true;mesh.instanceMatrix.needsUpdate=true;scene.add(mesh);
  });
  const bases=closeTrees.filter((_,i)=>i%3===0);
  const powder=new THREE.InstancedMesh(new THREE.SphereGeometry(1,12,7,0,Math.PI*2,0,Math.PI*.5),new THREE.MeshStandardMaterial({color:0xf5f4ed,roughness:.98}),bases.length);
@@ -1393,10 +1326,10 @@ function makeSkier() {
   }
   seatedLegs.visible=false;g.add(seatedLegs);
   scene.add(g);
-  return { g, legs, seatedLegs, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: skiers.length % lifts.length, ticket: nextTicket++, route: null, distance: 0 };
+  return { g, legs, seatedLegs, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: lifts.length?skiers.length % lifts.length:0, ticket: nextTicket++, route: null, distance: 0 };
 }
 function spawnSkier() {
-  if(!lifts.length)return;
+  if(!lifts.length||resortDocument.buildings.length||skiers.length>=120)return;
   const s = makeSkier();
   const arrival=lifts[s.liftIndex].LIFT.reversible?lifts[s.liftIndex].queuePoint(skiers.length+2):lifts[s.liftIndex].worldPoint(24+Math.random()*8,liftFrame(lifts[s.liftIndex].def).length/2+8+Math.random()*6);s.x=arrival.x;s.z=arrival.z;
   const lift=lifts[s.liftIndex],half=liftFrame(lift.def).length/2;
@@ -1418,7 +1351,7 @@ const seatWorld = cabinInterior;
 // Skiers follow the deck surface inside each terminal and the snow outside it.
 function skierSurfaceY(x,z){
   let ground=terrainY(x,z);
-  for(const lift of lifts){if(lift.LIFT.reversible){const level=lift.platformY(x,z);if(level!==null)ground=level;continue;}const STATION=stationSettings(lift.def),f=liftFrame(lift.def),dx=x-f.x,dz=z-f.z,lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
+  for(const lift of lifts){if(lift.platformY){const level=lift.platformY(x,z);if(level!==null)ground=level;continue;}const STATION=stationSettings(lift.def),f=liftFrame(lift.def),dx=x-f.x,dz=z-f.z,lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz,lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
     for(const end of [-1,1]){const out=end*(lz-end*f.length/2),edge=(1-smoothstep(7.4,8,Math.abs(lx)))*smoothstep(3.6,4.3,Math.abs(lx))*(1-smoothstep(STATION.straight-3,STATION.straight+2,out))*smoothstep(-7,3,out),level=(end===1?lift.LIFT.base.y:lift.LIFT.top.y)-5+(lift.LIFT.fixedGrip?0:.52);ground=THREE.MathUtils.lerp(ground,level,edge);}
   }
   return ground;
@@ -1663,7 +1596,7 @@ function startFlightLook(source='space'){
  if(source==='space')try{const pending=cameraCanvas.requestPointerLock?.();pending?.catch(()=>{});}catch{}
 }
 addEventListener('keydown',e=>{
- if(rideMode||editingText(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(window.LiftCoGraphics.modal||rideMode||editingText(e.target)||e.ctrlKey||e.metaKey||e.altKey)return;
  if(['KeyW','KeyA','KeyS','KeyD','ShiftLeft','ShiftRight'].includes(e.code)){flight.keys.add(e.code);e.preventDefault();}
  if(e.code==='Space'&&!(e.target instanceof Element&&e.target.closest('button,a'))){e.preventDefault();if(!e.repeat)startFlightLook();}
 });
@@ -1680,17 +1613,19 @@ document.addEventListener('mousemove',e=>{
  controls.target.copy(camera.position).addScaledVector(camera.getWorldDirection(flightForward),flight.distance);
 });
 cameraCanvas.addEventListener('pointerdown',e=>{
+ // Pointer lock can outlive key release; OrbitControls cannot capture then.
+ if(document.pointerLockElement){e.stopImmediatePropagation();return;}
  cameraCanvas.focus({preventScroll:true});
  if(e.button!==2||rideMode)return;
  e.preventDefault();e.stopImmediatePropagation();startFlightLook('right');
- if(flight.looking&&flight.source==='right'){flight.pointer=e.pointerId;cameraCanvas.setPointerCapture(e.pointerId);}
+ if(flight.looking&&flight.source==='right'){flight.pointer=e.pointerId;if(!window.LiftCoCapturePointer(cameraCanvas,e.pointerId))endFlightLook();}
 },true);
 cameraCanvas.addEventListener('contextmenu',e=>e.preventDefault());
 for(const event of ['pointerup','pointercancel','lostpointercapture'])cameraCanvas.addEventListener(event,e=>{
  if(flight.source==='right'&&e.pointerId===flight.pointer)endFlightLook();
 },true);
 function updateFlight(dt){
- if(rideMode||editingText(document.activeElement))return;
+ if(window.LiftCoGraphics.modal||rideMode||editingText(document.activeElement))return;
  const forward=Number(flight.keys.has('KeyW'))-Number(flight.keys.has('KeyS')),side=Number(flight.keys.has('KeyD'))-Number(flight.keys.has('KeyA'));
  if((!forward&&!side)||(!controls.enabled&&!flight.looking))return;
  camera.getWorldDirection(flightForward);flightRight.crossVectors(flightForward,flightUp).normalize();
@@ -1726,7 +1661,7 @@ $('btnRide').onclick=()=>{const line=lifts[selectedLiftIndex];if(!line)return;co
 cameraCanvas.addEventListener('pointerdown',e=>{
   if(!rideMode||e.button!==0||rideLook.pointer!==null)return;
   e.preventDefault();rideLook.pointer=e.pointerId;rideLook.x=e.clientX;rideLook.y=e.clientY;
-  cameraCanvas.setPointerCapture(e.pointerId);cameraCanvas.style.cursor='grabbing';
+  if(!window.LiftCoCapturePointer(cameraCanvas,e.pointerId)){endRideLook();return;}cameraCanvas.style.cursor='grabbing';
 });
 cameraCanvas.addEventListener('pointermove',e=>{
   if(!rideMode||e.pointerId!==rideLook.pointer)return;
@@ -1810,12 +1745,12 @@ function selectResortLift(index){
  selectedLiftIndex=index;const lift=lifts[index],empty=!lift;
  $('emptyResort').hidden=!empty;$('btnRide').parentElement.hidden=empty;for(const id of ['btnRide','btnEdit','btnStation','btnDeleteLift','btnAdd'])$(id).disabled=empty;
  $('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');
- if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='Upper Snowfields / V1';return;}
- const f=liftFrame(lift.def);$('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');liftStatNodes.forEach((n,i)=>n.classList.toggle('selected',i===index));$('lineDetail').textContent=Math.round(f.length)+' m line · '+(lift.supports.length-2)+' towers · '+lift.cabins.length+' '+lift.LIFT.carrierName+' · '+lift.LIFT.capacity+(lift.LIFT.isChair?' seats':' places');$('viewTitle').textContent=lift.def.name;}
+ if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='Upper Snowfields / V3';return;}
+ const f=liftFrame(lift.def);$('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');liftStatNodes.forEach((n,i)=>n.classList.toggle('selected',i===index));$('lineDetail').textContent=Math.round(f.length)+' m line · '+(lift.def.manual?lift.def.towers.length:lift.supports.length-2)+' towers · '+lift.cabins.length+' '+lift.LIFT.carrierName;$('viewTitle').textContent=lift.def.name;}
 selectResortLift(Math.max(0,lifts.findIndex(l=>l.def.id===savedResort?.selectedLineId)));
 const construction=window.createResortBuilder({THREE,scene,camera,controls,renderer,app,lifts,skiers,RESORT,terrainY,rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,STATION,seed,SAVE_KEY,selectResortLift,getSelectedLift:()=>selectedLiftIndex,enterFreeCamera,
  onConstructionBegin:()=>resortTools?.constructionBegan(),onConstructionEnd:()=>resortTools?.constructionEnded(),pendingConstruction:()=>resortTools?.active,previewTerrain:def=>resortTools?.previewTerrain(def),getDefinitions:()=>resortTools?.terrainLifts||RESORT.lifts,commit:definition=>resortTools.commitLift(definition),getSimulation:()=>({speed,time:+$('tod').value,served,skierCount:skiers.length}),setSpeed:value=>{speed=value;syncSpeed();},save:data=>{if(!saveBackupsReady)throw Error('Could not create the pre-change save backup. Free browser storage and reload before saving.');localStorage.setItem(SAVE_KEY,JSON.stringify({...data,mapVersion:MAP_VERSION,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden')}));navigationSavePending=true;sessionStorage.removeItem(DELETE_UNDO_KEY);},getSaved:()=>savedResort,liftTypes:window.LiftCoLiftTypes,mapLimits:{buildLimit:MAP.buildLimit,maxLineLength:MAP.maxLineLength},noticeKey:'lift-co-empty-notice',terminalGuides:true,autoPistes:false,rightDragLook:true,columnLean:true,stationSettings,
- createLayout:def=>def.type==='solo'?window.LiftCoSoloRuntime.layoutFor(def,{frame:liftFrame,planPoint,ground:rawTerrainY,prepare:prepareStationGround}):def.type==='funitel-rocharbois'?window.LiftCoFunitelRuntime.layoutFor(def,{frame:liftFrame,planPoint,ground:rawTerrainY,prepare:prepareStationGround}):columnLiftLayout(def,true),freeCameraHint,isCameraLooking:()=>flight.looking});
+ createLayout:def=>specIsNext(def)?window.LiftCoNextRuntime.layoutFor(def,{ground:rawTerrainY,terrain:(x,z)=>worldTerrainY(x,z,def),prepare:prepareStationGround}):def.type==='solo'?window.LiftCoSoloRuntime.layoutFor(def,{frame:liftFrame,planPoint,ground:rawTerrainY,prepare:prepareStationGround}):def.type==='funitel-rocharbois'?window.LiftCoFunitelRuntime.layoutFor(def,{frame:liftFrame,planPoint,ground:rawTerrainY,prepare:prepareStationGround}):columnLiftLayout(def,true),freeCameraHint,isCameraLooking:()=>flight.looking});
 $('btnBuild').onclick=()=>construction.begin();$('firstLift').onclick=()=>construction.begin();$('btnEdit').onclick=()=>{if(lifts[selectedLiftIndex])construction.begin(lifts[selectedLiftIndex]);};$('tabResort').onclick=()=>construction.cancel();
 // Persist line changes through the same reload path as construction so terrain,
 // clearings and guest assignments are rebuilt from the remaining network.
@@ -1883,38 +1818,43 @@ addEventListener('resize', () => {
   renderer.setSize(app.clientWidth, app.clientHeight);
 });
 
-// Preserve live V1 progress without overwriting a construction/removal save during reload.
-function resortSnapshot(){return{...window.LiftCoResort.copy(resortDocument),version:2,mapVersion:MAP_VERSION,lifts:RESORT.lifts.map(serializeLift),selectedLineId:lifts[selectedLiftIndex]?.def.id||null,served,skierCount:skiers.length,time:+$('tod').value,speed:construction.active?construction.resumeSpeed:resortTools?.active?resortTools.resumeSpeed:speed,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),camera:{position:camera.position.toArray(),target:(rideMode?camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),24):controls.target).toArray()}};}
+// Preserve progress without overwriting a construction/removal save during reload.
+function resortSnapshot(){return{...window.LiftCoResort.copy(resortDocument),version:3,releaseVersion:3,mapVersion:MAP_VERSION,lifts:RESORT.lifts.map(serializeLift),selectedLineId:lifts[selectedLiftIndex]?.def.id||null,served,skierCount:skiers.length,time:+$('tod').value,speed:construction.active?construction.resumeSpeed:resortTools?.active?resortTools.resumeSpeed:speed,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),camera:{position:camera.position.toArray(),target:(rideMode?camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),24):controls.target).toArray()}};}
 function persistResort(){if(navigationSavePending||!saveBackupsReady)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(resortSnapshot()));}catch{console.warn('Resort could not be saved.');}}
 addEventListener('pagehide',persistResort);addEventListener('beforeunload',persistResort);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)persistResort();});
 $('softShadows').onchange=()=>{renderer.shadowMap.enabled=$('softShadows').checked;renderer.shadowMap.needsUpdate=true;};
-if(savedResort?.softShadows){$('softShadows').checked=true;$('softShadows').onchange();}
-$('exportResort').onclick=()=>{const legacy={};for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-before-build-operate:')||k.startsWith('lift-co-empty-map-v1:')||k.startsWith('lift-co-pre-v1-backup:')||k.startsWith(SOLO_HOLD_BACKUP_PREFIX)||k.startsWith('lift-co-pre-funitel-20261016:'))){try{legacy[key]=JSON.parse(localStorage.getItem(key));}catch{legacy[key]=localStorage.getItem(key);}}const payload={format:'lift-co-backup',created:new Date().toISOString(),slot:seed,current:resortSnapshot(),legacy};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='lift-co-upper-snowfields-v1-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+// V3 uses device graphics preferences instead of per-world shadow defaults.
+$('exportResort').onclick=()=>{const legacy={};for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-before-village-20261020:')||k.startsWith('lift-co-pre-station-styles-20261020:')||k.startsWith('lift-co-before-build-operate:')||k.startsWith('lift-co-empty-map-v1:')||k.startsWith('lift-co-pre-v1-backup:')||k.startsWith(SOLO_HOLD_BACKUP_PREFIX)||k.startsWith('lift-co-pre-funitel-20261016:')||k.startsWith('lift-co-pre-v3-20261018:')||k.startsWith('lift-co-pre-next-lifts-20261018:')||k.startsWith('lift-co-pre-solo-integration-20261018:'))){try{legacy[key]=JSON.parse(localStorage.getItem(key));}catch{legacy[key]=localStorage.getItem(key);}}const payload={format:'lift-co-backup',created:new Date().toISOString(),slot:seed,current:resortSnapshot(),drafts:construction.exportDrafts(),legacy};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='lift-co-upper-snowfields-v3-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 if(savedResort?.uiHidden)requestAnimationFrame(()=>$('toggleInterface').click());
 
 resortTools=window.LiftCoResortTools({THREE,scene,camera,controls,renderer,doc:resortDocument,RESORT,lifts,cabins,skiers,routes,terrainService,terrainChunks,terrainY,rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,stationSettings,history:resortHistory,construction,getSpeed:()=>speed,setSpeed:v=>{speed=v;syncSpeed();},persist:persistResort,select:selectResortLift,selected:()=>selectedLiftIndex,refreshLiftButtons,enterFreeCamera,lightFixtures:towerLightFixtures,walkTo,cabinInterior,updateSkierEquipment,routePoint,makeSkier,leaveSkiTracks,servedRun:()=>served++,canSave:()=>saveBackupsReady,saveDocument:proposal=>{if(!saveBackupsReady)throw Error('Browser save backup unavailable.');localStorage.setItem(SAVE_KEY,JSON.stringify({...resortSnapshot(),...proposal,lifts:proposal.lifts.map(serializeLift)}));},nextTicket:()=>nextTicket++,notice:text=>{$('saveNotice').textContent=text;$('saveNotice').hidden=false;setTimeout(()=>$('saveNotice').hidden=true,5500);}});
+const resortInterface=window.LiftCoInterface();
+if(!saveBackupsReady){$('saveNotice').textContent='Saving is paused: the pre-change browser backup could not be created. Download your resort backup, free browser storage, then reload.';$('saveNotice').hidden=false;}
+window.LiftCoGraphics.init({THREE,renderer,scene,camera,sun,snow,app,stopFlight,notice:text=>{$('saveNotice').textContent=text;$('saveNotice').hidden=false;setTimeout(()=>$('saveNotice').hidden=true,5000);}});
 // ---------- main loop ----------
 const clock = new THREE.Clock();
-let spawnT = 0;
+let spawnT = 0,lastHud=0;
 function animate() {
   requestAnimationFrame(animate);
-  const rawDt = Math.min(clock.getDelta(), 0.05);
+  const elapsed=clock.getDelta(),rawDt = Math.min(elapsed, 0.05);
+  window.LiftCoGraphics.beginFrame(elapsed);
   const dt = rawDt * (construction.active||resortTools?.active?0:speed);
   for(const lift of lifts)lift.update(dt);
   construction.update(0);
   resortTools.update(performance.now()/1000);
+  resortTools.shuttle.update(dt);resortTools.guests.populate(dt);
   // skiers
   spawnT += dt;
   if (lifts.length && spawnT > 7 && skiers.length < 18) { spawnT = 0; spawnSkier(); }
   let riding = 0;
-  for (const s of skiers) { resortTools.guests.update(s, dt); if (s.state === 'ride') riding++; }
+  for (const s of skiers) { resortTools.guests.update(s, dt); if (s.state === 'ride'||s.state==='busRide') riding++; }
   if(liveTracksDirty){liveTracks.instanceMatrix.needsUpdate=true;liveTracksDirty=false;}
   updateChimneys(dt);
-  // snow
-  {
+  // Snowfall density reduces CPU updates as well as draw submission.
+  if(snow.visible){
     const p=snow.geometry.attributes.position;
-    for(let i=0;i<p.count;i++){
+    for(let i=0;i<window.LiftCoGraphics.snowCount;i++){
       let y=p.getY(i)-snowVel[i]*dt;
       const x=p.getX(i)+(Math.sin(sceneryTime*.35+i)*.055+.055)*dt;
       p.setX(i,x);
@@ -1943,7 +1883,7 @@ function animate() {
     updateFlight(rawDt);controls.update();
   }
   for(const c of cabins){c.g.getWorldPosition(_v1);c.g.visible=(rideMode&&c===reservedRideCabin)||_v1.distanceToSquared(camera.position)<2250000;}
-  for(const s of skiers)s.g.visible=!s.away&&!!lifts.length&&!!resortTools.network.entrance&&!construction.active&&!resortTools.active&&s.g.position.distanceToSquared(camera.position)<1440000;
+  for(const s of skiers)s.g.visible=!s.retired&&!s.away&&!!resortTools.network.nodes.get(s.homeBuilding?s.homeBuilding+':home':resortTools.network.entrance)&&!construction.active&&!resortTools.active&&s.g.position.distanceToSquared(camera.position)<1440000;
   // Let the scene remain visible at any zoom distance. Keep close-up clipping
   // small and expand the far plane and atmospheric range as the camera retreats.
   const viewDistance=rideMode?24:camera.position.distanceTo(controls.target);
@@ -1953,7 +1893,8 @@ function animate() {
   }
   scene.fog.near=Math.max(900,viewDistance*1.15);
   scene.fog.far=Math.max(5500,viewDistance*3.8);
-  // hud
+  // Human-rate readouts avoid invalidating layout every frame.
+  if(performance.now()-lastHud>250){lastHud=performance.now();
   document.getElementById('stSkiers').textContent = skiers.length;
   const abilityCounts=[0,0,0,0];let entranceWaiting=0;
   for(const s of skiers){if(Number.isInteger(s.ability)&&s.ability>=0&&s.ability<4)abilityCounts[s.ability]++;if(s.state==='networkIdle'&&!s.plan?.length&&!s.edge&&s.networkNode===resortTools.network.entrance)entranceWaiting++;}
@@ -1961,7 +1902,8 @@ function animate() {
   document.getElementById('stEntranceWaiting').textContent=entranceWaiting+' waiting at entrance';
   document.getElementById('stRiding').textContent = riding;
   document.getElementById('stServed').textContent = served;
-  lifts.forEach((lift,i)=>{const waiting=skiers.filter(s=>s.liftIndex===i&&(s.state==='queue'||s.state==='load')).length;liftStatNodes[i].textContent=lift.def.name+'\n'+((window.LiftCoLiftTypes.find(t=>t.id===lift.LIFT.type)?.shortName||'Gondola')+' · '+lift.LIFT.capacity+(lift.LIFT.isChair?' seats':' places'))+' · '+waiting+' waiting';});
+  lifts.forEach((lift,i)=>{const waiting=skiers.filter(s=>s.liftIndex===i&&(s.state==='queue'||s.state==='load')).length;liftStatNodes[i].textContent=lift.def.name+'\n'+((window.LiftCoLiftTypes.find(t=>t.id===lift.LIFT.type)?.shortName||'Gondola'))+' · '+waiting+' waiting';});
+  }
   skyDome.position.copy(camera.position);
   updateTowerFloodlights();
   renderer.render(scene, camera);

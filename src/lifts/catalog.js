@@ -22,3 +22,14 @@ if(window.LiftCoSoloRuntime)window.LiftCoLiftTypes.push({id:'solo',group:'tramwa
 
 // Rocharbois stays a separate construction family: fixed grips, paired ropes, shuttle operation.
 if(window.LiftCoFunitelRuntime)window.LiftCoLiftTypes.push({id:'funitel-rocharbois',group:'funitel',order:1,label:'75-person reversible funitel — articulated cabin',shortName:'75p reversible funitel',funitel:true,reversible:true,horizontal:true,defaultColor:0x355768,capacity:75,carrierName:'funitel cabins',bottomDrop:3.65,halfWidth:1.5,halfLength:4.25,railX:3.5,terminalSpacing:24,defaultTowerHeight:12,maxTowerHeight:100,cableSpeed:5,stationSpeed:0,description:'Two reversible cabins · three articulated compartments · 75 standing passengers · 5 m/s · twin ropes per cabin. Connect similar-height areas; place towers to clear the terrain.'});
+
+// Approved B carriers. Special layouts are dedicated choices, not toggles on old lifts.
+if(window.LiftCoNextRuntime){
+ const common={nextModel:true,bottomDrop:4.65,stationSpeed:.65,stationPitch:4.68,group:'chairlift',isChair:true,carrierName:'chairs',railX:3.1,defaultTowerHeight:12,maxTowerHeight:60};
+ window.LiftCoLiftTypes.push(
+  {...common,id:'chair-arcabulle',family:'arcabulle',order:3,label:'6-seat detachable bubble chairlift — Arcabulle',shortName:'6-seat bubble chair',capacity:6,halfWidth:1.95,halfLength:1.75,cableSpeed:5,defaultColor:0xe8e5dc,description:'Approved Full shoulders chair · six seats · detachable 0.65 m/s station crawl · 5 m/s line.'},
+  {...common,id:'chair-alps5',family:'alps5',order:4,label:'2-seat fixed-grip chairlift — Alps-inspired',shortName:'2-seat fixed-grip chair',capacity:2,halfWidth:.75,halfLength:1.45,cableSpeed:1.8,stationSpeed:1.8,stationPitch:10,stationStraight:12,railX:2.2,fixedGrip:true,defaultColor:0xaa706b,description:'Approved Round crown double · period mast and Classic canopy · one speed throughout, up to 1.8 m/s.'},
+  {...common,id:'chair-panoramabahn',family:'panoramabahn',order:5,label:'4-seat detachable bubble chairlift — angle station',shortName:'4-seat turning bubble chair',capacity:4,halfWidth:1.35,halfLength:1.7,cableSpeed:5,defaultColor:0x318366,layout:'turn',description:'Approved Deep bubble chair · dedicated open angle transfer · drag the middle ring to bend the line · no passenger access at the turn.'},
+  {...common,id:'gondola-princesse8',family:'princesse',isChair:false,group:'gondola',order:6,label:'8-person detachable gondola — passenger mid-station',shortName:'8p mid-station gondola',capacity:8,carrierName:'Palace8 cabins',halfWidth:1.5,halfLength:1.25,bottomDrop:4.04,cableSpeed:6,stationSpeed:.4,stationPitch:3.5,defaultTowerHeight:8,defaultColor:0xe7e5dc,layout:'mid',description:'Approved Broad waist Palace8 · three passenger stations · drag the middle station to bend the line · through riders keep their seats · coupled operation.'}
+ );
+}
