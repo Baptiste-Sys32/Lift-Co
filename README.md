@@ -1,6 +1,6 @@
 # Lift Co. — V3
 
-A cozy Three.js ski-resort prototype. Open the HTML pages directly in a browser; there is no build step. The Three.js CDN needs an internet connection.
+A cozy Three.js ski-resort prototype. Serve the folder over local HTTP (e.g. `python3 -m http.server`) and open the pages from there; they do not load via `file://`. There is no build step. The Three.js CDN needs an internet connection.
 
 Local village milestone: [construction, shuttle and resident specification](docs/village-shuttle.md).
 The original resort (`index.html`) and VPS remain unchanged.
