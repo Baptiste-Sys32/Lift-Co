@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. Coachworks / Five ways up</title><link rel="icon" href="data:,">
+<link rel="stylesheet" href="../src/styles/bus-showroom.css?v=1">
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
+</head>
+<body>
+<header class="masthead"><a class="wordmark" href="../empty-map.html">lift co<span>.</span><small>COACHWORKS</small></a><p>FIVE WAYS UP.<span>A MOUNTAIN TRANSIT COLLECTION</span></p><a class="back-link" href="./vehicles.html">Vehicle workshop <span aria-hidden="true">↗</span></a></header>
+<aside id="inspector">
+<div class="editorial"><div class="eyebrow">DESIGN STUDY / 02</div><h1>Room for<br><em>everyone.</em></h1><p id="tagline">A little flexibility goes a long way.</p></div>
+<div class="model-meta"><span id="family">ARTICULATED MOUNTAIN BUS</span><span id="modelIndex">04 / 05</span></div>
+<h2 id="modelName">Ribbon 18</h2><div class="specs"><div><strong id="length">18.2</strong><span>METRES</span></div><div><strong id="axles">3</strong><span>AXLES</span></div><div><strong id="jointCount">1</strong><span>JOINT</span></div></div>
+<ul id="features"></ul>
+<section class="bend-section"><div class="section-top"><label for="bend">Give it a bend.</label><output id="bendValue" for="bend">18°</output></div><input id="bend" type="range" min="-36" max="36" value="18" step="1"><p id="bendNote">Move the slider. Watch the accordion follow.</p></section>
+<section class="finish-section"><span class="eyebrow">YOUR COLOUR, YOUR MOUNTAIN</span><div id="swatches" class="swatches" aria-label="Body paint"><button data-color="#c96b46" style="--swatch:#c96b46" aria-label="Copper" aria-pressed="true"></button><button data-color="#4e887e" style="--swatch:#4e887e" aria-label="Pine" aria-pressed="false"></button><button data-color="#d79b45" style="--swatch:#d79b45" aria-label="Saffron" aria-pressed="false"></button><button data-color="#355c72" style="--swatch:#355c72" aria-label="Lake" aria-pressed="false"></button><button data-color="#80576b" style="--swatch:#80576b" aria-label="Berry" aria-pressed="false"></button><label class="custom-paint" title="Choose a custom paint colour"><input id="paint" type="color" value="#c96b46" aria-label="Custom body paint"><span>+</span></label></div></section>
+<div class="switches"><label><span>Open the doors</span><input id="doors" type="checkbox"><i></i></label><label><span>See inside</span><input id="cutaway" type="checkbox"><i></i></label><label><span>Winter kit</span><input id="winter" type="checkbox"><i></i></label><label><span>Lights on</span><input id="lights" type="checkbox" checked><i></i></label></div>
+<button id="demo" class="demo" aria-pressed="false"><span class="play-mark" aria-hidden="true">▶</span><span id="demoLabel">Bring it to life</span><small>WHEELS + STEERING + JOINTS</small></button>
+<p class="study-note">An original fleet, made for the mountain.<br>Choose a favourite. We can take it further.</p>
+</aside>
+<main id="stage" aria-label="Interactive bus showroom">
+<div class="stage-top"><span class="live-badge"><i></i> LIVE 3D STUDY</span><button id="lineup" aria-pressed="false">Compare all five <span aria-hidden="true">↗</span></button></div>
+<div id="viewport" aria-label="Drag to orbit the bus model"></div>
+<div class="stage-corner"><span id="bigNumber">18</span><p id="stageCaption">ONE JOINT. A LOT OF POSSIBILITIES.</p></div>
+<nav class="camera-views" aria-label="Camera angle"><button data-view="quarter" aria-pressed="true">Three-quarter</button><button data-view="side" aria-pressed="false">Door side</button><button data-view="front" aria-pressed="false">Front</button><button data-view="rear" aria-pressed="false">Rear</button><button data-view="roof" aria-pressed="false">Above</button></nav>
+<div class="stage-bottom"><p id="motionStatus" role="status">Parked. Take a look around.</p><span>DRAG TO ORBIT <b>·</b> SCROLL TO EXPLORE</span></div>
+<div id="loading"><div class="loader-bars"><i></i><i></i><i></i></div><p>Opening the coachworks...</p></div>
+<pre id="error" role="alert" hidden></pre>
+</main>
+<nav id="fleet" aria-label="Choose a bus design"></nav>
+<script type="module" src="../src/vehicles/bus-showroom.js?v=1"></script>
+</body></html>

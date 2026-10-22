@@ -10,10 +10,10 @@ window.LiftCoTerrainSurface=(()=>{
  }
  function regions(defs,frame,point){const out=[];for(const d of defs){if(!d.base||!d.top)continue;const f=frame(d);for(const p of [d.base,d.mid,d.top].filter(Boolean))out.push({x:p[0],z:p[1],r:75});for(const t of d.towers||[]){const p=point(d,0,f.length/2-t.fraction*f.length);out.push({x:p.x,z:p.z,r:t.height>30?18:12});}}return out;}
  function sampler(height){const values=new Map();return(x,z)=>{const key=x+','+z;let y=values.get(key);if(y===undefined){y=height(x,z);values.set(key,y);}return y;};}
- function build(T,cx,cz,height,areas){
-  const positions=[],normals=[],colours=[],uvs=[],indices=[],vertices=new Map(),snow=new T.Color(0xf3eee5),rock=new T.Color(0x55575a),c=new T.Color();
+ function build(T,cx,cz,height,areas,pisteSurface=null){
+  const positions=[],normals=[],colours=[],uvs=[],grooming=[],indices=[],vertices=new Map(),snow=new T.Color(0xf3eee5),rock=new T.Color(0x55575a),c=new T.Color();
   const fine=(x,z)=>areas.some(a=>Math.abs(x-a.x)<a.r+8&&Math.abs(z-a.z)<a.r+8);
-  function vertex(x,z){const key=x+','+z;if(vertices.has(key))return vertices.get(key);const y=height(x,z),dx=(height(x+1,z)-height(x-1,z))/2,dz=(height(x,z+1)-height(x,z-1))/2,length=Math.hypot(dx,1,dz),slope=Math.hypot(dx,dz),t=fade((slope-.8)/1),h=fade((y-24)/31);c.copy(snow).lerp(rock,t*h*.85);const i=positions.length/3;positions.push(x,y-.08,z);normals.push(-dx/length,1/length,-dz/length);colours.push(c.r,c.g,c.b);vertices.set(key,i);return i;}
+  function vertex(x,z){const key=x+','+z;if(vertices.has(key))return vertices.get(key);const y=height(x,z),dx=(height(x+1,z)-height(x-1,z))/2,dz=(height(x,z+1)-height(x,z-1))/2,length=Math.hypot(dx,1,dz),slope=Math.hypot(dx,dz),t=fade((slope-.8)/1),h=fade((y-24)/31);c.copy(snow).lerp(rock,t*h*.85);const i=positions.length/3;positions.push(x,y-.08,z);normals.push(-dx/length,1/length,-dz/length);colours.push(c.r,c.g,c.b);const groom=pisteSurface?.sample(x,z);grooming.push(groom?.weight||0,groom?.across||0);vertices.set(key,i);return i;}
   const tri=(a,b,c)=>indices.push(a,c,b);
   for(let j=0;j<30;j++)for(let i=0;i<30;i++){
    const x=cx-150+i*10,z=cz-150+j*10;
@@ -24,7 +24,7 @@ window.LiftCoTerrainSurface=(()=>{
    const center=vertex(x+5,z+5);for(let k=0;k<ring.length;k++)tri(center,ring[k],ring[(k+1)%ring.length]);
   }
   for(let i=0;i<positions.length;i+=3)uvs.push(positions[i]/300,positions[i+2]/300);
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));g.setAttribute('color',new T.Float32BufferAttribute(colours,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));g.setIndex(indices);g.computeBoundingSphere();g.userData.localRefinement=true;return g;
+  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));g.setAttribute('color',new T.Float32BufferAttribute(colours,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));g.setAttribute('pisteGroom',new T.Float32BufferAttribute(grooming,2));g.setIndex(indices);g.computeBoundingSphere();g.userData.localRefinement=true;return g;
  }
  return{terrace,regions,build,sampler,fade};
 })();

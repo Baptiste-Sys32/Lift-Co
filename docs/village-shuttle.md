@@ -7,15 +7,26 @@ installed in the local project. Standalone studies and asset sources are unchang
 
 ## Construction
 
-Open Terrain & routes, then Village & shuttle. Chalet, Apartments and Hotel add
-individual accommodation with 6, 24 and 48 beds. Click snow to place or move the
-selected home; coordinates, rotation, name and floor elevation are editable.
-The gold preview includes the entrance terrace. Supported foundations extend
-to the ground; the whole building footprint must clear the hillside. Raise its
-floor or move it if a foundation conflict blocks Apply.
+Open the dedicated Village tab. Choose Chalet, Alpine apartments or Mountain
+lodge (6, 24 and 48 beds). A translucent model follows the pointer without
+changing the saved world. Click snow to stage it, rotate with Q/E or Rotate,
+then use the persistent Build button. Escape or Cancel restores the world.
+Click an existing building to inspect it; drag to move, or use Move. Coordinates
+and floor elevation remain available under Fine adjustments. Foundations fit
+the hillside automatically unless a manual floor elevation is chosen.
+The entrance ring identifies the explicit pedestrian connection point.
 
-Draw road uses the existing point editor, including point dragging, elevation,
-naming, deletion and Make junction. Carriageways are fixed at 6 m with a dashed
+The collection shows actual model previews and a short next-step guide. Name,
+rotation, movement and removal live in a contextual inspector. Build, Save,
+Finish and Cancel stay visible over the map with validation feedback. Tablet
+layouts wrap these actions. See [placement guide](village-workbench.md).
+
+Road opens a contextual point editor, including point dragging, elevation,
+naming, deletion and Make junction. Default automatic grading limits each new
+control point to an 8% approach; the completed curve still validates at 12%.
+Clicking a road endpoint explicitly creates and joins a junction, matching its
+height. Owned stamps stop at connected ends so grading cannot reshape the
+neighboring carriageway. Carriageways are fixed at 6 m with a dashed
 centre line and two directional lanes. Roads have a maximum 12% grade and a
 minimum 10 m centre-line turning radius. Invalid geometry stays editable and
 blocks Apply with its cause. Crossings and nearby endpoints create no edges.
@@ -24,12 +35,26 @@ continuous valid tangents; a sharp intersection does not invent a bus turn.
 Splitting a road remaps its stops to the appropriate half, retaining stop IDs.
 
 Bus stop adds a terminal. Click a road to snap it, or choose a road and distance
-percentage. Switch road side changes its side. A terminal has a conservative
+percentage. The pointer chooses the road side; E or Other side switches it. A terminal has a conservative
 30 m radius paved turning pad, a level boarding bay, a separate pedestrian
 point and a visible approach ramp. The complete pad and terrain shaping are
-previewed. Stops need level ground at their boarding datum; conflicting road
+previewed. The boarding bay stays level while the surrounding pavement follows the
+authoritative surface, including the graded carriageway. Stops need level ground
+at their boarding datum; conflicting road
 or sculpting work blocks Apply. Homes, stops, roads, lift structures and open
 pistes participate in combined footprint validation.
+
+New pistes open when valid construction is applied. Pistes allow minor
+undulations up to 3 m of continuous rise; climb duration alone is not a blocker.
+The editor reports endpoint elevations and can reverse the existing piste
+without redrawing it. Station labels use actual relative access elevations,
+rather than assuming the internal Base/Top names indicate downhill direction. Existing closed pistes
+keep their state. A per-piste Test mode toggle bypasses terrain and guest-skill
+restrictions for quick experiments, while retaining explicit connections and
+the requirement for a return route. Connected station earthworks keep a continuous groomed snow surface and are
+traversed on skis with slow push edges; the downhill core is measured separately. This
+prevents raised base pads from creating false uphill ski sections while
+preserving validation of the actual mountain.
 
 Draw footpaths between the teal entrance, stop pedestrian and lift access
 snaps. Select a snap while drawing, or select an endpoint and Confirm connection.
@@ -38,8 +63,8 @@ owned access. Proximity creates no guest connection. Place paths outwards from
 a building entrance; a connected path may use its terrace but cannot cut
 through the building.
 
-Connect stops creates the single supported shuttle connection. Choose two
-stops, name it and Apply. The shortest valid connected road path is selected
+Shuttle connection creates the single supported service. Choose two shelters
+on the map or from the stop list, name it and Build. The shortest valid connected road path is selected
 automatically. Disconnected roads and invalid junction turns block Apply.
 Open/Closed is edited in the same transaction. Readouts report occupants out
 of 24 seats, queued guests and an estimated round-trip time.
@@ -94,12 +119,16 @@ reference building entrance or stop pedestrian nodes. Snapshots, export,
 transactions and session history carry every new record. Guest positions and
 seat reservations are runtime state, as with the existing lift guests.
 
-Before writes, existing slots are copied to
+Before this interface revision writes, existing slots are additionally copied to
+`lift-co-before-village-workbench-20261021:<original key>`. The earlier milestone
+backup remains at
 `lift-co-before-village-20261020:<original key>`. Failure participates in the
 existing shared blocking backup gate. Export includes these backups.
 
 - `src/resort/village.js`: bed/dimension/entrance contracts, footprints,
-  foundation validation and replaceable building models.
+  foundation validation and replaceable building model adapter.
+- `src/resort/village-models.js`: batched Alpine shells and sheltered stops.
+- `src/resort/shuttle-model.js`: detailed workshop bus adapter.
 - `src/resort/roads.js`: design curves, grade/radius checks, owned road and stop
   earthworks, explicit road graph and shortest valid routing.
 - `src/resort/shuttle.js`: motion, vehicle placeholder, seat anchors, door and
@@ -118,7 +147,9 @@ does not determine simulation capacity or connectivity.
 
 ## Deliberate simplifications
 
-Building shells and the bus are procedural placeholders. Foundations use corner
+Building shells and the bus are replaceable procedural models. Timber courses,
+pitched snowy roofs, balconies, glazed doors, planters and stone bases improve
+the shells. The bus reuses the detailed vehicle workshop model. Foundations use corner
 supports and a small owned terrace. Terminal pads are deliberately generous,
 with conservative collision boxes. Terminal motion is sampled curve following,
 not tyre/contact physics. There is no traffic, vehicle collision solver,
