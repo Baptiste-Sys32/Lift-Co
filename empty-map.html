@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lift Co. V3 — Upper Snowfields</title>
+<title>Lift Co. V4 - Upper Snowfields</title>
 <link rel="stylesheet" href="./src/styles/resort.css?v=3">
 <link rel="stylesheet" href="./src/styles/resort-v3.css?v=polish-20261020-1">
+<link rel="stylesheet" href="./src/styles/village-workbench.css?v=slope-polish-2">
 <style>
 .empty-network{padding:19px 15px 16px;border:1px solid var(--line);background:#ebece1;border-top:2px solid var(--gold)}.empty-network h2{font-size:25px;margin:9px 0}.empty-network p{font:11px/1.8 sans-serif;color:#7b8472}.empty-network button{width:100%;margin-top:16px;background:var(--ink);border-color:var(--ink);color:#fff8e8}.empty-network .empty-symbol{font:24px Georgia;color:#c49b57}.map-area{margin-top:14px;display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font:10px monospace;color:#7b8472}#btnAdd:disabled{opacity:.4}.place-title #viewTitle{max-width:430px}
 </style>
@@ -19,7 +20,7 @@
 <body>
 <div id="app"></div>
 <aside id="hud">
-  <header class="brand"><span class="eyebrow">UPPER SNOWFIELDS / V3</span><h1>Lift Co<span>.</span></h1><p>Twin Summit Pass. Your high mountain resort.</p></header>
+  <header class="brand"><span class="eyebrow">UPPER SNOWFIELDS / V4</span><h1>Lift Co<span>.</span></h1><p>Twin Summit Pass. Your high mountain resort.</p></header>
   <nav class="mode-tabs"><button id="tabResort" class="on">Your resort</button><button id="btnBuild">Build a lift <span>＋</span></button></nav>
   <section id="resortPanel">
     <div class="section-heading"><span class="eyebrow">01 / YOUR LIFT NETWORK</span><span id="networkCount" class="mono"></span></div>
@@ -31,7 +32,7 @@
     <button id="undoDeleteLift" hidden>Undo lift removal ↶</button><p id="liftRemovalMessage" class="small" role="status" hidden></p>
     <section class="panel-section"><span class="eyebrow">02 / THE AFTERNOON</span><div class="row spread"><label for="tod">Light & atmosphere</label><span id="timeLabel" class="mono">Golden hour</span></div><input id="tod" type="range" min="0" max="1" step="0.001" value="0.62"><p class="small">A warm glow, a quiet mountain, one more run.</p><label class="check" style="display:flex;align-items:center;gap:7px;margin-top:12px"><input id="softShadows" type="checkbox">Soft shadows</label><p class="small">Shadows are off by default to keep the mountain lighter to render.</p></section>
     <section class="panel-section"><span class="eyebrow">03 / THE LANDSCAPE</span><p class="small">3.6 × 3.6 km of twin summits, upper snowfields, station terraces and natural ski faces.</p><p class="small" style="margin-top:9px"><a href="./experiments/twin-summit-options.html?map=snowfields" target="_blank" rel="noopener">Map design workshop ↗</a></p><div class="map-area"><span>Map footprint</span><span>12.96 km²</span></div><form id="seedForm"><label for="seed">Resort slot</label><div class="row"><input id="seed" maxlength="32" aria-label="Resort slot"><button type="submit">Open slot ↗</button></div></form></section>
-    <button id="exportResort" style="width:100%;margin-top:18px">Download resort backup ↧</button><p class="sidebar-note">Upper Snowfields V1 has its own save slots.<br><a href="./index.html">Return to the original resort ↗</a></p>
+    <button id="exportResort" style="width:100%;margin-top:18px">Download resort backup ↧</button><p class="sidebar-note">Upper Snowfields saves stay in this browser.<br><a href="./index.html">Return to the original resort ↗</a></p>
   </section>
   <section id="buildPanel" hidden>
     <div class="section-heading"><span id="buildHeading" class="eyebrow">01 / PLAN A NEW LINE</span><button id="cancelBuild" class="text-button">Close ×</button></div>
@@ -44,10 +45,10 @@
   </section>
 </aside>
 <button id="toggleInterface" type="button" aria-label="Hide interface" title="Hide interface" aria-expanded="true" aria-controls="hud resortBar transport hint buildProfile">‹</button>
-<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">Upper Snowfields / V3</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span><span id="stAbility" style="max-width:220px;white-space:normal">Green 0 · Blue 0 · Red 0 · Black 0</span><span id="stEntranceWaiting">0 waiting at entrance</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
+<header id="resortBar"><div class="place-title"><span class="eyebrow">AN UNTOUCHED MOUNTAINSIDE</span><span id="viewTitle">Upper Snowfields / V4</span></div><div id="stats"><div><b id="stSkiers">0</b><span>skiers</span><span id="stAbility" style="max-width:220px;white-space:normal">Green 0 · Blue 0 · Red 0 · Black 0</span><span id="stEntranceWaiting">0 waiting at entrance</span></div><div><b id="stRiding">0</b><span>riding</span></div><div><b id="stServed">0</b><span>runs served</span></div></div></header>
 <footer id="transport"><div class="row"><button id="btnPause" aria-label="Pause">Ⅱ</button><button id="btnPlay" class="on">1×</button><button id="btnFast">2×</button><span class="divider"></span><button id="btnAdd">＋ Skiers</button></div><div class="row"><button id="btnCam">Free camera</button><button id="btnHome">Overview ↗</button></div></footer>
 <div id="hint">WASD = fly · right-drag / Space + mouse = look · Shift = faster · drag = orbit · scroll = zoom</div>
-<section id="buildProfile" hidden><div class="row spread"><span class="eyebrow">LINE PROFILE / DRAG A DOT TO SET TOWER HEIGHT</span><span id="profileLegend" class="mono">Snow — Rope — Cabin floor</span></div><svg id="mountainProfile" viewBox="0 0 1000 180" role="img" aria-label="Terrain and editable lift profile"></svg></section>
+<section id="buildProfile" hidden><div class="row spread"><span class="eyebrow">LINE PROFILE / DRAG A DOT TO SET TOWER HEIGHT</span><span id="profileLegend" class="mono">Snow / Rope / Cabin floor</span></div><svg id="mountainProfile" viewBox="0 0 1000 180" role="img" aria-label="Terrain and editable lift profile"></svg></section>
 <div id="saveNotice" role="status" hidden>Resort saved.</div>
 <div id="err"></div>
 <script src="./assets/generated/tree-pack.js"></script>
@@ -60,10 +61,10 @@
 <script src="./src/lifts/funitel-rocharbois.js?v=3"></script>
 <script src="./src/lifts/funitel-loaded-rope.js?v=3"></script>
 <script src="./src/lifts/funitel-runtime.js?v=3"></script>
-<script src="./src/resort/terrain-surface.js?v=3"></script>
+<script src="./src/resort/terrain-surface.js?v=slope-polish-2"></script>
 <script src="./src/resort/foundations.js?v=3"></script>
 <script src="./src/resort/graphics.js?v=3"></script>
-<script src="./src/resort/interface.js?v=3"></script>
+<script src="./src/resort/interface.js?v=4.0.0"></script>
 <script src="./src/lifts/tower-mast.js?v=3"></script>
 <script src="./src/lifts/gondola-pylons.js?v=placed-wheel-parts-1"></script>
 <script src="./src/lifts/solo.js?v=3"></script>
@@ -87,16 +88,26 @@
 <script src="./src/lifts/station-designs.js?v=1"></script>
 <script src="./src/builder/draft-store.js?v=polish-20261020-1"></script>
 <script src="./src/builder/resort-editor.js?v=polish-20261020-1"></script>
-<script src="./src/resort/document.js?v=3"></script>
-<script src="./src/resort/roads.js?v=village-1"></script>
-<script src="./src/resort/village.js?v=village-1"></script>
-<script src="./src/resort/shuttle.js?v=village-1"></script>
-<script src="./src/resort/village-tools.js?v=village-1"></script>
-<script src="./src/resort/operations.js?v=3"></script>
-<script src="./src/resort/guest-network.js?v=3"></script>
-<script src="./src/resort/resort-tools.js?v=polish-20261020-1"></script>
+<script src="./src/resort/document.js?v=4.0.0"></script>
+<script src="./src/resort/station-access.js?v=station-access-2"></script>
+<script src="./src/resort/piste-access.js?v=station-access-2"></script>
+<script src="./src/resort/piste-planner.js?v=piste-auto-1"></script>
+<script src="./src/resort/piste-workbench.js?v=4.0.0"></script>
+<script src="./src/resort/piste-surface.js?v=slope-polish-2"></script>
+<script src="./src/resort/piste-nature.js?v=slope-polish-2"></script>
+<script src="./src/resort/world-signs.js?v=slope-polish-2"></script>
+<script src="./src/resort/roads.js?v=village-polish-2"></script>
+<script src="./src/resort/village-models.js?v=slope-polish-2"></script>
+<script src="./src/resort/village.js?v=village-polish-2"></script>
+<script src="./src/resort/shuttle.js?v=village-polish-2"></script>
+<script src="./src/resort/village-tools.js?v=slope-polish-2"></script>
+<script src="./src/resort/operations.js?v=4.0.0"></script>
+<script src="./src/resort/ski-motion.js?v=skier-motion-2"></script>
+<script src="./src/resort/guest-network.js?v=station-access-2"></script>
+<script src="./src/resort/resort-tools.js?v=4.0.0"></script>
 <script type="module">
 import * as THREE from 'three';
+import {createShuttleModel} from './src/resort/shuttle-model.js?v=village-polish-2';
 import './src/lifts/station-architecture.js?v=polish-20261020-1';
 import { OrbitControls } from './assets/vendor/three/OrbitControls.js?v=pointer-capture-1';
 
@@ -219,6 +230,8 @@ try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-u
 try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-station-styles-20261020:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Station design backup unavailable; saving is disabled.');}
 try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-v3-20261018:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('V3 save backup unavailable; saving is disabled.');}
 try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-before-village-20261020:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Village backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-before-village-workbench-20261021:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('Village workbench backup unavailable; saving is disabled.');}
+try{for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-upper-snowfields-v1:'))){const backup='lift-co-pre-v4-20261021:'+key;if(localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key));}}catch{saveBackupsReady=false;console.warn('V4 save backup unavailable; saving is disabled.');}
 let savedResort=null;
 try{savedResort=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');}catch(error){console.warn('Resort save unavailable.');}
 function validLiftDefinition(d){return !window.LiftCoPlacement.definitionReason(d,window.LiftCoLiftTypes,MAP);}
@@ -311,7 +324,7 @@ function prepareStationGround(def){
   if(def.type==='funitel-rocharbois')def.stationGround[-1]=def.stationGround[1];
 }
 for(const def of RESORT.lifts){prepareStationGround(def);def.stationElevations??={base:def.stationGround[1],top:def.stationGround[-1]};}
-function terrainY(x,z,extraDef=null){
+function terrainY(x,z,extraDef=null,skipStation=null){
   let y=rawTerrainY(x,z);
   const definitions=resortTools?.terrainLifts||RESORT.lifts;
   for(const def of extraDef?[...definitions.filter(d=>d.id!==extraDef.id),extraDef]:definitions){
@@ -319,6 +332,7 @@ function terrainY(x,z,extraDef=null){
     if(window.LiftCoNextAlignment.isNext(def)){
       const path=window.LiftCoNextAlignment.make(def);
       for(const frame of window.LiftCoNextAlignment.stationFrames(def)){
+        if(skipStation===def.id+':'+frame.end)continue;
         if(def.stationFoundations?.[frame.end]==='raised')continue;
         const dx=x-frame.x,dz=z-frame.z;if(Math.abs(dx)>100||Math.abs(dz)>100)continue;const lx=Math.cos(frame.yaw)*dx-Math.sin(frame.yaw)*dz,lz=Math.sin(frame.yaw)*dx+Math.cos(frame.yaw)*dz;
         let blend;if(frame.end==='mid'){const q=path.project(x,z);const along=path.midDistance+(q.distance-path.midDistance);blend=window.LiftCoTerrainSurface.terrace(q.lateral,along,8,path.midStart,path.midEnd,def.stationGround.mid,y);}else blend=window.LiftCoTerrainSurface.terrace(lx,lz,9,-4,def.stationStyle==='princesse'?34:def.type==='chair-alps5'?18:30,def.stationGround[frame.end==='base'?1:-1],y);
@@ -329,6 +343,7 @@ function terrainY(x,z,extraDef=null){
     const lx=Math.cos(f.angle)*dx-Math.sin(f.angle)*dz;
     const lz=Math.sin(f.angle)*dx+Math.cos(f.angle)*dz;
     for(const end of [-1,1]){
+      if(skipStation===def.id+':'+(end===1?'base':'top'))continue;
       if(def.type==='solo'){const out=end*(lz-end*f.length/2),raised=def.stationFoundations?.[end===1?'base':'top']==='raised';y=window.LiftCoSoloPlacement.height(y,lx,out,def.stationGround[end],end===1?'base':'top',raised,def.arrivalProfile);
        // The public wing has its own small pad, clear of the cliff approach.
        if(def.stationStyle==='faron'&&!raised){const side=-end*lx,pad=window.LiftCoTerrainSurface.terrace(side-12.95,-out,3.75,-5.5,12.3,def.stationGround[end],y);y=THREE.MathUtils.lerp(y,def.stationGround[end],pad);}continue;}
@@ -365,7 +380,7 @@ const terrainChunks=[];let initialHeight=window.LiftCoTerrainSurface.sampler(ter
 for(let iz=0;iz<12;iz++)for(let ix=0;ix<12;ix++){
  const x=-1650+ix*300,z=-1650+iz*300;
  const g=window.LiftCoTerrainSurface.build(THREE,x,z,initialHeight,initialRefinement);
- const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.97,bumpMap:snowBump,bumpScale:.055}));mesh.receiveShadow=true;mesh.userData.terrain=true;scene.add(mesh);terrainChunks.push({mesh,x,z});
+ const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.97,bumpMap:snowBump,bumpScale:.055}));window.LiftCoPisteSurface.material(mesh.material);mesh.receiveShadow=true;mesh.userData.terrain=true;scene.add(mesh);terrainChunks.push({mesh,x,z});
 }
 initialHeight=null;
 // Continue the snow beyond the detailed resort so its square mesh edge disappears
@@ -389,17 +404,7 @@ initialHeight=null;
  contextSnow.onBeforeCompile=shader=>{shader.vertexShader='varying vec2 vSnowXZ;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvSnowXZ=(modelMatrix*vec4(position,1.0)).xz;');shader.fragmentShader='varying vec2 vSnowXZ;\n'+shader.fragmentShader;shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','#include <color_fragment>\ndiffuseColor.a*=1.0-smoothstep(3000.0,3600.0,max(abs(vSnowXZ.x),abs(vSnowXZ.y)));');};
  const ground=new THREE.Mesh(geometry,contextSnow);ground.receiveShadow=true;ground.renderOrder=-1;ground.userData.terrain=true;scene.add(ground);
 }
-function signAt(text,x,z,color=0x234c60) {
-  const canvas=document.createElement('canvas'); canvas.width=512;canvas.height=128;
-  const ctx=canvas.getContext('2d'); ctx.fillStyle='#f4eee0';ctx.fillRect(0,0,512,128);
-  ctx.fillStyle='#'+color.toString(16).padStart(6,'0');ctx.fillRect(8,8,496,112);
-  ctx.fillStyle='#fffaf0';ctx.font='bold 34px Georgia';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,64,470);
-  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
-  const board=new THREE.Mesh(new THREE.PlaneGeometry(5.2,1.3),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}));
-  const y=terrainY(x,z);board.position.set(x,y+3.2,z);scene.add(board);
-  const pole=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,3.2,6),new THREE.MeshStandardMaterial({color:0x725b42}));
-  pole.position.set(x,y+1.6,z);scene.add(pole);
-}
+
 // Dense piste grids follow cross-slope curvature; narrow ski grooves sit on the snow.
 const pisteMaterial=new THREE.MeshStandardMaterial({color:0xebeee9,roughness:.94,bumpMap:snowBump,bumpScale:.025});
 const trackMaterial=new THREE.MeshStandardMaterial({color:0x9eafb6,roughness:1,transparent:true,opacity:.33,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1});
@@ -417,7 +422,7 @@ for(const route of routes){
     }
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setIndex(indices);geometry.computeVertexNormals();
-  const piste=new THREE.Mesh(geometry,pisteMaterial);piste.receiveShadow=true;scene.add(piste);
+  geometry.dispose(); // The terrain material owns the piste surface.
   const grooves=[],grooveIndices=[];
   for(let trail=0;trail<14;trail++){
     const phase=trackRandom()*Math.PI*2,freq=.11+trackRandom()*.045,amplitude=1+trackRandom()*1.4;
@@ -443,7 +448,7 @@ for(const route of routes){
     const point=routePoint(route,d,new THREE.Vector3()),ahead=routePoint(route,d+1,new THREE.Vector3());tangent.subVectors(ahead,point).normalize();
     for(const side of [-1,1]){const x=point.x+tangent.z*side*(route.width/2+.5),z=point.z-tangent.x*side*(route.width/2+.5);const pole=new THREE.Mesh(poleG,poleM);pole.position.set(x,terrainY(x,z)+.9,z);scene.add(pole);}
   }
-  const point=route.samples[13];signAt(route.name,point.x+route.width*.65,point.z,route.color);
+
 }
 // A bounded instance pool records new pairs of tracks behind the active skiers.
 const liveTrackGeometry=new THREE.PlaneGeometry(1,1);liveTrackGeometry.rotateX(-Math.PI/2);
@@ -453,16 +458,19 @@ const trackMatrix=new THREE.Matrix4(),trackScale=new THREE.Vector3(),trackRight=
 function leaveSkiTracks(skier){
   if(!skier.lastTrack){skier.lastTrack=new THREE.Vector3(skier.x,terrainY(skier.x,skier.z),skier.z);return;}
   const a=skier.lastTrack,b=new THREE.Vector3(skier.x,terrainY(skier.x,skier.z),skier.z),distance=a.distanceTo(b);
-  if(distance<.7)return;
-  if(distance>3){a.copy(b);return;}
-  trackForward.subVectors(b,a).normalize();trackRight.set(trackForward.z,0,-trackForward.x).normalize();trackUp.crossVectors(trackForward,trackRight).normalize();
-  for(const side of [-1,1]){
-    trackCentre.copy(a).add(b).multiplyScalar(.5).addScaledVector(trackRight,side*.16);trackCentre.y=terrainY(trackCentre.x,trackCentre.z)+.048;
-    trackMatrix.makeBasis(trackRight,trackUp,trackForward);trackMatrix.scale(trackScale.set(.105,1,distance+.06));trackMatrix.setPosition(trackCentre);
-    liveTracks.setMatrixAt(nextLiveTrack,trackMatrix);nextLiveTrack=(nextLiveTrack+1)%liveTracks.instanceMatrix.count;liveTracks.count=Math.min(liveTracks.count+1,liveTracks.instanceMatrix.count);
-  }
-  liveTracksDirty=true;a.copy(b);
+  if(distance<.55)return;if(distance>12){a.copy(b);return;}
+  const count=Math.ceil(distance/.8),start=a.clone();
+  for(let i=0;i<count;i++){
+    const from=start.clone().lerp(b,i/count),to=start.clone().lerp(b,(i+1)/count);from.y=terrainY(from.x,from.z);to.y=terrainY(to.x,to.z);
+    trackForward.subVectors(to,from).normalize();trackRight.set(trackForward.z,0,-trackForward.x).normalize();trackUp.crossVectors(trackForward,trackRight).normalize();
+    for(const side of [-1,1]){
+      trackCentre.copy(from).add(to).multiplyScalar(.5).addScaledVector(trackRight,side*.16);trackCentre.y=terrainY(trackCentre.x,trackCentre.z)+.035;
+      trackMatrix.makeBasis(trackRight,trackUp,trackForward);trackMatrix.scale(trackScale.set(.09,1,from.distanceTo(to)+.035));trackMatrix.setPosition(trackCentre);
+      liveTracks.setMatrixAt(nextLiveTrack,trackMatrix);nextLiveTrack=(nextLiveTrack+1)%liveTracks.instanceMatrix.count;liveTracks.count=Math.min(liveTracks.count+1,liveTracks.instanceMatrix.count);
+    }
+  }liveTracksDirty=true;a.copy(b);
 }
+
 const rockClearings=[],stationClearings=RESORT.lifts.flatMap(d=>window.LiftCoPlacement.terminalBoxes(d,window.LiftCoLiftTypes.find(t=>t.id===d.type),stationSettings(d)));
 // Dark rock ribs emerge through thick snow caps, away from all groomed routes.
 function corridorClearance(x,z) {
@@ -1167,7 +1175,7 @@ if(!def.preview&&spec.cabinFamily){
   root.updateMatrixWorld(true);
   cabinFactory?.bindInstances(root,cabins);
   return{index,def,root,LIFT,LOOP,cableHeight:cableY,cabins,towerWheels,stationGuides,supports,S_LOAD,S_UNLOAD,wrapDist,inStation,targetSpeedAt,doorsOpenAt,stationInfo,timetable,stationTyres,stationRoofs,update,
-    endInfo(end){const top=end==='top',sign=top?-1:1,gate=top?LOOP.straight+LOOP.turn+S_LOAD:S_LOAD;return{end,gate,unloadGate:top?2*LOOP.straight+LOOP.turn-(isClassic?6:10):S_UNLOAD,queuePoint:i=>worldPoint(sign*5.65,sign*(half+STATION.straight-S_LOAD+1.4-i*1.12)),load:worldPoint(sign*(STATION.railX+1.25),sign*(half+STATION.straight-S_LOAD)),unload:worldPoint(sign*(STATION.railX+1.25),-sign*(half+STATION.straight-(isClassic?6:10)))};},
+    endInfo(end){const top=end==='top',sign=top?-1:1,gate=top?LOOP.straight+LOOP.turn+S_LOAD:S_LOAD;return{end,gate,unloadGate:top?S_UNLOAD:2*LOOP.straight+LOOP.turn-(isClassic?6:10),queuePoint:i=>worldPoint(sign*5.65,sign*(half+STATION.straight-S_LOAD+1.4-i*1.12)),load:worldPoint(sign*(STATION.railX+1.25),sign*(half+STATION.straight-S_LOAD)),unload:worldPoint(-sign*(STATION.railX+1.25),sign*(half+STATION.straight-(isClassic?6:10)))};},
     queueSlots,queuePoint,skiOff,load,boardingPoint:isChair?(seat=>worldPoint(5.0+Math.floor(seat/3)*.62,half+STATION.straight-S_LOAD-(seat%3)*.8)):null,unload,exit,worldPoint,routes:routes.filter(r=>r.liftIndex===index)};
 }
 function specIsNext(def){return window.LiftCoNextAlignment.isNext(def);}
@@ -1184,6 +1192,7 @@ function createLift(def,index){
    const z=sign*(f.length/2+out);window.LiftCoFoundations.create(THREE,{parent:lift.root,x,z,top:datum,width:1.2,depth:1.6,groundAt:(x,z)=>{const p=planPoint(def,x,z);return rawTerrainY(p.x,p.z);},material:foundationM});
   }
  }}
+ window.LiftCoWorldSigns.strip(lift.root);
  return window.LiftCoOperations.attach(lift);
 }
 const lifts=RESORT.lifts.map(createLift);
@@ -1256,7 +1265,7 @@ const lifts=RESORT.lifts.map(createLift);
  });powder.receiveShadow=true;scene.add(powder);
 }
 
-for(const lift of lifts){const p=lift.worldPoint(-6,liftFrame(lift.def).length/2+5);signAt(lift.def.name,p.x,p.z);}
+
 const cabins=lifts.flatMap(lift=>lift.cabins);
 
 // Damped pendulum driven by changes in cabin speed, measured in simulation time.
@@ -1326,7 +1335,8 @@ function makeSkier() {
   }
   seatedLegs.visible=false;g.add(seatedLegs);
   scene.add(g);
-  return { g, legs, seatedLegs, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: lifts.length?skiers.length % lifts.length:0, ticket: nextTicket++, route: null, distance: 0 };
+  const skier={ g, legs, seatedLegs, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: lifts.length?skiers.length % lifts.length:0, ticket: nextTicket++, route: null, distance: 0 };
+  window.LiftCoSkiMotion.attachRig(THREE,skier);return skier;
 }
 function spawnSkier() {
   if(!lifts.length||resortDocument.buildings.length||skiers.length>=120)return;
@@ -1370,7 +1380,7 @@ function releaseSeat(s,lift) {
 }
 function joinQueue(s){s.ticket=nextTicket++;s.state='queue';s.t=0;}
 function updateSkierEquipment(s){
-  const chairlift=lifts[s.liftIndex].LIFT.isChair,seated=chairlift||s.seatedCabin,takingOff=s.state==='takeOff',puttingOn=s.state==='putOn';
+  const chairlift=lifts[s.liftIndex].LIFT.isChair,pushing=s.state==='skiPush',seated=chairlift||s.seatedCabin,takingOff=s.state==='takeOff',puttingOn=s.state==='putOn';
   const sitting=seated?(s.state==='ride'?1:s.state==='board'?smoothstep(0,.65,s.t):s.state==='unload'?1-smoothstep(0,.85,s.t):0):0;
   s.seatedLegs.visible=sitting>.05;s.legs.visible=sitting<.5;
   let carried=['queue','load','board','ride','unload','exitWalk','apres','transfer','networkWalk','networkExit','networkIdle'].includes(s.state)?1:0;
@@ -1382,10 +1392,10 @@ function updateSkierEquipment(s){
   s.skis.position.set(.53*carried,.08+1.07*carried,.16*carried);
   s.skis.rotation.set(-Math.PI/2*carried,0,-.1*carried);if(sitting>0){s.skis.position.y=THREE.MathUtils.lerp(.08,.17,sitting);s.skis.position.z=THREE.MathUtils.lerp(0,.58,sitting);}
   s.skis.children.forEach((ski,i)=>ski.position.x=(i?1:-1)*THREE.MathUtils.lerp(.16,.045,carried));
-  s.upperBody.rotation.x=(takingOff||puttingOn) ? .48*Math.sin(Math.PI*Math.min(1,s.t/1.15)) : 0;
+  s.upperBody.rotation.x=pushing?.12:(takingOff||puttingOn) ? .48*Math.sin(Math.PI*Math.min(1,s.t/1.15)) : 0;
   for(const {arm,elbow,side} of s.arms){
     const hold=side>0&&s.skis.visible?carried:0;
-    arm.rotation.set(s.walking?Math.sin(s.t*8+side)*.12*(1-hold):0,0,-side*.1+hold*.45);
+    arm.rotation.set(pushing?-.25+Math.sin(s.t*3.8)*.18:s.walking?Math.sin(s.t*8+side)*.12*(1-hold):0,0,-side*.1+hold*.45);
     elbow.rotation.x=THREE.MathUtils.lerp(-.2-hold*.9,-.9,sitting);
   }
 }
@@ -1745,7 +1755,7 @@ function selectResortLift(index){
  selectedLiftIndex=index;const lift=lifts[index],empty=!lift;
  $('emptyResort').hidden=!empty;$('btnRide').parentElement.hidden=empty;for(const id of ['btnRide','btnEdit','btnStation','btnDeleteLift','btnAdd'])$(id).disabled=empty;
  $('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');
- if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='Upper Snowfields / V3';return;}
+ if(empty){$('lineDetail').textContent='No lifts yet. Open your first line to welcome skiers.';$('viewTitle').textContent='Upper Snowfields / V4';return;}
  const f=liftFrame(lift.def);$('networkCount').textContent=lifts.length+' '+(lifts.length===1?'line':'lines');liftStatNodes.forEach((n,i)=>n.classList.toggle('selected',i===index));$('lineDetail').textContent=Math.round(f.length)+' m line · '+(lift.def.manual?lift.def.towers.length:lift.supports.length-2)+' towers · '+lift.cabins.length+' '+lift.LIFT.carrierName;$('viewTitle').textContent=lift.def.name;}
 selectResortLift(Math.max(0,lifts.findIndex(l=>l.def.id===savedResort?.selectedLineId)));
 const construction=window.createResortBuilder({THREE,scene,camera,controls,renderer,app,lifts,skiers,RESORT,terrainY,rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,STATION,seed,SAVE_KEY,selectResortLift,getSelectedLift:()=>selectedLiftIndex,enterFreeCamera,
@@ -1819,16 +1829,16 @@ addEventListener('resize', () => {
 });
 
 // Preserve progress without overwriting a construction/removal save during reload.
-function resortSnapshot(){return{...window.LiftCoResort.copy(resortDocument),version:3,releaseVersion:3,mapVersion:MAP_VERSION,lifts:RESORT.lifts.map(serializeLift),selectedLineId:lifts[selectedLiftIndex]?.def.id||null,served,skierCount:skiers.length,time:+$('tod').value,speed:construction.active?construction.resumeSpeed:resortTools?.active?resortTools.resumeSpeed:speed,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),camera:{position:camera.position.toArray(),target:(rideMode?camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),24):controls.target).toArray()}};}
+function resortSnapshot(){return{...window.LiftCoResort.copy(resortDocument),version:3,releaseVersion:4,mapVersion:MAP_VERSION,lifts:RESORT.lifts.map(serializeLift),selectedLineId:lifts[selectedLiftIndex]?.def.id||null,served,skierCount:skiers.length,time:+$('tod').value,speed:construction.active?construction.resumeSpeed:resortTools?.active?resortTools.resumeSpeed:speed,softShadows:$('softShadows').checked,uiHidden:document.body.classList.contains('ui-hidden'),camera:{position:camera.position.toArray(),target:(rideMode?camera.position.clone().addScaledVector(camera.getWorldDirection(new THREE.Vector3()),24):controls.target).toArray()}};}
 function persistResort(){if(navigationSavePending||!saveBackupsReady)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify(resortSnapshot()));}catch{console.warn('Resort could not be saved.');}}
 addEventListener('pagehide',persistResort);addEventListener('beforeunload',persistResort);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)persistResort();});
 $('softShadows').onchange=()=>{renderer.shadowMap.enabled=$('softShadows').checked;renderer.shadowMap.needsUpdate=true;};
 // V3 uses device graphics preferences instead of per-world shadow defaults.
-$('exportResort').onclick=()=>{const legacy={};for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-before-village-20261020:')||k.startsWith('lift-co-pre-station-styles-20261020:')||k.startsWith('lift-co-before-build-operate:')||k.startsWith('lift-co-empty-map-v1:')||k.startsWith('lift-co-pre-v1-backup:')||k.startsWith(SOLO_HOLD_BACKUP_PREFIX)||k.startsWith('lift-co-pre-funitel-20261016:')||k.startsWith('lift-co-pre-v3-20261018:')||k.startsWith('lift-co-pre-next-lifts-20261018:')||k.startsWith('lift-co-pre-solo-integration-20261018:'))){try{legacy[key]=JSON.parse(localStorage.getItem(key));}catch{legacy[key]=localStorage.getItem(key);}}const payload={format:'lift-co-backup',created:new Date().toISOString(),slot:seed,current:resortSnapshot(),drafts:construction.exportDrafts(),legacy};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='lift-co-upper-snowfields-v3-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$('exportResort').onclick=()=>{const legacy={};for(const key of Object.keys(localStorage).filter(k=>k.startsWith('lift-co-pre-v4-20261021:')||k.startsWith('lift-co-before-village-workbench-20261021:')||k.startsWith('lift-co-before-village-20261020:')||k.startsWith('lift-co-pre-station-styles-20261020:')||k.startsWith('lift-co-before-build-operate:')||k.startsWith('lift-co-empty-map-v1:')||k.startsWith('lift-co-pre-v1-backup:')||k.startsWith(SOLO_HOLD_BACKUP_PREFIX)||k.startsWith('lift-co-pre-funitel-20261016:')||k.startsWith('lift-co-pre-v3-20261018:')||k.startsWith('lift-co-pre-next-lifts-20261018:')||k.startsWith('lift-co-pre-solo-integration-20261018:'))){try{legacy[key]=JSON.parse(localStorage.getItem(key));}catch{legacy[key]=localStorage.getItem(key);}}const payload={format:'lift-co-backup',created:new Date().toISOString(),slot:seed,current:resortSnapshot(),drafts:construction.exportDrafts(),legacy};const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='lift-co-upper-snowfields-v4-'+new Date().toISOString().slice(0,10)+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
 if(savedResort?.uiHidden)requestAnimationFrame(()=>$('toggleInterface').click());
 
-resortTools=window.LiftCoResortTools({THREE,scene,camera,controls,renderer,doc:resortDocument,RESORT,lifts,cabins,skiers,routes,terrainService,terrainChunks,terrainY,rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,stationSettings,history:resortHistory,construction,getSpeed:()=>speed,setSpeed:v=>{speed=v;syncSpeed();},persist:persistResort,select:selectResortLift,selected:()=>selectedLiftIndex,refreshLiftButtons,enterFreeCamera,lightFixtures:towerLightFixtures,walkTo,cabinInterior,updateSkierEquipment,routePoint,makeSkier,leaveSkiTracks,servedRun:()=>served++,canSave:()=>saveBackupsReady,saveDocument:proposal=>{if(!saveBackupsReady)throw Error('Browser save backup unavailable.');localStorage.setItem(SAVE_KEY,JSON.stringify({...resortSnapshot(),...proposal,lifts:proposal.lifts.map(serializeLift)}));},nextTicket:()=>nextTicket++,notice:text=>{$('saveNotice').textContent=text;$('saveNotice').hidden=false;setTimeout(()=>$('saveNotice').hidden=true,5500);}});
+resortTools=window.LiftCoResortTools({THREE,createShuttleModel,forestPrototypes,forestPlacements,rockClearings,scene,camera,controls,renderer,doc:resortDocument,RESORT,lifts,cabins,skiers,routes,terrainService,terrainChunks,terrainY,stationTerrainY:(x,z,key)=>terrainY(x,z,null,key),rawTerrainY,prepareStationGround,createLift,liftFrame,planPoint,stationSettings,history:resortHistory,construction,getSpeed:()=>speed,setSpeed:v=>{speed=v;syncSpeed();},persist:persistResort,select:selectResortLift,selected:()=>selectedLiftIndex,refreshLiftButtons,enterFreeCamera,lightFixtures:towerLightFixtures,walkTo,skierSurfaceY,cabinInterior,updateSkierEquipment,routePoint,makeSkier,leaveSkiTracks,servedRun:()=>served++,canSave:()=>saveBackupsReady,saveDocument:proposal=>{if(!saveBackupsReady)throw Error('Browser save backup unavailable.');localStorage.setItem(SAVE_KEY,JSON.stringify({...resortSnapshot(),...proposal,lifts:proposal.lifts.map(serializeLift)}));},nextTicket:()=>nextTicket++,notice:text=>{$('saveNotice').textContent=text;$('saveNotice').hidden=false;setTimeout(()=>$('saveNotice').hidden=true,5500);}});
 const resortInterface=window.LiftCoInterface();
 if(!saveBackupsReady){$('saveNotice').textContent='Saving is paused: the pre-change browser backup could not be created. Download your resort backup, free browser storage, then reload.';$('saveNotice').hidden=false;}
 window.LiftCoGraphics.init({THREE,renderer,scene,camera,sun,snow,app,stopFlight,notice:text=>{$('saveNotice').textContent=text;$('saveNotice').hidden=false;setTimeout(()=>$('saveNotice').hidden=true,5000);}});
@@ -1849,6 +1859,7 @@ function animate() {
   if (lifts.length && spawnT > 7 && skiers.length < 18) { spawnT = 0; spawnSkier(); }
   let riding = 0;
   for (const s of skiers) { resortTools.guests.update(s, dt); if (s.state === 'ride'||s.state==='busRide') riding++; }
+  resortTools.guests.animate(dt);
   if(liveTracksDirty){liveTracks.instanceMatrix.needsUpdate=true;liveTracksDirty=false;}
   updateChimneys(dt);
   // Snowfall density reduces CPU updates as well as draw submission.
@@ -1887,7 +1898,7 @@ function animate() {
   // Let the scene remain visible at any zoom distance. Keep close-up clipping
   // small and expand the far plane and atmospheric range as the camera retreats.
   const viewDistance=rideMode?24:camera.position.distanceTo(controls.target);
-  const near=Math.max(.02,viewDistance*.00001),far=Math.max(9000,viewDistance*4+3000);
+  const near=rideMode ? .02 : Math.max(.08,Math.min(1,viewDistance*.002)),far=Math.max(9000,viewDistance*4+3000);
   if(Math.abs(camera.near-near)>near*.05||Math.abs(camera.far-far)>far*.05){
     camera.near=near;camera.far=far;camera.updateProjectionMatrix();
   }

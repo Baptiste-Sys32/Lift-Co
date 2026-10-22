@@ -1,17 +1,21 @@
-# Lift Co. - V3
+# Lift Co. - V4
 
 A cozy Three.js ski-resort prototype. Serve the folder over local HTTP (e.g. `python3 -m http.server`) and open the pages from there; they do not load via `file://`. There is no build step. The Three.js CDN needs an internet connection.
 
 Local village milestone: [construction, shuttle and resident specification](docs/village-shuttle.md).
+Start building from the dedicated **Village** tab. See the [placement guide](docs/village-workbench.md).
 The original resort (`index.html`) remains unchanged.
 
 ## Start here
 
 | Page | Purpose |
 | --- | --- |
+| [Bus coachworks](designs/bus-showroom.html) | Five detailed bus designs, including articulated and double-articulated models. Bend, doors, interiors, winter kits and a same-scale fleet comparison. |
 | [Station variants workshop](designs/station-variants.html) | Four approved station directions under refinement: Fixed B, Gondola B, Tramway B and Funitel C. Detachable chairs unselected. Closed building shells, supported machinery, animated arrivals and cutaways. [Research notes](docs/station-variants.md). |
-| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V3, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
+| [empty-map.html](empty-map.html) | Current game: Upper Snowfields V4, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
 | [index.html](index.html) | Original working resort with Summit Express, skiers and the construction UI. |
+
+The [V4 checkpoint](docs/v4-checkpoint.md) fixes construction gestures, route connections, operation-save failures and resource cleanup. Save documents remain version 3.
 
 The [V3 checkpoint](docs/v3-checkpoint.md) adds graphics presets, focused workspaces, smoother station earthworks and grounded, height-scaled pylon foundations. V1/V2 worlds migrate to V3 after an automatic backup.
 
@@ -118,3 +122,5 @@ python3 tools/build-lift-test-data.py
 Tree generation reads `assets/models/snowy-trees.glb` and writes `assets/generated/tree-pack.js`. Terrain generation writes the full heightmap and metadata to `assets/data/`; it downloads source tiles if uncached. The lift-scale generator crops that local full heightmap into `assets/data/lift-scale-heightmap.js`.
 
 Historical `.bak` files are kept in `archive/backups/` as original snapshots. Their embedded paths describe their original layout; restore and adapt them before using them as pages.
+
+Automatic piste construction in the local sandbox: [piste atelier](docs/automatic-pistes.md).
