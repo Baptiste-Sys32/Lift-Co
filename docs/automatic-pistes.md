@@ -51,3 +51,9 @@ Focused isolated scenarios additionally cover deterministic nature, custom grove
 Skier terrain alignment, individual carving lines, articulated poses and turn powder are described in [Skier movement and pose](ski-motion.md).
 
 Both station sides, multiple connected pistes and open-door passenger circulation are described in [Station sides and passenger circulation](station-access.md).
+
+## Shared piste boundaries
+
+Boundary posts use the combined footprint of all authored pistes. A post inside another piste is omitted; coincident outer edges retain the earlier piste's posts. An incoming run therefore loses its redundant rows in a shared section. Offset overlaps retain only the outer row on each side of the combined snow corridor, while crossings leave an opening and separated branches regain their own posts. Closing a piste keeps its physical boundary footprint; deleting or moving it recomputes the remaining boundary posts.
+
+This is a visual union on the existing groomed terrain, without an additional snow sheet or changes to the individual piste identities, difficulty, endpoints or guest routes. A visual crossing does not create an implicit network junction. Existing saved pistes receive the corrected posts when loaded.

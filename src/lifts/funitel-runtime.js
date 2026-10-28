@@ -51,6 +51,7 @@ window.LiftCoFunitelRuntime=(()=>{
    for(let i=0;i<2;i++){
     const model=factory.makeCabin(0,{stubs:false});model.root.position.x=(i?1:-1)*factory.lane;model.paint.color.set(def.color??0x355768);line.add(model.root);
     const c=Object.assign(model,{g:model.root,suspension:model.sections[1],isFunitel:true,riders:Array(75).fill(null),eye:new T.Vector3(0,1.65,0),yaw:Math.PI,sway:0,s:0,speed:0,station:null,dwellRemaining:0,door:0});
+    c.inspectionCablePoint=out=>{line.updateWorldMatrix(true,false);const z=c.loadedZ??c.s,p=c.loadedProfile?c.loadedProfile(z):layout.atZ(z);return out.set((i?1:-1)*factory.lane,p.y,z).applyMatrix4(line.matrixWorld);};
     c.passengerPoint=(seat,out)=>out.set((seat%5-2)*.43,.25,(Math.floor(seat%25/5)-2)*.42).applyMatrix4(model.sections[Math.floor(seat/25)].matrixWorld);
     cabins.push(c);ropes.push([-1,1].map(edge=>factory.dynamicRope(line,(i?1:-1)*factory.lane+edge*1.5,first,last,steps)));
    }

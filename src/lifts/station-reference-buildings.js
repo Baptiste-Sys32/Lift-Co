@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {selectedRefinements} from './station-selected-refinements.js?v=polish-20261020-1';
+import {selectedRefinements} from './station-selected-refinements.js?v=4.4.0';
 
 // Estimated reference geometry from the credited photographs. Shared shells
 // have distinct load paths; operational cable routes stay in their runtimes.

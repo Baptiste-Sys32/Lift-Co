@@ -34,7 +34,6 @@ window.LiftCoOperations={
    const gate=lift.endInfo(end,source).unloadGate,total=lift.LOOP.total,delta=((carrier.s-gate+total/2)%total+total)%total-total/2,station=lift.stationInfo?.(carrier.s);
    return Number.isFinite(gate)&&!!station&&station.end===end&&['arrival','through'].includes(station.phase)&&delta>=-.6&&delta<=6&&(lift.LIFT.isChair||carrier.speed<1.15);
   };
-  lift.cameraCabin=lift.cabins[lift.LIFT.reversible?1:0];if(lift.cameraCabin)lift.cameraCabin.cameraOnly=true;
   lift.dispose=()=>{lift.root.removeFromParent();const geometries=new Set(),materials=new Set();lift.root.traverse(o=>{if(o.isInstancedMesh)o.dispose();if(o.geometry)geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[])materials.add(m);});geometries.forEach(g=>g.dispose());materials.forEach(m=>{if(m.map?.userData.stationOwned)m.map.dispose();m.dispose();});};
   return lift;
  }

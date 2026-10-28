@@ -1,6 +1,7 @@
 // Compact, three-sheave station receptors. Large approach trains belong to the
 // player's separate towers; the terminal itself has no automatic extra pole.
 window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false,ropeRadius=.055}){
+ const wheelParts=window.LiftCoWheelParts?.createFactory(T);
  const group=new T.Group();group.name='Station cable guides';root.add(group);
  const steel=new T.MeshStandardMaterial({color:fixedGrip?0x315b55:0x819092,roughness:.5,metalness:.55});
  const rubber=new T.MeshStandardMaterial({color:0x293337,roughness:.7,metalness:.2});
@@ -20,11 +21,10 @@ window.LiftCoStationGuides={create(T,{root,layout,half,railX,fixedGrip=false,rop
    for(let k=0;k<count;k++){
     const distance=start+dir*(.3+(length-.6)*k/(count-1)),slope=layout.slopeAt(distance),normalY=1/Math.hypot(1,slope);
     const contact=point(distance,side*railX),wheel=new T.Group();
-    const tyre=new T.Mesh(wheelG,rubber);tyre.castShadow=true;wheel.add(tyre);
+    if(wheelParts)wheelParts.fill(wheel,{radius:.31});else{const tyre=new T.Mesh(wheelG,rubber);tyre.castShadow=true;wheel.add(tyre);wheel.add(new T.Mesh(hubG,alloy));wheel.add(new T.Mesh(new T.BoxGeometry(.39,.4,.04),steel));}
     wheel.position.copy(contact).add(new T.Vector3(0,sign*(.31+ropeRadius)*normalY,sign*(.31+ropeRadius)*slope*normalY));
     const carrier=new T.Group();group.add(carrier);
-    carrier.add(wheel);wheel.add(new T.Mesh(hubG,alloy));
-    const spoke=new T.Mesh(new T.BoxGeometry(.39,.4,.04),steel);wheel.add(spoke);
+    carrier.add(wheel);
     const mount=new T.Vector3(frameX,wheel.position.y+sign*.19,wheel.position.z);frame.push(mount);contacts.push(wheel.position.clone());
     const axle=beam(new T.Vector3(side*(railX-.18),wheel.position.y,wheel.position.z),new T.Vector3(frameX,wheel.position.y,wheel.position.z),.09,.09);carrier.add(axle);
     const anchor=mount.clone(),axleEnd=new T.Vector3(frameX,wheel.position.y,wheel.position.z);

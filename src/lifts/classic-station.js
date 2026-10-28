@@ -1,6 +1,6 @@
 // Approved compact Classic terminal. No detachment rails or conveyor tyres.
 window.LiftCoClassicStation={create(T,{root,half,straight,railX:R,base,top,ends=[1,-1],driveAssembly=true}){
-const roofs=[],bullwheels={};
+const roofs=[],bullwheels={},wheelParts=window.LiftCoWheelParts?.createFactory(T);
 const M={},G=new Map();function mat(key,color,roughness=.7,metalness=0){return M[key]||(M[key]=new T.MeshStandardMaterial({color,roughness,metalness}));}function geo(key,fn){if(!G.has(key))G.set(key,fn());return G.get(key);}const green=mat('green',0x315b55,.6,.45),steel=mat('steel',0xa9b6b4,.4,.65),ivory=mat('ivory',0xeeeede,.6),dark=mat('dark',0x2e4042,.7,.3),black=mat('black',0x222e31),snow=mat('snow',0xe9ece4,1),concrete=mat('concrete',0x9da89b,1),glass=new T.MeshStandardMaterial({color:0x284c59,transparent:true,opacity:.68,roughness:.2,metalness:.15,side:T.DoubleSide});
 function mesh(g,geometry,material,x=0,y=0,z=0){const m=new T.Mesh(geometry,material);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;g.add(m);return m;}
 function box(g,w,h,d,x,y,z,m){return mesh(g,geo('b'+[w,h,d],()=>new T.BoxGeometry(w,h,d)),m,x,y,z);}
@@ -20,9 +20,11 @@ function terminal(end){
  box(g,5.7,.16,12.6,0,rope+.52,end*-4.2,dark);
  if(driveAssembly){
  const wheel=new T.Group();wheel.position.y=rope;g.add(wheel);bullwheels[end===1?'base':'top']=wheel;
+ if(wheelParts)wheelParts.fill(wheel,{radius:R-.055,axis:'y',bull:true});else{
  const rim=mesh(wheel,geo('bullwheel-rim',()=>{const a=new T.TorusGeometry(R-.045,.075,8,64);a.rotateX(Math.PI/2);return a;}),green);
  mesh(wheel,geo('bullwheel-hub',()=>new T.CylinderGeometry(.45,.45,.38,20)),dark);
  for(let i=0;i<8;i++){const a=i/8*Math.PI*2;bar(wheel,[.4*Math.cos(a),0,.4*Math.sin(a)],[(R-.12)*Math.cos(a),0,(R-.12)*Math.sin(a)],.075,steel);}
+ }
  mesh(g,geo('drive-shaft',()=>new T.CylinderGeometry(.19,.19,1.2,12)),steel,0,rope+.57,0);box(g,1.7,.7,2,0,rope+1.12,end*-2.2,green);box(g,.9,.7,1,0,rope+.96,end*-4.2,steel);
  }
  // Ribbed curved glazing, with white end cheeks and a visible black service grille.

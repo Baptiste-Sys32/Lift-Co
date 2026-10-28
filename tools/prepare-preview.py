@@ -12,6 +12,7 @@ import shutil
 project=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser()
 parser.add_argument('output',type=Path)
+parser.add_argument('--shared-saves',type=Path,help='Directory containing approved shared resort snapshots')
 arguments=parser.parse_args()
 output=arguments.output.resolve()
 if output.exists():
@@ -19,7 +20,7 @@ if output.exists():
 output.mkdir(parents=True)
 blocked=re.compile(r'(?:^\.|secret|token|credential|auth\.json|\.pem$|\.key$|\.keystore$)',re.I)
 allowed={'.html','.js','.css','.json','.jpg','.jpeg','.png','.webp','.svg','.glb','.bin','.ttf','.woff2','.pdf','.md','.txt'}
-paths=[project/'empty-map.html',project/'index.html',project/'designs/station-variants.html',project/'docs/station-variants.md']
+paths=[project/'load-resort.html',project/'empty-map.html',project/'index.html',project/'designs/station-variants.html',project/'designs/footpaths.html',project/'docs/station-variants.md',project/'docs/footpath-studies.md']
 for folder in ['src','assets']:
     paths.extend(p for p in (project/folder).rglob('*') if p.is_file())
 for source in paths:
@@ -34,6 +35,19 @@ for source in paths:
     target.parent.mkdir(parents=True,exist_ok=True)
     shutil.copyfile(source,target)
 
+# Shared snapshots are explicit deployment inputs, never browser backups/history.
+if arguments.shared_saves:
+    folder=output/'shared-resorts'
+    folder.mkdir()
+    for source in sorted(arguments.shared_saves.glob('*.json')):
+        if source.is_symlink() or not re.fullmatch(r'[a-f0-9]{24}',source.stem):
+            raise SystemExit('Invalid shared-save filename')
+        payload=json.loads(source.read_text())
+        current=payload.get('current',{})
+        if payload.get('format')!='lift-co-shared-save' or current.get('version')!=3 or current.get('mapVersion')!='upper-snowfields-v1' or not isinstance(current.get('lifts'),list):
+            raise SystemExit('Unsupported shared resort snapshot')
+        (folder/source.name).write_text(json.dumps(payload,separators=(',',':'),allow_nan=False)+'\n')
+
 # Keep the authored game untouched. Only the staged HTML gets local module URLs.
 # The flat vendor directory serves both the game and the station workshop.
 game=output/'empty-map.html'
@@ -42,6 +56,9 @@ text=text.replace('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module
 text=text.replace('https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/','./assets/vendor/three/')
 text=text.replace("'three/addons/controls/OrbitControls.js'","'three/addons/OrbitControls.js'")
 game.write_text(text)
+# The deployed index is the game launcher; keep the original resort reachable.
+interface=output/'src/resort/interface.js'
+interface.write_text(interface.read_text().replace("window.location.assign('./index.html')", "window.location.assign('./original-resort.html')"))
 (output/'index.html').write_text('''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0; url=./empty-map.html"><title>Lift Co.</title></head><body><p><a href="./empty-map.html">Open Upper Snowfields</a></p><p><a href="./designs/station-variants.html">Station workshop</a></p></body></html>
 ''')

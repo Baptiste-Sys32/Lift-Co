@@ -152,6 +152,14 @@ function makeCabin(def=definition,number=1,showPassengers=false){
  // The interior remains visible through the glass and the real door opening.
  for(const side of [-1,1]){bar(body,[side*w*.37,.18,-l*.36],[side*w*.37,1.3,-l*.36],.025,steel);bar(body,[side*w*.37,1.3,-l*.36],[side*w*.37,1.3,l*.36],.025,steel);}
  for(const z of [-l*.3,l*.3])bar(body,[-w*.34,h-.33,z],[w*.34,h-.33,z],.025,steel);
+ // Folded end perches preserve the twelve standing positions and door aisle.
+ const interior=new T.Group();interior.name='Solo interior';body.add(interior);
+ for(const end of [-1,1])for(const x of [-.38,.38]){box(interior,.62,.46,.075,x,.77,end*(l/2-.16),blue);box(interior,.62,.075,.20,x,.48,end*(l/2-.21),rubber);for(const dx of [-.24,.24])bar(interior,[x+dx,.25,end*(l/2-.14)],[x+dx,1.08,end*(l/2-.14)],.018,steel);}
+ for(let z=-l*.36;z<=l*.36;z+=.16)box(interior,w*.82,.008,.015,0,.185,z,rubber);
+ for(const x of [-w*.28,w*.28])box(interior,.035,.025,l*.64,x,h-.195,0,cream);
+ // Four shared material batches keep the extra interior detail inexpensive.
+ interior.updateMatrixWorld(true);const inverse=interior.matrixWorld.clone().invert(),parts=new Map();interior.traverse(o=>{if(o.isMesh){if(!parts.has(o.material))parts.set(o.material,[]);parts.get(o.material).push(o);}});interior.clear();
+ for(const [material,nodes]of parts){const geometry=geo('interior:'+def.id+':'+material.uuid,()=>{const positions=[],normals=[];for(const node of nodes){const g=(node.geometry.index?node.geometry.toNonIndexed():node.geometry.clone()).applyMatrix4(inverse.clone().multiply(node.matrixWorld));positions.push(...g.attributes.position.array);normals.push(...g.attributes.normal.array);g.dispose();}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));return g;});mesh(interior,geometry,material);}
  const people=new T.Group();body.add(people);const rows=def.family?4:2;for(let i=0;i<rows;i++)for(const side of [-1,1])passenger(people,side*w*.21,(i-(rows-1)/2)*(def.family?.9:.95),(i*2+(side+1)/2));people.visible=showPassengers;
  return{g,body,suspension,trolley,trolleyY,doors,people,wheels,haulGrips,def};
 }

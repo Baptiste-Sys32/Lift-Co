@@ -43,7 +43,7 @@ window.LiftCoResort=(()=>{
  function route(T,feature,height){
   if(feature.points.length<2)return null;
   const curve=new T.CatmullRomCurve3(feature.points.map(p=>new T.Vector3(p.x,0,p.z)),false,'centripetal');
-  const count=clamp(Math.ceil(curve.getLength()/2),20,1600),samples=curve.getSpacedPoints(count),distances=[0];
+  const count=clamp(Math.ceil(curve.getLength()/2),20,1600),samples=feature.liftTransfer?feature.points.flatMap((p,i,list)=>{if(!i)return[new T.Vector3(p.x,0,p.z)];const a=list[i-1],n=Math.max(1,Math.ceil(Math.hypot(p.x-a.x,p.z-a.z)/2));return Array.from({length:n},(_,j)=>new T.Vector3(a.x+(p.x-a.x)*(j+1)/n,0,a.z+(p.z-a.z)*(j+1)/n));}):curve.getSpacedPoints(count),distances=[0];
   for(let i=0;i<samples.length;i++){samples[i].y=height(samples[i].x,samples[i].z);if(i)distances.push(distances[i-1]+Math.hypot(samples[i].x-samples[i-1].x,samples[i].z-samples[i-1].z));}
   return{...feature,samples,distances,length:distances.at(-1),width:feature.width||10};
  }
@@ -72,16 +72,16 @@ window.LiftCoResort=(()=>{
    this.nodes=new Map();this.edges=new Map();this.doc=doc;this.routes=routes;
    const addNode=(key,p)=>{this.nodes.set(key,p);if(!this.edges.has(key))this.edges.set(key,[]);};
    const edge=(from,to,data)=>{if(this.nodes.has(from)&&this.nodes.has(to))this.edges.get(from).push({from,to,...data});};
-   for(const lift of doc.lifts)for(const end of (window.LiftCoNextAlignment?.ends(lift)||['base','top'])){const hub=lift.id+':'+end,origin=stationPoint(lift,end);addNode(hub,origin);for(const port of stationAccess?.ports(lift,end)||[]){addNode(port.id,port);const walk=stationAccess.path(lift,end,origin,port),cost=(walk?.length||Math.hypot(port.x-origin.x,port.z-origin.z))/2.8;edge(hub,port.id,{kind:'stationWalk',stationKey:hub,cost});edge(port.id,hub,{kind:'stationWalk',stationKey:hub,cost});}}
+   for(const lift of doc.lifts)for(const end of (window.LiftCoNextAlignment?.ends(lift)||['base','top'])){const hub=lift.id+':'+end,origin=stationPoint(lift,end);addNode(hub,origin);for(const port of stationAccess?.ports(lift,end)||[]){addNode(port.id,port);const walk=stationAccess.path(lift,end,origin,port),cost=(walk?.length||Math.hypot(port.x-origin.x,port.z-origin.z))/1.7;edge(hub,port.id,{kind:'stationWalk',stationKey:hub,cost});edge(port.id,hub,{kind:'stationWalk',stationKey:hub,cost});}}
    for(const j of doc.junctions)addNode(j.id,j);
    for(const b of doc.buildings||[])addNode(b.id+':home',window.LiftCoVillage.entrance(b));
    const roads=window.LiftCoRoads?.compile(globalThis.THREE||window.LiftCoThree,doc,()=>0)||[];
-   for(const s of doc.stops||[]){const p=window.LiftCoRoads.stopInfo(s,roads,()=>0);if(!p)continue;addNode(s.id+':ped',p.ped);addNode(s.id,p.board);edge(s.id+':ped',s.id,{kind:'access',cost:5/2.8});edge(s.id,s.id+':ped',{kind:'access',cost:5/2.8});}
+   for(const s of doc.stops||[]){const p=window.LiftCoRoads.stopInfo(s,roads,()=>0);if(!p)continue;addNode(s.id+':ped',p.ped);addNode(s.id,p.board);edge(s.id+':ped',s.id,{kind:'access',cost:5/1.7});edge(s.id,s.id+':ped',{kind:'access',cost:5/1.7});}
    for(const f of [...doc.paths,...doc.pistes]){if(f.points.length<2)continue;const r=routes.find(r=>r.id===f.id);addNode(f.id+':start',r?.samples[0]||f.points[0]);addNode(f.id+':end',r?.samples.at(-1)||f.points.at(-1));}
    for(const f of [...doc.paths,...doc.pistes]){
     if(f.points.length<2)continue;const a=f.id+':start',b=f.id+':end',r=routes.find(r=>r.id===f.id);for(const [i,key,target]of [[0,a,f.connections?.[0]],[1,b,f.connections?.[1]]])if(target){const access=r?.stationAccess?.[i];if(access){edge(key,target,{kind:'push',route:access,reverse:i===0,cost:access.length/2.8});edge(target,key,{kind:'push',route:access,reverse:i===1,cost:access.length/2.8});}else{edge(key,target,{kind:'access',cost:1});edge(target,key,{kind:'access',cost:1});}}
-    if(!r||r.length<.1||f.open===false)continue;
-    if(doc.paths.includes(f)){edge(a,b,{kind:'walk',route:r,cost:r.length/2.8});edge(b,a,{kind:'walk',route:r,reverse:true,cost:r.length/2.8});}
+    if(!r||r.length<.1||f.open===false||r.walkingBlocked)continue;
+    if(doc.paths.includes(f)){edge(a,b,{kind:'walk',route:r,cost:r.length/1.7});edge(b,a,{kind:'walk',route:r,reverse:true,cost:r.length/1.7});}
     else if(r.rating.valid)edge(a,b,{kind:'ski',route:r,ability:r.rating.ability,cost:r.length/7});
    }
    for(const lift of doc.lifts){if(lift.operations?.open===false)continue;const ends=window.LiftCoNextAlignment?.ends(lift)||['base','top'],path=window.LiftCoNextAlignment?.make(lift),distance=end=>end==='base'?0:end==='mid'?path.midDistance:path?.length??Math.hypot(lift.base[0]-lift.top[0],lift.base[1]-lift.top[1]);for(const a of ends)for(const b of ends)if(a!==b)edge(lift.id+':'+a,lift.id+':'+b,{kind:'lift',liftId:lift.id,end:a,dest:b,cost:Math.abs(distance(a)-distance(b))/(lift.operations?.speed||5)+20});}

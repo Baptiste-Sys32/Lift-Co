@@ -95,7 +95,7 @@ window.LiftCoGondolaRuntime={createFactory(T,spec,{color=spec.defaultColor}={}){
  function bindInstances(root,cabins){
   lineRoot=root;carriers=cabins;
   instances=templateParts.map((part,index)=>{
-   const mesh=new T.InstancedMesh(part.geometry,part.material,carriers.length);mesh.name=spec.id+' carriers / '+index;mesh.castShadow=part.castShadow;mesh.receiveShadow=part.receiveShadow;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);root.add(mesh);return mesh;
+   const mesh=new T.InstancedMesh(part.geometry,part.material,carriers.length);mesh.name=spec.id+' carriers / '+index;mesh.userData.carrierInstances=true;mesh.castShadow=part.castShadow;mesh.receiveShadow=part.receiveShadow;mesh.frustumCulled=false;mesh.instanceMatrix.setUsage(T.DynamicDrawUsage);root.add(mesh);return mesh;
   });
   for(const carrier of carriers)for(const part of carrier.renderParts){part.userData.instancedPart=true;part.visible=false;}
   updateInstances();

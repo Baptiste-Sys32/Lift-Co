@@ -13,3 +13,23 @@ Circulating lifts require the correct destination station, incoming passenger la
 The guest retains the assigned seat throughout the exit animation. The seat is freed only on reaching the platform, and the interpolation follows the moving cabin. Platform heights are used at unloading and while waiting, preventing guests from dropping into the deck. Legacy circulating lift arrival gates and platform sides now consistently describe the named destination station in both directions. Missing carriers are handled by relocating the guest through the existing reset path.
 
 Focused isolated scenarios cover six lift families, rotated terminals, passenger mid-stations, both side IDs, perimeter paths, old footpath detours, three pistes sharing a station, opposite-side returns and V3 reload. Door scenarios cover closed and partial opening, wrong stations, departure lanes and closing dwell. Guest scenarios verify retained seats during unloading, platform touchdown, physical movement around the terminal and direct continuation to the selected piste side. Native legacy gate definitions are inspected in both directions. Existing skier motion, snow approaches, nature planting and construction history scenarios remain checked. No repository test suite was added or run. Browser visual review and device performance remain unverified when browser control is unavailable.
+
+## Explicit lift transfers
+
+In **Pistes**, choose **Connect lifts**, select the departure station and the station on the next lift, then **Preview path**. The game chooses the shortest walkable connection between their exterior access ports. Review it in the normal construction transaction and choose **Build**. The path can be renamed, adjusted, closed or deleted like other footpaths. Cancel, local Undo/Redo, session history and the existing backup/save gate apply.
+
+Connections are bidirectional and explicit. Guests can ride one lift, walk to the next, continue uphill, ski down and return home when the complete outing suits their ability. Proximity alone never creates a connection. Several paths and pistes may connect to the same station.
+
+The first implementation uses a 3 m wide path on existing ground, without new earthworks. It routes around station, tower and building footprints with 3 m clearance from the path centre during generation. The compiled curve retains at least half the widest authored path width plus 0.65 m of clearance. It considers stations within 400 m, limits the generated path to 500 m and rejects walking segments above 60% gradient. Corners use circular tangent bends, reduced in radius where needed to keep the full walking corridor clear of protected footprints. Rendering and guest movement use the same compiled curve. Failed proposals explain the problem and leave the resort unchanged. A manually drawn footpath is still available for longer or more complex routes.
+
+Transfers store their endpoints and a `liftTransfer` flag in existing V3 `paths` records. On subsequent edits, missing endpoints, blocked geometry or excessive walking grades stop construction from being applied. A transfer made invalid by a separate lift edit is shown in red and excluded from guest routing until adjusted or closed. Guests affected by a newly blocked transfer are returned home through the existing route-change handling.
+
+## Visible station approaches
+
+Saved and newly drawn footpaths now use rounded circular bends without changing their authored points, identities or explicit connections. Existing paths improve on reload without rebuilding. Wider paths narrow to 3 m over the final 6 m at a station.
+
+Every connected station endpoint extends visibly from its exterior access ring toward the actual boarding and unloading approaches. These packed-snow forecourts follow the same station walking waypoints as guests, route around nearby protected footprints, and stop at the first platform contact. Timber paths retain their boards and meet the packed snow at their ends. Shared station approaches are drawn once per station access and boarding/unloading branch, owned by a connected path for picking. Removing the last owning connection removes its approach.
+
+Approaches are derived scene geometry, not extra saved routes or proximity connections. Existing V3 saves and endpoint IDs remain valid. Full browser appearance and tablet performance need device review; isolated checks cover the production geometry and navigation compilation.
+
+The local station-flow increment now owns explicit queue lanes and exit corridors. Solo uses its shared passenger floor and door plan instead of the generic terminal-envelope detour. Its original station-side IDs remain valid. See [station flow](station-flow.md).

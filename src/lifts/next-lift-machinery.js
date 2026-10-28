@@ -2,13 +2,14 @@
 // Geometry is estimated from the report photos, not manufacturing drawings.
 window.LiftCoStudyMachinery={createFactory(T,h){
  const {geo,mesh,box,beam,cylinder,pipe,steel,dark,rubber,yellow}=h;
+ const sharedWheels=window.LiftCoWheelParts?.createFactory(T);
  const alloy=new T.MeshStandardMaterial({color:0xc6ccc7,metalness:.72,roughness:.38}),cast=new T.MeshStandardMaterial({color:0x788783,metalness:.6,roughness:.5}),red=new T.MeshStandardMaterial({color:0x98473e,metalness:.3,roughness:.6});
  function disc(key,r,depth,hole,holes=0){return geo(key,()=>{const s=new T.Shape();s.absarc(0,0,r,0,Math.PI*2,false);const bore=new T.Path();bore.absarc(0,0,hole,0,Math.PI*2,true);s.holes.push(bore);for(let i=0;i<holes;i++){const a=i/holes*Math.PI*2,p=new T.Path();p.absarc(Math.cos(a)*r*.65,Math.sin(a)*r*.65,r*.14,0,Math.PI*2,true);s.holes.push(p);}const g=new T.ExtrudeGeometry(s,{depth,bevelEnabled:true,bevelSize:.007,bevelThickness:.005,bevelSegments:1,curveSegments:10});g.translate(0,0,-depth/2);return g;});}
  function boltRing(parent,{axis='x',radius=.15,count=6,offset=.045,size=.022,material=alloy}={}){
   const geometry=geo('bolts'+[axis,radius,count,offset,size],()=>{const positions=[],normals=[];for(const sign of [-1,1])for(let i=0;i<count;i++){const a=i/count*Math.PI*2,g=new T.CylinderGeometry(size,size,.024,6);if(axis==='x'){g.rotateZ(Math.PI/2);g.translate(sign*offset,Math.cos(a)*radius,Math.sin(a)*radius);}else g.translate(Math.cos(a)*radius,sign*offset,Math.sin(a)*radius);const b=g.toNonIndexed(),p=b.attributes.position,n=b.attributes.normal;positions.push(...p.array);normals.push(...n.array);g.dispose();b.dispose();}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));return g;});return mesh(parent,geometry,material);
  }
  function sheave(parent,x,y,z){
-  const root=new T.Group();root.name='Cast sheave / rubber groove / bolted hub';root.position.set(x,y,z);parent.add(root);
+  const root=new T.Group();root.name='Cast sheave / rubber groove / bolted hub';root.position.set(x,y,z);parent.add(root);if(sharedWheels){sharedWheels.fill(root,{radius:.322});root.userData.radius=.322;root.userData.axialHalfWidth=.17;return root;}
   const profile=[[.266,-.12],[.33,-.12],[.35,-.09],[.35,-.065],[.31,-.035],[.31,.035],[.35,.065],[.35,.09],[.33,.12],[.266,.12]].map(([r,a])=>new T.Vector2(r,a));
   mesh(root,geo('cast-sheave-rim',()=>{const g=new T.LatheGeometry(profile,36);g.rotateZ(Math.PI/2);return g;}),alloy);
   const web=mesh(root,disc('sheave-web',.269,.045,.084,6),cast);web.rotation.y=Math.PI/2;

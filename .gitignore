@@ -8,3 +8,4 @@ credentials
 *.keystore
 archive/
 .opencodeignore
+docs/vps-operations.local.md

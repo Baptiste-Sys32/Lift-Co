@@ -6,10 +6,17 @@ Local village milestone: [construction, shuttle and resident specification](docs
 Start building from the dedicated **Village** tab. See the [placement guide](docs/village-workbench.md).
 The original resort (`index.html`) remains unchanged.
 
+Footpaths now use **packed snow** by default. Select a path and choose **Timber** under **Path surface** for a wooden walkway. Existing paths update on reload. [Design and implementation notes](docs/footpath-studies.md).
+
+Use **Pistes > Connect lifts** to preview an explicit walking transfer between two lift stations. Overlapping pistes share their outer boundary posts. See [station access](docs/station-access.md) and [automatic pistes](docs/automatic-pistes.md).
+
+Click a cabin, chair or station to open **Lift inspection**, or use **Inspect lift**. Follow, Passenger, Platform and Cable cameras share a compact live panel. Older cabin interiors and station wheels have been improved. [Details and verification](docs/lift-inspection.md).
+
 ## Start here
 
 | Page | Purpose |
 | --- | --- |
+| [Footpath studies](designs/footpaths.html) | Three walking-path designs on snow: packed snow, alpine gravel and timber. Compare with walkers and evening light. |
 | [Bus coachworks](designs/bus-showroom.html) | Five detailed bus designs, including articulated and double-articulated models. Bend, doors, interiors, winter kits and a same-scale fleet comparison. |
 | [Station variants workshop](designs/station-variants.html) | Four approved station directions under refinement: Fixed B, Gondola B, Tramway B and Funitel C. Detachable chairs unselected. Closed building shells, supported machinery, animated arrivals and cutaways. [Research notes](docs/station-variants.md). |
 | [empty-map.html](empty-map.html) | Current game: Upper Snowfields V4, 3.6 km terrain, thirteen buildable lift choices, scenery, construction/removal, flight controls and a hideable UI. No prebuilt lifts. |
@@ -72,7 +79,7 @@ Jaillet V4 has a round footprint, a smaller base, fuller sides and curved should
 ## Folder guide
 
 ```text
-ski-lift/
+Lift-Co/
 ├── README.md                  Project navigation - this file
 ├── index.html                 Original resort
 ├── empty-map.html             Large blank map / construction
@@ -124,3 +131,13 @@ Tree generation reads `assets/models/snowy-trees.glb` and writes `assets/generat
 Historical `.bak` files are kept in `archive/backups/` as original snapshots. Their embedded paths describe their original layout; restore and adapt them before using them as pages.
 
 Automatic piste construction in the local sandbox: [piste atelier](docs/automatic-pistes.md).
+
+Next: [V5 guest activity implementation plan](docs/v5-implementation-plan.md).
+
+[Settings and interface scale](docs/interface-settings.md): Interface and Graphics categories with browser-local UI sizing.
+
+Guest movement uses articulated walking steps, skate pushes and braking poses. See [guest animation](docs/guest-animation.md) for behavior and verification limits.
+
+Click a guest in the local sandbox to explore on foot or skis, board a lift directly, or join its queue. See [guest possession](docs/guest-possession.md) for controls and current limits.
+
+Local station flow now has automatic queue/exit lanes and barriers, with corrected Solo passenger entrances, exits and machinery separation. See [station flow](docs/station-flow.md).

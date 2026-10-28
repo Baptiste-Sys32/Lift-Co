@@ -1,6 +1,6 @@
 import * as T from 'three';
 import {mergeGeometries} from '../../assets/vendor/three/BufferGeometryUtils.js';
-import {referenceFactory} from './station-reference-buildings.js?v=polish-20261020-1';
+import {referenceFactory} from './station-reference-buildings.js?v=4.4.0';
 
 // Approved visual architecture only. Cable routing remains owned by each runtime.
 function create(style,{length=26,boardingY=.52,radius=2.2,role='valley',fixed=false,deckEnd=23,deckOuter=7.55,portalHeight=14.2}={}){
