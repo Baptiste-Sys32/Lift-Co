@@ -103,3 +103,4 @@ Initial direction, not accepted: snow-laden, irregular alpine firs; friendly pad
 
 - User rejected pale hats against snow. Changed Spruce's ivory helmet to ochre and Berry's cream beanie to deep burgundy with copper trim in src/resort/guest-model.js. Other outfits, geometry, fit and animation remain unchanged.
 - Updated model cache queries and regenerated the offline before/after/outfit images. Syntax and targeted color-only source checks pass; no repository test suite added or run. Commit/push this palette correction; VPS untouched.
+- Palette preview follow-up: completed both offline renders after the color-only commit and refreshed the comparison/outfit contact sheets. Geometry resource counts remain unchanged.
