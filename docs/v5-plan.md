@@ -7,7 +7,7 @@ V5 is an aesthetic checkpoint: original snow-covered trees, finished stylized gu
 - [x] Research canonical app IDs, screenshots, capsules, community galleries and available reviews before modeling.
 - [x] Recover a permanent working baseline and preserve incomplete station-flow sources separately.
 - [x] Trees: six original normalized prototypes, evergreen branch silhouettes and snow caps within existing instancing budget.
-- [ ] Skiers: rounded clothing, goggles and coherent winter equipment using existing rig anchors and poses.
+- [x] Skiers: rounded clothing, goggles and coherent winter equipment using existing rig anchors and poses.
 - [ ] UI: compact slate panels, clear controls and restrained accents, preserving IDs and all functions.
 - [ ] Verify syntax, dependency availability, rig/scenery invariants and V4 document loading with focused checks.
 - [ ] Browser acceptance: empty error overlay, full guest journey, laptop frame rate and tablet layout. Requires an available browser; do not mark accepted from CPU-only checks.
@@ -34,3 +34,6 @@ Direction: snow-laden, irregular alpine firs; friendly padded winter figures wit
 
 - Trees: added tools/build-v5-trees.py, regenerated assets/generated/tree-pack.js and added optional vertex colors to empty-map.html asset loading. Six deterministic irregular firs use dark branch undersides, inset snow shelves and exposed tapered trunks. Existing transforms, placement RNG, six instance buckets and scenery editing hooks are unchanged. No tree texture or per-frame updates. Browser acceptance pending.
 - Tree budget: 212 triangles per prototype (1,272 total), below the original six-prototype total of 1,324. Six draw buckets retained. Decoded positions, indices, colors, ground origins, height=1 and upward snow normals checked.
+
+- Characters: src/resort/guest-model.js replaces appearance at the existing makeSkier attachment point in empty-map.html. Original torso/head/upperBody/arm/elbow/leg/seat anchors and all movement code retained. Shared padded jacket with collar, zipper and pockets; integrated dark goggle band, amber lens, four skin palettes, fuller sleeves and rounded seated trouser legs. Details merge into existing meshes, adding no draw calls. Geometry cached per Three instance. Boots and ski contacts remain unchanged. Visual and frame-rate acceptance pending.
+- Character verification: focused isolated Node/Three construction of 120 actual makeSkier instances passed finite geometry, color attribute counts, original upper-body offset, two animated leg chains, six seated-leg children and head parenting. All guests share the jacket prototype. No repository test suite added or run.

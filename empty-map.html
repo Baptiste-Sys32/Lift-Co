@@ -113,6 +113,7 @@
 <script src="./src/resort/shuttle.js?v=village-polish-2"></script>
 <script src="./src/resort/village-tools.js?v=4.2.3"></script>
 <script src="./src/resort/operations.js?v=4.3.0"></script>
+<script src="./src/resort/guest-model.js?v=5.0.0"></script>
 <script src="./src/resort/guest-boots.js?v=4.3.7"></script>
 <script src="./src/resort/ski-motion.js?v=4.3.7"></script>
 <script src="./src/resort/guest-animation.js?v=4.3.8"></script>
@@ -1357,7 +1358,7 @@ function makeSkier() {
   seatedLegs.visible=false;g.add(seatedLegs);
   scene.add(g);
   const skier={ g, legs, seatedLegs, bootGeometry, bootMaterial, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: lifts.length?skiers.length % lifts.length:0, ticket: nextTicket++, route: null, distance: 0 };
-  window.LiftCoSkiMotion.attachRig(THREE,skier);return skier;
+  window.LiftCoSkiMotion.attachRig(THREE,skier);window.LiftCoGuestModel.dress(THREE,skier,{helmet:helm});return skier;
 }
 function spawnSkier() {
   if(!lifts.length||resortDocument.buildings.length||skiers.length>=120)return;
