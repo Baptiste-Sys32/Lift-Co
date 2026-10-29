@@ -6,7 +6,7 @@ V5 is an aesthetic checkpoint: original snow-covered trees, finished stylized gu
 
 - [x] Research canonical app IDs, screenshots, capsules, community galleries and available reviews before modeling.
 - [x] Recover a permanent working baseline and preserve incomplete station-flow sources separately.
-- [ ] Trees: six original normalized prototypes, evergreen branch silhouettes and snow caps within existing instancing budget.
+- [x] Trees: six original normalized prototypes, evergreen branch silhouettes and snow caps within existing instancing budget.
 - [ ] Skiers: rounded clothing, goggles and coherent winter equipment using existing rig anchors and poses.
 - [ ] UI: compact slate panels, clear controls and restrained accents, preserving IDs and all functions.
 - [ ] Verify syntax, dependency availability, rig/scenery invariants and V4 document loading with focused checks.
@@ -31,3 +31,6 @@ Direction: snow-laden, irregular alpine firs; friendly padded winter figures wit
 - Research: inspected appdetails and twelve full-resolution Steam screenshots. Extracted tree, character and UI observations above before modeling. Neither game has published user reviews on its store page.
 - Recovery: localhost had been serving a temporary published checkpoint because the development copy lacked 13 scripts, including two station-flow modules unavailable on the VPS. Restored that same working published baseline into the permanent repository. Preserved differing incomplete development sources in ignored archive/pre-v5-incomplete-source. docs/v5-recovery.json records restored files. This is baseline recovery, not a lift redesign. The recent station-flow increment remains unavailable and is not represented as completed V5 work.
 - Research follow-up: both community screenshot galleries returned HTTP 200 but no additional attributable close model studies were established. Header capsules were inspected as promotional art only. Reference imagery is not bundled into the game.
+
+- Trees: added tools/build-v5-trees.py, regenerated assets/generated/tree-pack.js and added optional vertex colors to empty-map.html asset loading. Six deterministic irregular firs use dark branch undersides, inset snow shelves and exposed tapered trunks. Existing transforms, placement RNG, six instance buckets and scenery editing hooks are unchanged. No tree texture or per-frame updates. Browser acceptance pending.
+- Tree budget: 212 triangles per prototype (1,272 total), below the original six-prototype total of 1,324. Six draw buckets retained. Decoded positions, indices, colors, ground origins, height=1 and upward snow normals checked.

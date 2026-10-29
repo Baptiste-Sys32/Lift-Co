@@ -54,7 +54,7 @@
 <section id="buildProfile" hidden><div class="row spread"><span class="eyebrow">LINE PROFILE / DRAG A DOT TO SET TOWER HEIGHT</span><span id="profileLegend" class="mono">Snow / Rope / Cabin floor</span></div><svg id="mountainProfile" viewBox="0 0 1000 180" role="img" aria-label="Terrain and editable lift profile"></svg></section>
 <div id="saveNotice" role="status" hidden>Resort saved.</div>
 <div id="err"></div>
-<script src="./assets/generated/tree-pack.js"></script>
+<script src="./assets/generated/tree-pack.js?v=5.0.0"></script>
 <script src="./assets/data/terrain-heightmap.js"></script>
 <script src="./src/terrain/mountain-designs.js?v=3"></script>
 <script src="./src/terrain/twin-summit-variants.js?v=3"></script>
@@ -551,8 +551,9 @@ const forestPlacements=[],forestPrototypes=[];
 {
  const pack=window.LIFT_TREE_ASSETS;
  function decode(encoded,Type){const bytes=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0));return new Type(bytes.buffer);}
- const palette=new THREE.TextureLoader().load(pack.texture);palette.colorSpace=THREE.SRGBColorSpace;palette.flipY=false;palette.magFilter=THREE.NearestFilter;palette.minFilter=THREE.NearestFilter;palette.generateMipmaps=false;
- const material=new THREE.MeshStandardMaterial({map:palette,roughness:.95,metalness:0});
+ const palette=pack.texture?new THREE.TextureLoader().load(pack.texture):null;
+ if(palette){palette.colorSpace=THREE.SRGBColorSpace;palette.flipY=false;palette.magFilter=THREE.NearestFilter;palette.minFilter=THREE.NearestFilter;palette.generateMipmaps=false;}
+ const material=new THREE.MeshStandardMaterial({map:palette,vertexColors:!!pack.vertexColors,roughness:.95,metalness:0});
  const groves=[[-139,74],[-79,81],[70,81],[151,35],[-163,0],[-131,-59],[141,-63],[-110,-121],[113,-135],[-58,122],[57,142],[-275,145],[270,125],[-290,-55],[285,-110],[-185,-240],[182,-260],[-100,280],[160,290],[-350,-180],[355,-220],[-435,270],[431,245],[-420,-330],[420,-330],[-175,430],[170,420]];
  const buckets=pack.variants.map(()=>[]),forestRandom=seededRandom(seed+'-woodland');
  const occupied=new Map();
@@ -576,7 +577,7 @@ const forestPlacements=[],forestPrototypes=[];
  const dummy=new THREE.Object3D();
  for(let i=0;i<pack.variants.length;i++){
   const data=pack.variants[i],geometry=new THREE.BufferGeometry();
-  geometry.setAttribute('position',new THREE.BufferAttribute(decode(data.position,Float32Array),3));geometry.setAttribute('normal',new THREE.BufferAttribute(decode(data.normal,Float32Array),3));geometry.setAttribute('uv',new THREE.BufferAttribute(decode(data.uv,Float32Array),2));geometry.setIndex(new THREE.BufferAttribute(decode(data.index,Uint16Array),1));geometry.computeBoundingSphere();
+  geometry.setAttribute('position',new THREE.BufferAttribute(decode(data.position,Float32Array),3));geometry.setAttribute('normal',new THREE.BufferAttribute(decode(data.normal,Float32Array),3));geometry.setAttribute('uv',new THREE.BufferAttribute(decode(data.uv,Float32Array),2));geometry.setIndex(new THREE.BufferAttribute(decode(data.index,Uint16Array),1));if(data.color)geometry.setAttribute('color',new THREE.BufferAttribute(decode(data.color,Float32Array),3));geometry.computeBoundingSphere();
   forestPrototypes.push({geometry,material});
   const trees=new THREE.InstancedMesh(geometry,material,buckets[i].length);
   buckets[i].forEach((tree,j)=>{dummy.position.set(tree.x,tree.y-.08,tree.z);dummy.rotation.set(0,tree.angle,0);dummy.scale.set(tree.height*tree.width,tree.height,tree.height*tree.width);dummy.updateMatrix();trees.setMatrixAt(j,dummy.matrix);});
