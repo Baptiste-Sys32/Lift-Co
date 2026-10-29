@@ -1,0 +1,556 @@
+{
+  "researched": "2026-10-29",
+  "purpose": "Local visual analysis, no reference assets shipped in game",
+  "sources": [
+    {
+      "id": "4493130-s00",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/e1f1552510c7a709bd246dbfadca4ca0bb57857d/ss_e1f1552510c7a709bd246dbfadca4ca0bb57857d.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-0.jpg",
+      "inspected": true,
+      "sha256": "23c4bce3c70de88dfa160d70d6ca905de8a5405efb66e927c0b9c205d06f726c"
+    },
+    {
+      "id": "4493130-s01",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/97f02bc32567f50e5d8ec7ca5292bbaf9319378f/ss_97f02bc32567f50e5d8ec7ca5292bbaf9319378f.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-1.jpg",
+      "inspected": true,
+      "sha256": "59bfe86ca305b6d98987b5151bb4f0eda304cd6f5becd1dd2885ed2349808c91"
+    },
+    {
+      "id": "4493130-s02",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/8df6dd5900788868e31d80de0ac522e5f0e24b8a/ss_8df6dd5900788868e31d80de0ac522e5f0e24b8a.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-2.jpg",
+      "inspected": true,
+      "sha256": "a6c38849835251fc83ba89a5ce42c0d5321d2b262ba20fd2272d44f88758837b"
+    },
+    {
+      "id": "4493130-s03",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/8f6c11a2a5fd67ab72b7c90c067606582434812f/ss_8f6c11a2a5fd67ab72b7c90c067606582434812f.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-3.jpg",
+      "inspected": true,
+      "sha256": "01f7252479b959b25fde2bb2366556a56ef82af52340270c8d4375fd4b9ad6bf"
+    },
+    {
+      "id": "4493130-s04",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/a3122ba0bb04e5d2d94e18385c5a4452e6e95c17/ss_a3122ba0bb04e5d2d94e18385c5a4452e6e95c17.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-4.jpg",
+      "inspected": true,
+      "sha256": "424537f10019cadccefd35c21c81e19426ac24cab7588afbc0db46a48f3807e0"
+    },
+    {
+      "id": "4493130-s05",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/a7def38d037d2400e8efc573479c5ab0ad14ac0b/ss_a7def38d037d2400e8efc573479c5ab0ad14ac0b.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-5.jpg",
+      "inspected": true,
+      "sha256": "9b7650f2e8261f1394a0eb523387372d9053c249931fe1304b1c1b58f91c7ecb"
+    },
+    {
+      "id": "4493130-s06",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/91b302e7744ca6e5c32c5dd55ea7026ab506c7ad/ss_91b302e7744ca6e5c32c5dd55ea7026ab506c7ad.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-6.jpg",
+      "inspected": true,
+      "sha256": "158dd5d1f82180a2df81ba4eca1598f2bad4bfbafac73572fc38fb5947cd082a"
+    },
+    {
+      "id": "4493130-s07",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4493130/0c76932da3d4bdbcb058e1edb74d8f203b4346fc/ss_0c76932da3d4bdbcb058e1edb74d8f203b4346fc.1920x1080.jpg?t=1792696424",
+      "local": "archive/v5-reference-study/4493130-7.jpg",
+      "inspected": true,
+      "sha256": "b09f03456421fb8f39be1114f116492ba3cb810381b48f38df76812eaa548223"
+    },
+    {
+      "id": "4960910-s00",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/793b1fa6a67d59b4b44563119c444de8e1839098/ss_793b1fa6a67d59b4b44563119c444de8e1839098.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-0.jpg",
+      "inspected": true,
+      "sha256": "1e1d1aeec95d07da0d84317d9820d04ca2434a6d4d06bb6840d24ca772cfb2b4"
+    },
+    {
+      "id": "4960910-s01",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/eb6fa2da8475dc77e792aeb051f3885235e64c63/ss_eb6fa2da8475dc77e792aeb051f3885235e64c63.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-1.jpg",
+      "inspected": true,
+      "sha256": "27c42c73201079c42130bc523e2ea7a0a0b637fd3d9cdd2e7c2801c2146e7e5f"
+    },
+    {
+      "id": "4960910-s02",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/8a7e8fe7c32d8a2ed56567ff9ae820f74d46b634/ss_8a7e8fe7c32d8a2ed56567ff9ae820f74d46b634.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-2.jpg",
+      "inspected": true,
+      "sha256": "c1e08d567a1ac32b1718a3baae60b914a987a1550adeb18bbeac4db19012dfe1"
+    },
+    {
+      "id": "4960910-s03",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/b4bf36ef77d79890b9de97e84f70339e9c0daf4c/ss_b4bf36ef77d79890b9de97e84f70339e9c0daf4c.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-3.jpg",
+      "inspected": true,
+      "sha256": "8fa78a02c9dea70ce50b8e3895d9d9fc79cd03ee45009eaa77a30e058c7ddfc4"
+    },
+    {
+      "id": "4960910-s04",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/331802f7ab172e1f3e842802771da16df8a6f66c/ss_331802f7ab172e1f3e842802771da16df8a6f66c.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-4.jpg",
+      "inspected": true,
+      "sha256": "1f05b58446c1525f57444028b7f2daaeee1cd814ecbc270e142b1e2a16c23b79"
+    },
+    {
+      "id": "4960910-s05",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/c8616403f1328c56a6d9dbf27393f019124afcdf/ss_c8616403f1328c56a6d9dbf27393f019124afcdf.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-5.jpg",
+      "inspected": true,
+      "sha256": "ac8cef10b19c3ff661ce544e7eabedf6604dd4736822be33c3867fbdb3a39a1a"
+    },
+    {
+      "id": "4960910-s06",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/88118b7a0b0ee7aaed3bd15b95f6110dcd03993c/ss_88118b7a0b0ee7aaed3bd15b95f6110dcd03993c.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-6.jpg",
+      "inspected": true,
+      "sha256": "f6961184443238cbe47ab145f4eb38babb24060587f469043a453dc98edfc3c4"
+    },
+    {
+      "id": "4960910-s07",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/1eb9ea7665fcea7bd2636f611e1a05670fbc1232/ss_1eb9ea7665fcea7bd2636f611e1a05670fbc1232.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-7.jpg",
+      "inspected": true,
+      "sha256": "4164b5530424e4fd8e4b0a59e611c1bc406a170bcdca3cdda77596b04ee656c8"
+    },
+    {
+      "id": "4960910-s08",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/f2eae7809e7c9b1a5c861359a9c9fa4b5426ab77/ss_f2eae7809e7c9b1a5c861359a9c9fa4b5426ab77.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-8.jpg",
+      "inspected": true,
+      "sha256": "712d8f18601884aa30fbe969250cda2ea39747e8a9152fcf4206898a12ee1a08"
+    },
+    {
+      "id": "4960910-s09",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/70d3c84c1677ffd55470e4e6535028f70ea38685/ss_70d3c84c1677ffd55470e4e6535028f70ea38685.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-9.jpg",
+      "inspected": true,
+      "sha256": "266df9d545f8e14d9d2868226a98709dc9fd3ae206c34206fbf8252c49066222"
+    },
+    {
+      "id": "4960910-s10",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/aa8f901bd9112d6d4dac78502002aeae7652bc7d/ss_aa8f901bd9112d6d4dac78502002aeae7652bc7d.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-10.jpg",
+      "inspected": true,
+      "sha256": "43e4cecbd74b565dee2ebdbbe72f363eaf68ed428af72e9ac85eb1633ff7c98c"
+    },
+    {
+      "id": "4960910-s11",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/4caf43ba11a307cfbac7bf784f3a89392f008a4c/ss_4caf43ba11a307cfbac7bf784f3a89392f008a4c.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-11.jpg",
+      "inspected": true,
+      "sha256": "6e3ad11ed1612474d8be484c561bda6e8d1913bf052b067c46e552e4d63e1d15"
+    },
+    {
+      "id": "4960910-s12",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/19da15af8b67d61f3db9a77ba2bb0340f4bd305a/ss_19da15af8b67d61f3db9a77ba2bb0340f4bd305a.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-12.jpg",
+      "inspected": true,
+      "sha256": "136577ee86a4ba5fd4849d548356dc9bbb78932b0f08a6cf179da70b83b90d45"
+    },
+    {
+      "id": "4960910-s13",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/450477257ffbe04793ca0b74db25a67d533dde96/ss_450477257ffbe04793ca0b74db25a67d533dde96.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-13.jpg",
+      "inspected": true,
+      "sha256": "1c7d001b45727ca24dd851d82f4c3a85c079303069ea8e2fc06a96a7b670fd1e"
+    },
+    {
+      "id": "4960910-s14",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/b455b16912fbec5b5ecc5e2577a5327b6724c6c1/ss_b455b16912fbec5b5ecc5e2577a5327b6724c6c1.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-14.jpg",
+      "inspected": true,
+      "sha256": "e2c4b8bf6701b9826d5e40d49c303c8d903c7f299381d70b72c12ac74c4b0eb0"
+    },
+    {
+      "id": "4960910-s15",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/85ceca0970f4692dd2ae997ba53a2137176959e3/ss_85ceca0970f4692dd2ae997ba53a2137176959e3.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-15.jpg",
+      "inspected": true,
+      "sha256": "2e8011321d28b9888f03acf5cc5e8d8e0fd8c41cfa5030789c4e1d053428ecd3"
+    },
+    {
+      "id": "4960910-s16",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/fe56ffb93ee16c5c2abbecada27b8f054dd64b60/ss_fe56ffb93ee16c5c2abbecada27b8f054dd64b60.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-16.jpg",
+      "inspected": true,
+      "sha256": "38ed464bb811f39585712cac7eec24fefeeedf3553c5521d3ac8df5f75afb555"
+    },
+    {
+      "id": "4960910-s17",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/df85def75d3e0f3df5ea34aaa21cc1118a3090c6/ss_df85def75d3e0f3df5ea34aaa21cc1118a3090c6.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-17.jpg",
+      "inspected": true,
+      "sha256": "5dfaf67d9bb4bdb73581f9262facc77b923d95c171dab5a9ed23f23cee232344"
+    },
+    {
+      "id": "4960910-s18",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/c1a52d70cfdcf58238188cbb077cb55762d0bec7/ss_c1a52d70cfdcf58238188cbb077cb55762d0bec7.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-18.jpg",
+      "inspected": true,
+      "sha256": "75b3989666039ecd3dfd3f4b3fa81d563fed4ed4ee78e576627042b5a4f6021a"
+    },
+    {
+      "id": "4960910-s19",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/125fb01a1deb23c805197775025b411682f89fbe/ss_125fb01a1deb23c805197775025b411682f89fbe.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-19.jpg",
+      "inspected": true,
+      "sha256": "9413c094164d59f38b0297784a69d1bf7d9748a6bb7be507854f12b941e11ccb"
+    },
+    {
+      "id": "4960910-s20",
+      "game": "Pinebrook Ski Resort",
+      "type": "official screenshot",
+      "url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4960910/3b4d435eba58fa8ee1000967dc8c0b0ca49e4e51/ss_3b4d435eba58fa8ee1000967dc8c0b0ca49e4e51.1920x1080.jpg?t=1791811158",
+      "local": "archive/v5-reference-study/4960910-20.jpg",
+      "inspected": true,
+      "sha256": "1fe59f4049fec15b0370dc0828be8e2a7b3e741803f0005638dedb2a96a34823"
+    },
+    {
+      "id": "press-apres-patio-guests",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/apres-patio-guests.jpg",
+      "local": "archive/v5-reference-study/press-apres-patio-guests.jpg",
+      "inspected": true,
+      "sha256": "70334a0541ee062f4897745ad2ecd4742acd0b7516fdc9cf08d1100830db43d7"
+    },
+    {
+      "id": "press-base-village-apres-crowd",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/base-village-apres-crowd.jpg",
+      "local": "archive/v5-reference-study/press-base-village-apres-crowd.jpg",
+      "inspected": true,
+      "sha256": "7b3bece4c5637436c8f04e7024cbc4be8be1281a32976d4ffb4185327ce9a4bf"
+    },
+    {
+      "id": "press-cabin-porch-dusk",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/cabin-porch-dusk.jpg",
+      "local": "archive/v5-reference-study/press-cabin-porch-dusk.jpg",
+      "inspected": true,
+      "sha256": "929b44522ae1b17434b5173906b62bb42ead1d6ed1cafc9dc8e0f172752b5976"
+    },
+    {
+      "id": "press-chairlift-ride-view",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/chairlift-ride-view.jpg",
+      "local": "archive/v5-reference-study/press-chairlift-ride-view.jpg",
+      "inspected": true,
+      "sha256": "d27d3a9c031ca30a491df8012d001c8f91b1b74f5e3145abe53730cd75450537"
+    },
+    {
+      "id": "press-gp_build-catalog",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_build-catalog.jpg",
+      "local": "archive/v5-reference-study/press-gp_build-catalog.jpg",
+      "inspected": true,
+      "sha256": "fe454a498fad7f78c0d6ec2fff2c297478e847526d459a81ac08de99d6a7d16c"
+    },
+    {
+      "id": "press-gp_guest-reviews",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_guest-reviews.jpg",
+      "local": "archive/v5-reference-study/press-gp_guest-reviews.jpg",
+      "inspected": true,
+      "sha256": "ffd92d11727975b67124cbdd981f477b5bc5c05531e5ccebfe5bb11acb77b2ed"
+    },
+    {
+      "id": "press-gp_lift-management",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_lift-management.jpg",
+      "local": "archive/v5-reference-study/press-gp_lift-management.jpg",
+      "inspected": true,
+      "sha256": "d5fd0b6554e1078df7499a71ee66dce2d5d351ffaf2cf53e150ba8800f22f82a"
+    },
+    {
+      "id": "press-gp_lodging-pricing",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_lodging-pricing.jpg",
+      "local": "archive/v5-reference-study/press-gp_lodging-pricing.jpg",
+      "inspected": true,
+      "sha256": "ca48949c0210a71f78f112836001db75de89ef94139e8e8a84eabd154ff5ed24"
+    },
+    {
+      "id": "press-gp_resort-management",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_resort-management.jpg",
+      "local": "archive/v5-reference-study/press-gp_resort-management.jpg",
+      "inspected": true,
+      "sha256": "3523a7f752e56a00f8535038dd06cf668e19e39b717c1b2a0c306c4fbcad99ea"
+    },
+    {
+      "id": "press-gp_slope-difficulty-overlay",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_slope-difficulty-overlay.jpg",
+      "local": "archive/v5-reference-study/press-gp_slope-difficulty-overlay.jpg",
+      "inspected": true,
+      "sha256": "deb746e280fcbb5e2fd11b430ba7eebe4b2f423f73255b471c2f63ea2ba23c65"
+    },
+    {
+      "id": "press-gp_staff-management",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_staff-management.jpg",
+      "local": "archive/v5-reference-study/press-gp_staff-management.jpg",
+      "inspected": true,
+      "sha256": "6d094cb444688eb5ad11e9f9ec2df7909db7e346411ea65422a2ef90f2182ca7"
+    },
+    {
+      "id": "press-gp_trail-built",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_trail-built.jpg",
+      "local": "archive/v5-reference-study/press-gp_trail-built.jpg",
+      "inspected": true,
+      "sha256": "9770c03b2edfefb0e6af51114e3ecd82e9ef5a7c09523b26070703548ddc895d"
+    },
+    {
+      "id": "press-gp_trail-drawing",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_trail-drawing.jpg",
+      "local": "archive/v5-reference-study/press-gp_trail-drawing.jpg",
+      "inspected": true,
+      "sha256": "ba593b6f6a75fd015ae01bed7839a87c5afc555ca9aecc30494345aebf0c1293"
+    },
+    {
+      "id": "press-gp_trail-naming",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/gp_trail-naming.jpg",
+      "local": "archive/v5-reference-study/press-gp_trail-naming.jpg",
+      "inspected": true,
+      "sha256": "8f6fae7f9481522d0b0daf7eb8c68dcbd8d3a6574a51a2a6d7494cf26e65736e"
+    },
+    {
+      "id": "press-halfpipe-air",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/halfpipe-air.jpg",
+      "local": "archive/v5-reference-study/press-halfpipe-air.jpg",
+      "inspected": true,
+      "sha256": "d577951b59040d8365dd190125701a684e19f136a432657ff2d26a5663f15cb7"
+    },
+    {
+      "id": "press-mountain-aerial-sunburst",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/mountain-aerial-sunburst.jpg",
+      "local": "archive/v5-reference-study/press-mountain-aerial-sunburst.jpg",
+      "inspected": true,
+      "sha256": "78193a284446c529f2a2a047c69ff0f0457037f3f66085c7ccabe5e473c0f362"
+    },
+    {
+      "id": "press-skier-traverse-larches",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/skier-traverse-larches.jpg",
+      "local": "archive/v5-reference-study/press-skier-traverse-larches.jpg",
+      "inspected": true,
+      "sha256": "fbe8a932e4840e02481300d66c55c4c7f02559b9eac29562ffc947ba1aa4e8cf"
+    },
+    {
+      "id": "press-skiers-along-fence-line",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/skiers-along-fence-line.jpg",
+      "local": "archive/v5-reference-study/press-skiers-along-fence-line.jpg",
+      "inspected": true,
+      "sha256": "82d4ce52ab402a74b816f76f1eddd32efb7a1ed405a1cdb2f221c4fa41fa1b26"
+    },
+    {
+      "id": "press-terrain-park-box-slide",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/terrain-park-box-slide.jpg",
+      "local": "archive/v5-reference-study/press-terrain-park-box-slide.jpg",
+      "inspected": true,
+      "sha256": "f3507851e89e4097f73e810fb30f8f3db480aa19c18b98b7eb9ff96990013e14"
+    },
+    {
+      "id": "press-terrain-park-kicker",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/terrain-park-kicker.jpg",
+      "local": "archive/v5-reference-study/press-terrain-park-kicker.jpg",
+      "inspected": true,
+      "sha256": "dde644dc4e708515e932eceb3a6c12ea3b369091f273f0c8b65b03f6656dd7ca"
+    },
+    {
+      "id": "press-terrain-park-rails",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/terrain-park-rails.jpg",
+      "local": "archive/v5-reference-study/press-terrain-park-rails.jpg",
+      "inspected": true,
+      "sha256": "5238a1f5d22211d6920efc9b5e35a64b041e7cf0e7ab6e089aa1fb9aa0ed993d"
+    },
+    {
+      "id": "press-valley-aerial-afternoon",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/valley-aerial-afternoon.jpg",
+      "local": "archive/v5-reference-study/press-valley-aerial-afternoon.jpg",
+      "inspected": true,
+      "sha256": "ad085c25283848659eea0b3308d626c6b95cfcc15f6242213aab8f871793a57f"
+    },
+    {
+      "id": "press-valley-vista-larches",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official press screenshot",
+      "url": "https://www.skieogame.com/img/carousel/valley-vista-larches.jpg",
+      "local": "archive/v5-reference-study/press-valley-vista-larches.jpg",
+      "inspected": true,
+      "sha256": "95378784c4335dc283253e952b34c98b3b853cd1a74f8dc6edeb09560a2cf3a9"
+    },
+    {
+      "id": "skieo-trailer",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "official trailer",
+      "url": "https://www.skieogame.com/press/trailer/SkiEO_Trailer_Demo_1080p.mp4",
+      "durationSeconds": 56.933333,
+      "local": "archive/v5-reference-study/skieo-official-trailer.mp4",
+      "inspection": "2-second overview frame sampling across duration, plus exact-seek close studies at 26,27,28,29,30,40,41,42 seconds. Not a continuous real-time viewing.",
+      "sha256": "f4e15ca8a3f918973d07f0bc7eb6ad3f7716af2f6f27dd7c40b4eef18d7767b9"
+    },
+    {
+      "id": "pinebrook-trailer",
+      "game": "Pinebrook Ski Resort",
+      "type": "official Steam trailer",
+      "url": "https://video.akamai.steamstatic.com/store_trailers/4960910/732127087/f414f5736aa0b409786dce4db54ebdb7f44fcabf/1791390031/hls_264_master.m3u8?t=1791392403",
+      "durationSeconds": 123.466667,
+      "local": "archive/v5-reference-study/pinebrook-trailer-local.mp4",
+      "inspection": "4-second overview frame sampling across duration, plus exact-seek views at 0,2,3,4,52,64,80,92,100,108,116,120 seconds. Not a continuous real-time viewing.",
+      "sha256": "b431e5832290c035755e542ba1d5b914467d7dcb08b19b164589293e3cfff0c4",
+      "excludedCloseStudySeconds": [
+        0,
+        52
+      ],
+      "exclusionReason": "Black opening frame and motion-blurred transition are not shape evidence."
+    },
+    {
+      "id": "skieo-player",
+      "game": "Ski-E-O! Ski Resort Tycoon",
+      "type": "player recording",
+      "title": "The BEST Ski Resort Manager I have played! - SKI-E-O Resort Tycoon Gameplay | Strategy Lets Play",
+      "creator": "Nivarias",
+      "published": "20261017",
+      "durationSeconds": 2347,
+      "url": "https://www.youtube.com/watch?v=R-KCM3GTYDU",
+      "sampledSeconds": [
+        30,
+        90,
+        180,
+        300,
+        450,
+        600,
+        900,
+        1200,
+        1500,
+        1800,
+        2100,
+        2300
+      ],
+      "excludedSamples": [
+        30
+      ],
+      "inspection": "Sampled frames only, not watched end-to-end. Excluded samples are trailer intro or unrelated outro. No narrator claims used."
+    },
+    {
+      "id": "pinebrook-player",
+      "game": "Pinebrook Ski Resort",
+      "type": "player recording",
+      "title": "The lawsuits from the fatalities are ruining my profit | Pinebrook Ski Resort (Demo)",
+      "creator": "Wee Hours Games",
+      "published": "20261010",
+      "durationSeconds": 1306,
+      "url": "https://www.youtube.com/watch?v=-ZlrXwfqBj8",
+      "sampledSeconds": [
+        20,
+        60,
+        120,
+        180,
+        300,
+        420,
+        540,
+        660,
+        780,
+        900,
+        1080,
+        1200,
+        1290
+      ],
+      "excludedSamples": [
+        1290
+      ],
+      "inspection": "Sampled frames only, not watched end-to-end. Excluded samples are trailer intro or unrelated outro. No narrator claims used."
+    }
+  ]
+}

@@ -4,16 +4,17 @@ V5 is an aesthetic checkpoint: original snow-covered trees, finished stylized gu
 
 # Plan
 
-- [x] Research canonical app IDs, screenshots, capsules, community galleries and available reviews before modeling.
+- [x] Initial source identification.
+- [x] Deeper visual research: official press gallery, both trailers, player footage, multiple camera angles and documented uncertainty. See [research revision 2](v5-research.md) and [reference board](v5-reference-board.html).
 - [x] Recover a permanent working baseline and preserve incomplete station-flow sources separately.
-- [x] Trees: six original normalized prototypes, evergreen branch silhouettes and snow caps within existing instancing budget.
-- [x] Skiers: rounded clothing, goggles and coherent winter equipment using existing rig anchors and poses.
-- [ ] UI: compact slate panels, clear controls and restrained accents, preserving IDs and all functions.
+- [ ] Trees: revise the first prototype against research revision 2; validate ground, cabin and overview silhouettes before deriving six accepted variants.
+- [ ] Skiers: revise padded body volume, goggle frame and headwear against research revision 2; retain all rig anchors and validate standing/skiing/seated views.
+- [ ] UI: study a light compact direction using Pinebrook grouping and Ski-E-O status hierarchy. Preserve IDs and all functions. The earlier slate-only choice is superseded.
 - [ ] Verify syntax, dependency availability, rig/scenery invariants and V4 document loading with focused checks.
 - [ ] Browser acceptance: empty error overlay, full guest journey, laptop frame rate and tablet layout. Requires an available browser; do not mark accepted from CPU-only checks.
 - [ ] Optional map surfacing only after trees, skiers and UI pass browser acceptance.
 
-## Research notes (2026-10-29)
+## Initial research notes (2026-10-29, superseded by revision 2)
 
 Canonical identities verified through Steam appdetails and store pages:
 
@@ -22,7 +23,7 @@ Canonical identities verified through Steam appdetails and store pages:
 
 Both store pages report no user reviews. Review API requests returned non-JSON responses; no review claims are used. Community screenshot galleries were checked separately; availability is recorded in the log. Capsules are promotional artwork, not evidence of in-game model geometry. API metadata and six full-resolution screenshots per game were downloaded to /tmp/liftco-v5-references for inspection, not for shipping.
 
-Direction: snow-laden, irregular alpine firs; friendly padded winter figures with dark goggles and small boots; cold slate interface surfaces, snow-white text, glacier-blue selection and warm amber primary actions. Keep existing layout locations and UI scale options. No additional animated vegetation, textures or runtime geometry regeneration.
+Initial direction, not accepted: snow-laden, irregular alpine firs; friendly padded winter figures with dark goggles and small boots; cold slate interface surfaces, snow-white text, glacier-blue selection and warm amber primary actions. Keep existing layout locations and UI scale options. No additional animated vegetation, textures or runtime geometry regeneration.
 
 # Log
 
@@ -37,3 +38,13 @@ Direction: snow-laden, irregular alpine firs; friendly padded winter figures wit
 
 - Characters: src/resort/guest-model.js replaces appearance at the existing makeSkier attachment point in empty-map.html. Original torso/head/upperBody/arm/elbow/leg/seat anchors and all movement code retained. Shared padded jacket with collar, zipper and pockets; integrated dark goggle band, amber lens, four skin palettes, fuller sleeves and rounded seated trouser legs. Details merge into existing meshes, adding no draw calls. Geometry cached per Three instance. Boots and ski contacts remain unchanged. Visual and frame-rate acceptance pending.
 - Character verification: focused isolated Node/Three construction of 120 actual makeSkier instances passed finite geometry, color attribute counts, original upper-body offset, two animated leg chains, six seated-leg children and head parenting. All guests share the jacket prototype. No repository test suite added or run.
+
+
+### Research correction after user feedback
+
+- Paused model/UI work. Previous checked tree/skier items meant implementation existed, not that their style matched. Reopened both for visual revision; CPU geometry checks are not aesthetic acceptance.
+- Researched the official Ski-E-O press gallery (23 files), all Steam images (8 Ski-E-O, 21 Pinebrook), both official trailers and sampled two player recordings. 52 image files include repeated compositions. Sources, timestamps, inspection method and hashes are in docs/v5-reference-sources.json; findings/constraints in docs/v5-research.md; comparison board in docs/v5-reference-board.html. Original media and sampled frames preserved in ignored archive/v5-reference-study.
+- Corrected the first pass: Pinebrook UI is visible in later screenshots and player footage and uses light rounded windows; its people are angular, unlike Ski-E-O's padded rounded characters. A slate reskin is not a common reference style. Recommended targets remain proposals for the next pass.
+- Compared front/back/seated clothing views, cabin and ground tree views, catalogs/inspectors and normal tool states. Excluded a Ski-E-O trailer intro from independent gameplay evidence, a Pinebrook unrelated outro, and black/blurred trailer frames from shape analysis. No source topology, exact font identity or measured body proportions claimed.
+- Research-only revision. No game models, engine code, simulation, save schema, station designs, UI hooks or live game files changed in this pass. Browser visual/performance acceptance remains pending.
+- Research artifact verification: all board anchors/local resources resolve, source media hashes match the register, reference board and a full-resolution image return HTTP 200 from the current local server, and git diff --check passes. This verifies artifact integrity only; no browser rendering or game acceptance is implied.
