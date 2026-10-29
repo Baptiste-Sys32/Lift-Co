@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. V5 skier study</title><link rel="stylesheet" href="../src/styles/fir-study.css"><link rel="stylesheet" href="../src/styles/skier-study.css">
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
+</head>
+<body>
+<header><div><span class="eyebrow">V5 / SKIER STUDY 01</span><h1>A skier with winter clothes.</h1></div><a href="../empty-map.html">Back to the resort</a></header>
+<main>
+<section class="viewer" aria-label="Skier model comparison">
+ <div class="toolbar"><div role="group" aria-label="Model"><button data-model="before" aria-pressed="false">Before</button><button data-model="after" aria-pressed="true">New skier</button></div><div role="group" aria-label="Pose"><button data-pose="stand" aria-pressed="true">Stand</button><button data-pose="walk" aria-pressed="false">Walk</button><button data-pose="ski" aria-pressed="false">Ski</button><button data-pose="seat" aria-pressed="false">Sit</button></div></div>
+ <div class="toolbar secondary"><div role="group" aria-label="Viewpoint"><button data-view="front" aria-pressed="true">Front</button><button data-view="side" aria-pressed="false">Side</button><button data-view="back" aria-pressed="false">Back</button><button data-view="three" aria-pressed="false">Three-quarter</button></div><label><input id="animateSkier" type="checkbox" checked> Animate</label></div>
+ <div id="firCanvas"></div>
+ <div class="caption"><strong id="skierLabel">New skier</strong><span>Drag to orbit. Scroll to zoom.</span></div>
+ <pre id="studyError" role="alert" hidden></pre>
+</section>
+<section class="notes"><p>One clothing prototype: a padded jacket, wraparound goggles, a banded beanie and rounded mittens. It uses the existing joint positions, ski contacts and seated leg rig.</p><p>The poses use the game's walking and ski animation code. This study does not open or change a resort save. Browser performance and live lift clearance still need review.</p><details><summary>Show the geometry contact sheet</summary><p>Offline software rendering of the actual rig and mesh data, not an in-game screenshot.</p><img src="./data/skier-comparison.png" alt="Before and revised skier geometry shown standing, walking, skiing and sitting from several viewpoints"></details></section>
+</main>
+<script src="../src/resort/guest-boots.js?v=4.3.7"></script>
+<script src="../src/resort/ski-motion.js?v=4.3.7"></script>
+<script src="../src/resort/guest-animation.js?v=4.3.8"></script>
+<script src="./data/skier-before-model.js"></script>
+<script src="../src/resort/guest-model.js?v=5.0.2"></script>
+<script src="./data/skier-rig.js?v=5.0.2"></script>
+<script src="./data/skier-poses.js?v=5.0.2"></script>
+<script type="module">
+import * as T from 'three';
+import {OrbitControls} from '../assets/vendor/three/OrbitControls.js';
+const error=document.getElementById('studyError');
+function fail(e){error.hidden=false;error.textContent=e?.stack||String(e);}
+window.addEventListener('error',e=>fail(e.error||e.message));window.addEventListener('unhandledrejection',e=>fail(e.reason));
+try{
+ const scene=new T.Scene();scene.background=new T.Color(0xe2eaf0);
+ const camera=new T.PerspectiveCamera(34,1,.05,60),host=document.getElementById('firCanvas'),renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;host.append(renderer.domElement);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.15,0);controls.minDistance=2.5;controls.maxDistance=11;controls.maxPolarAngle=Math.PI*.51;controls.enableDamping=true;
+ scene.add(new T.HemisphereLight(0xebf3ff,0x76847b,2));const sun=new T.DirectionalLight(0xfff1dd,2.3);sun.position.set(-4,6,5);scene.add(sun);
+ const floor=new T.Mesh(new T.PlaneGeometry(60,60),new T.MeshStandardMaterial({color:0xe4eaed,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.04;scene.add(floor);
+ const models={before:window.LiftCoSkierStudyRig.create(T,{dress:window.LiftCoGuestModelBefore.dress}),after:window.LiftCoSkierStudyRig.create(T)};
+ const poses={};for(const [name,s]of Object.entries(models)){scene.add(s.g);poses[name]=window.LiftCoSkierStudyPose.create(T,s,camera);}models.before.g.visible=false;
+ const chair=new T.Group(),seatM=new T.MeshStandardMaterial({color:0x667986,roughness:.85}),legM=new T.MeshStandardMaterial({color:0x485d66,metalness:.35,roughness:.7});
+ function box(w,h,d,x,y,z,m){const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);o.position.set(x,y,z);chair.add(o);}
+ box(.78,.09,.60,0,.91,.18,seatM);box(.78,.63,.09,0,1.25,-.14,seatM);for(const x of [-.3,.3])for(const z of [-.05,.40])box(.045,.87,.045,x,.435,z,legM);scene.add(chair);chair.visible=false;
+ const views={front:[0,1.3,5.7],side:[5.7,1.3,0],back:[0,1.3,-5.7],three:[3.6,1.7,4.4]};
+ function view(name){camera.position.set(...views[name]);controls.target.set(0,1.15,0);controls.update();for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===name));}
+ for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>view(b.dataset.view));
+ for(const b of document.querySelectorAll('[data-model]'))b.addEventListener('click',()=>{for(const [name,s]of Object.entries(models))s.g.visible=name===b.dataset.model;for(const button of document.querySelectorAll('[data-model]'))button.setAttribute('aria-pressed',String(button===b));document.getElementById('skierLabel').textContent=b.dataset.model==='after'?'New skier':'Before';});
+ for(const b of document.querySelectorAll('[data-pose]'))b.addEventListener('click',()=>{for(const p of Object.values(poses))p.set(b.dataset.pose);chair.visible=b.dataset.pose==='seat';for(const button of document.querySelectorAll('[data-pose]'))button.setAttribute('aria-pressed',String(button===b));});
+ new ResizeObserver(()=>{const r=host.getBoundingClientRect();camera.aspect=r.width/r.height;camera.updateProjectionMatrix();renderer.setSize(r.width,r.height);}).observe(host);
+ const clock=new T.Clock();view('front');renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05);if(document.getElementById('animateSkier').checked)for(const p of Object.values(poses))p.update(dt);controls.update();renderer.render(scene,camera);});
+}catch(e){fail(e);}
+</script>
+</body></html>
