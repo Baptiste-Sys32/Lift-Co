@@ -1,0 +1,144 @@
+/* Current sandbox only: readable actions, concise panels, optional help. */
+.compact-ui :is(#hud,#transport,#villageDock,#graphicsDialog,#controlsDialog) button{
+ min-height:44px;min-width:44px;padding:10px 12px;border-width:1px;border-style:solid;font-family:Barlow,sans-serif;font-size:14px!important;line-height:1.3;touch-action:manipulation;
+}
+.compact-ui :is(button,input,select,summary):focus-visible{outline:3px solid #b96943;outline-offset:3px}
+.compact-ui :is(#hud,#graphicsDialog) :is(input:not([type=range]):not([type=checkbox]),select){min-height:44px;font-size:14px}
+.compact-ui #hud label{font-size:13px;color:#4b6152}
+.compact-ui #hud .brand{padding:14px 16px}
+.compact-ui #hud .brand h1{font:600 23px/1.15 Barlow,sans-serif;letter-spacing:-.4px;margin:7px 0 0}
+.compact-ui #graphicsButton{top:10px;right:10px;padding:9px}
+.compact-ui #hud .brand .eyebrow{padding-right:95px;font-size:10px;letter-spacing:1.4px}
+.compact-ui #hud .brand h1{max-width:100%}
+.compact-ui .workspace-tabs{padding:0 6px}
+.compact-ui .workspace-tabs button{padding:12px 6px;min-width:0;border-width:0 0 3px;border-radius:0}
+.compact-ui .workspace-intro{margin:15px 0 10px}
+.compact-ui :is(.village-intro,.piste-intro){padding:12px 0 9px}
+.compact-ui :is(#villagePanel h2,.piste-intro h2){font:600 22px/1.2 Barlow,sans-serif;letter-spacing:-.3px;margin:4px 0 10px}
+.compact-ui :is(.building-copy small,.shuttle-card small,#villageList small){font-size:12px;letter-spacing:.2px;color:#586e50}
+.compact-ui .building-copy strong{font-size:18px}
+.compact-ui :is(.village-section-label,#pisteWorkbench .eyebrow){font-size:11px;letter-spacing:1px;color:#5f7458}
+.compact-ui :is(#villagePanel .village-back,.piste-quiet,.secondary-action,.guide-action,.text-button){background:#fffdf7;border:1px solid #c8d1bd;border-radius:7px;color:#365b4d;padding:10px 12px;text-align:center}
+.compact-ui #villagePanel .village-back{margin:4px 0 12px}
+.compact-ui :is(#villagePanel .danger-button,#pisteWorkbench .danger-button,#hud .danger-button){display:flex;justify-content:center;align-items:center;gap:8px;background:#fff3ed;border:1px solid #cf9f8a;border-radius:7px;color:#983e28;text-align:center;padding:10px 12px}
+.compact-ui :is(#villagePanel .danger-button,#pisteWorkbench .danger-button,#hud .danger-button):hover:not(:disabled){background:#f8ded1;border-color:#b96943;color:#7c2e1b}
+.compact-ui .danger-button svg{width:19px;height:19px;flex-shrink:0}
+.compact-ui :is(#deleteVillage,#pisteDelete,#originalResort){width:100%;margin-top:16px}
+.compact-ui #villagePanel .guide-action{margin:2px 0 0;width:100%;font-weight:600}
+.compact-ui .village-guide{gap:9px;margin:8px 0 16px}
+.compact-ui #villageGuide p{font-size:13px;line-height:1.4;color:#586d50}
+.compact-ui #villageGuide strong{font-size:14px;color:#365b4d}
+.compact-ui :is(#villageDescription,#pisteMetrics,#routeSummary,#shuttleStats,.shuttle-live){font-size:13px!important;color:#536c4b!important;line-height:1.45}
+.compact-ui :is(#villageDescription,#buildingBeds,#shuttleStats,#pistePlantHint,#pisteStatus,#featureReport,#earthConflicts,#buildMessage,#draftRecoveryNotice):empty{display:none}
+.compact-ui #villageDescription{margin-bottom:12px}
+.compact-ui :is(#hud,#graphicsDialog) summary{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:10px 12px;border:1px solid #c8d1bd;border-radius:7px;background:#fffdf7;font:14px/1.35 Barlow,sans-serif;color:#365b4d;cursor:pointer;list-style:none;touch-action:manipulation}
+.compact-ui summary::-webkit-details-marker{display:none}
+.compact-ui summary::after{content:'+';font:21px Barlow,sans-serif;flex-shrink:0}
+.compact-ui details[open]>summary::after{content:'-'}
+.compact-ui .village-inventory summary>span{float:none;padding:0;font-size:12px;color:#617758}
+.compact-ui #pisteGuideList{padding:0;list-style:none}
+.compact-ui #pisteGuideList li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0;font-size:13px}
+.compact-ui #pisteGuideList li span{flex:1;min-width:0;max-width:none;overflow-wrap:anywhere}
+.compact-ui #pisteGuideList li button{float:none;flex-shrink:0}
+.compact-ui .piste-difficulties{gap:5px}
+.compact-ui .piste-difficulties button{padding:12px 2px;min-width:0;font-size:13px!important;min-height:66px}
+.compact-ui .piste-ends button{min-height:68px}
+.compact-ui .piste-nature{padding-top:1px}
+.compact-ui #pistePlantHint{min-height:0;margin:10px 0 0;font-size:13px}
+.compact-ui #pisteWorkbench .piste-test,.compact-ui #villagePanel .auto-foundation{font-size:13px!important}
+.compact-ui #pisteStatus{font-size:13px;line-height:1.45}
+.compact-ui #earthEditor>.row:nth-last-child(2),.compact-ui #earthEditor>.row:last-child{display:none}
+.compact-ui #earthEditor>h2{display:none}
+.compact-ui #earthEditor.automatic-piste-editor{padding:0;margin:0;border:0;background:none}
+.compact-ui .construction-help{gap:10px;padding:7px 12px;color:#496647;font-size:13px}
+.compact-ui .construction-dot,.compact-ui #constructionKeys{display:none}
+.compact-ui #constructionHint{flex:1;min-width:0}
+.compact-ui .construction-history{display:flex;gap:6px;margin-left:auto;flex-shrink:0}
+.compact-ui .construction-footer{padding:12px;gap:12px}
+.compact-ui .construction-footer strong{font:600 18px/1.25 Barlow,sans-serif;letter-spacing:0}
+.compact-ui #constructionStatus{font-size:13px;color:#963e28;max-height:80px}
+.compact-ui #constructionStatus:empty{display:none}
+.compact-ui #villageDock{bottom:20px}
+.compact-ui #villageDock:not([hidden])~#hint{display:none}
+.compact-ui #hint,.compact-ui #typeHelp,.compact-ui #stationStyleHelp,.compact-ui #transferClearanceHelp,.compact-ui .build-steps small{display:none!important}
+.compact-ui #transport{bottom:20px}
+.compact-ui #buildPanel{padding-bottom:10px}
+.compact-ui #buildPanel #buildHelp{font-size:14px;line-height:1.4;margin-top:12px;color:#456341}
+.compact-ui #buildPanel .draft-actions{padding-bottom:10px}
+.compact-ui #buildPanel .small{font-size:13px;line-height:1.45}
+.compact-ui #buildPanel #openLine{min-height:48px}
+.compact-ui #controlsDialog{width:min(440px,calc(100vw - 24px));max-height:85vh;overflow:auto;border:1px solid #a8b99d;border-radius:12px;padding:20px;background:#f5f2e9;color:#2c4038;box-shadow:0 20px 70px #203b3d44}
+.compact-ui #controlsDialog::backdrop{background:#193c3766}
+.compact-ui #controlsDialog header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.compact-ui #controlsDialog h2{font:600 24px Barlow,sans-serif}
+.compact-ui #controlsDialog dl{display:grid;grid-template-columns:1fr 1.4fr;gap:14px 18px;margin:0;font:14px/1.4 Barlow,sans-serif}
+.compact-ui #controlsDialog dt{color:#5e7055}.compact-ui #controlsDialog dd{margin:0;color:#2e4f3e}
+.compact-ui.building #transport{bottom:220px}
+@media(max-width:850px){.compact-ui #transport{flex-wrap:wrap}.compact-ui #villageDock .construction-footer{flex-direction:column;align-items:stretch}.compact-ui .construction-buttons{justify-content:flex-end}.compact-ui .construction-buttons>button{flex:1}.compact-ui #villageDock .construction-footer>div:first-child{width:100%}}
+@media(max-width:650px){.compact-ui #hud{width:min(275px,calc(100vw - 42px));bottom:140px}.compact-ui #toggleInterface{left:min(285px,calc(100vw - 32px))}.compact-ui #hud .brand{padding:12px}.compact-ui #hud .brand h1{font-size:22px}.compact-ui #villageDock{left:12px;right:12px;bottom:12px}.compact-ui:is(.village-edit,.piste-edit) #hud{bottom:192px;max-height:calc(100dvh - 212px)}.compact-ui .construction-help{font-size:12px}.compact-ui .construction-footer strong{font-size:16px}.compact-ui #villageDock .construction-footer{gap:8px}.compact-ui #transport{left:12px;right:12px;bottom:14px;gap:6px}.compact-ui #transport>.row{display:flex;flex:1;justify-content:space-between;gap:3px}.compact-ui #transport button{padding:10px 8px}.compact-ui #controlsDialog dl{grid-template-columns:1fr 1.25fr;gap:12px}.compact-ui #saveNotice{bottom:205px}.compact-ui.building #transport{bottom:205px}}
+
+/* Keep camera actions available while the construction toolbar replaces playback. */
+body.compact-ui.terrain-edit #transport{display:flex}
+.compact-ui:is(.terrain-edit,.building) #transport>.row:first-child{display:none}
+body.compact-ui.terrain-edit #villageDock{bottom:90px}
+@media(max-width:650px){.compact-ui.terrain-edit #hud{bottom:280px;max-height:calc(100dvh - 300px)}body.compact-ui.terrain-edit #villageDock{bottom:82px}}
+
+/* One height for ordinary actions; equal widths within each action group. */
+body.compact-ui :is(#hud,#transport,#villageDock,#graphicsDialog,#controlsDialog) button{height:44px;min-height:44px;box-sizing:border-box;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:20px;font-weight:600;vertical-align:middle}
+body.compact-ui #hud :is(.row,.object-actions,.camera-actions,.piste-plant-tools)>button{flex:1 1 0;min-width:0;margin-top:0}
+body.compact-ui :is(.mode-tabs,.workspace-tabs,.camera-actions,.object-actions,.piste-plant-tools,.construction-buttons,.construction-history){gap:8px}
+body.compact-ui #hud .mode-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 16px}
+body.compact-ui #hud .mode-tabs button{width:100%;margin:0}
+body.compact-ui #hud .workspace-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));position:sticky;top:0;z-index:2;margin:0 -4px 14px;padding:8px 4px 12px;border:0;background:var(--paper)}
+body.compact-ui #hud .workspace-tabs button{width:100%;min-width:0;padding:0 12px;justify-content:flex-start;background:#fffdf7;color:#566c59;border:1px solid #cad3c1;border-radius:8px;font-size:14px!important;box-shadow:none}
+body.compact-ui #hud .workspace-tabs button:hover:not(:disabled){background:#e8eee1;border-color:#9aae95}
+body.compact-ui #hud .workspace-tabs button.on{background:#365b4d;color:#fffdf4;border-color:#365b4d;box-shadow:none}
+body.compact-ui #hud .workspace-tabs button svg{width:19px;height:19px;flex-shrink:0}
+body.compact-ui #hud .workspace-tabs button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.compact-ui #hud #liftStats{min-height:0}
+body.compact-ui #hud #liftStats button{height:44px;min-height:44px;justify-content:flex-start;padding:0 12px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:20px!important}
+body.compact-ui #pisteWorkbench .piste-difficulties button{height:44px;min-height:44px;padding:0 4px;gap:5px;font-size:13px!important}
+body.compact-ui .piste-difficulties button i{display:inline-block;width:10px;height:10px;margin:0;flex-shrink:0}
+body.compact-ui #villagePanel .connection-tools button{height:72px;min-height:72px;padding:10px 4px}
+body.compact-ui #villagePanel .building-card{height:96px;min-height:96px;display:grid;padding:0;grid-template-columns:84px 1fr 16px;font-weight:400}
+body.compact-ui #villagePanel .shuttle-card{height:72px;min-height:72px;display:flex;padding:12px;text-align:left;justify-content:flex-start}
+body.compact-ui #pisteWorkbench .piste-ends button{height:76px;min-height:76px;padding:10px 12px;justify-content:flex-start}
+body.compact-ui #pisteWorkbench .piste-ends button small{margin-top:3px;max-height:32px;overflow:hidden}
+body.compact-ui #hud .build-steps button{height:52px;min-height:52px;justify-content:flex-start;padding:0 10px}
+body.compact-ui #hud #openLine{height:44px;min-height:44px}
+body.compact-ui #hud .danger-button{padding:0 12px}
+body.compact-ui #villageDock :is(.construction-buttons,.construction-history)>button{min-width:84px}
+@media(max-width:650px){body.compact-ui #hud .mode-tabs{padding:10px 12px}body.compact-ui #hud .workspace-tabs{gap:6px}body.compact-ui #villagePanel .building-card{grid-template-columns:74px 1fr 14px}body.compact-ui #transport button{padding:0 9px}}
+body.compact-ui #villageDock .construction-buttons>button{width:112px;min-width:112px}
+body.compact-ui #villageDock .construction-history>button{width:84px;min-width:84px}
+
+/* Scale only the interface layer. Modal settings stay at native screen size. */
+#interfaceLayer{position:fixed;left:0;top:0;transform-origin:0 0;pointer-events:none;z-index:10}
+#interfaceLayer>:is(#hud,#toggleInterface,#buildProfile,#villageDock,#err){pointer-events:auto}
+#interfaceLayer #hud{max-height:none}
+@media(max-width:650px){#interfaceLayer #hud{max-height:calc(var(--ui-viewport-height) - 160px)}body.compact-ui.building #interfaceLayer #hud{max-height:calc(var(--ui-viewport-height) - 290px)}body.compact-ui.terrain-edit #interfaceLayer #hud{max-height:calc(var(--ui-viewport-height) - 300px)}}
+body.compact-ui #graphicsDialog{background:var(--paper);color:var(--ink);border-color:#b7c6ab;border-radius:12px}
+body.compact-ui #graphicsDialog header{padding:18px 24px 14px}
+body.compact-ui #graphicsDialog h2{font:600 25px/1.2 Barlow,sans-serif;margin:0;letter-spacing:-.4px}
+body.compact-ui #graphicsDialog #gfx-close{border:1px solid #c8d1bd;border-radius:7px;background:#fffdf7;color:#365b4d;min-width:74px}
+body.compact-ui #graphicsDialog .settings-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0 24px 14px;flex-shrink:0}
+body.compact-ui #graphicsDialog .settings-categories button{width:100%;border:1px solid #c8d1bd;background:#fffdf7;color:#365b4d;border-radius:7px}
+body.compact-ui #graphicsDialog .settings-categories button[aria-selected=true]{background:#365b4d;color:#fffdf4;border-color:#365b4d}
+body.compact-ui #graphicsDialog .ui-scale-field{border:0;padding:0;margin:4px 0 14px;min-width:0}
+body.compact-ui #graphicsDialog .ui-scale-field legend{font:600 14px/1.4 Barlow,sans-serif;padding:0;margin-bottom:12px;color:#3c553f}
+body.compact-ui #graphicsDialog .ui-scale-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+body.compact-ui #graphicsDialog .ui-scale-choices button{width:100%;border:1px solid #c8d1bd;color:#365b4d;background:#fffdf7;border-radius:7px}
+body.compact-ui #graphicsDialog .ui-scale-choices button[aria-pressed=true]{border-color:#365b4d;background:#e1ead6;box-shadow:inset 0 0 0 1px #365b4d}
+body.compact-ui #graphicsDialog footer{gap:8px;background:#e9edde;border-color:#d0d8c7}
+body.compact-ui #graphicsDialog footer button{flex:1;min-width:0}
+
+@media(max-width:650px){body.compact-ui #interfaceLayer #hud{width:min(275px,calc(var(--ui-viewport-width) - 42px))}body.compact-ui #interfaceLayer #toggleInterface{left:min(285px,calc(var(--ui-viewport-width) - 32px))}body.compact-ui #interfaceLayer #saveNotice{max-width:calc(var(--ui-viewport-width) - 40px)}}
+
+/* Construction actions keep full labels at sidebar and tablet widths. */
+body.compact-ui #hud .tool-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+body.compact-ui #hud .tool-menu>button{width:100%;margin:0;padding:0 6px}
+body.compact-ui #transferEditor{margin:14px 0;padding:12px;border:1px solid #cad3c1;border-radius:8px;background:#fffdf7}
+body.compact-ui #transferEditor h2{margin:0 0 12px}
+body.compact-ui #transferEditor .row{margin-top:14px}
+body.compact-ui #transferStatus{font:13px/1.45 Barlow,sans-serif;color:#963e28;margin-top:10px}
+body.compact-ui #transferStatus:empty{display:none}

@@ -3,7 +3,7 @@ window.LiftCoStationAccess=(()=>{
  'use strict';
  const distance=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z);
  function create(ctx){
-  const T=ctx.THREE,height=ctx.height,soloCache=new WeakMap();
+  const T=ctx.THREE,height=ctx.height;
   function spec(d){return window.LiftCoLiftTypes.find(s=>s.id===d.type)||window.LiftCoLiftTypes[0];}
   function box(d,end){const kind=spec(d),ends=kind.nextModel?window.LiftCoNextAlignment.stationFrames(d).map(f=>f.end):window.LiftCoNextAlignment.ends(d),boxes=window.LiftCoPlacement.terminalBoxes(d,kind,ctx.stationSettings(d));return boxes[ends.indexOf(end)];}
   function resolve(key){for(const d of ctx.definitions())for(const end of window.LiftCoNextAlignment.ends(d)){const hub=d.id+':'+end;if(key===hub||key===hub+':left'||key===hub+':right')return{definition:d,end,hub,side:key===hub?null:key.slice(hub.length+1)};}return null;}
@@ -13,7 +13,6 @@ window.LiftCoStationAccess=(()=>{
   // Test the open rectangle interior. Walking along its boundary is permitted.
   function crosses(a,b,w,l){if(w<=0||l<=0)return false;let lo=0,hi=1;for(const [av,bv,min,max]of [[a.x,b.x,-w+1e-5,w-1e-5],[a.z,b.z,-l+1e-5,l-1e-5]]){const delta=bv-av;if(Math.abs(delta)<1e-8){if(av<=min||av>=max)return false;continue;}let p=(min-av)/delta,q=(max-av)/delta;if(p>q)[p,q]=[q,p];lo=Math.max(lo,p);hi=Math.min(hi,q);if(lo>=hi)return false;}return hi>1e-5&&lo<1-1e-5;}
   function route(d,end,start,finish){
-   if(d.type==='solo'){const signature=[...d.base,...d.top,d.stationGround?.[1],d.stationGround?.[-1],d.stationStyle].join(','),cached=soloCache.get(d);let record=cached;if(!record||record.signature!==signature){record={signature,ends:new Map()};soloCache.set(d,record);}if(!record.ends.has(end))record.ends.set(end,window.LiftCoSoloPassengers.access(T,d,end,height));return record.ends.get(end).route(start,finish);}
    const bounds=box(d,end);if(!bounds)return[start,finish];const others=(ctx.obstacles?.()||[]).filter(b=>b.stationKey!==d.id+':'+end&&Math.hypot(b.x-start.x,b.z-start.z)+Math.hypot(b.x-finish.x,b.z-finish.z)<distance(start,finish)+160);const exteriorClear=(a,b)=>window.LiftCoWalkCurves.clear(world(bounds,a),world(bounds,b),others,2.15);const a=local(bounds,start),b=local(bounds,finish),w=bounds.halfWidth+4.5,l=bounds.halfLength+4.5,kind=spec(d),enclosed=end!=='mid'&&d.stationStyle==='princesse',core=kind.reversible?0:(kind.railX||ctx.stationSettings(d).railX||3.1)+.4;
    // Native boarding platforms are walkable along one lane. Crossing lanes uses the exterior.
    if(!enclosed&&((a.x*b.x>0&&Math.min(Math.abs(a.x),Math.abs(b.x))>core)||kind.reversible&&Math.abs(a.x)<3.6&&Math.abs(b.x)<3.6)&&!crosses(a,b,core,bounds.halfLength)&&exteriorClear(a,b))return[start,finish];

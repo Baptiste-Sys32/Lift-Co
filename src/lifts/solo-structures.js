@@ -104,8 +104,8 @@ function createTower({z,groundY,route,haul,groundAt=()=>groundY}){
 
 // Timber screens and a concrete podium inspired by Stalden–Gspon (AZARCH).
 // The front contains two real, open-bottom cabin portals, not painted openings.
-function stationBuilding(root,{deck,eave,inward,groundY,z,groundAt,style}){
- const building=new T.Group(),panels=new T.Group(),passengerPlatforms=new T.Group();passengerPlatforms.name='Solo passenger thresholds and ramps';passengerPlatforms.rotation.y=inward<0?Math.PI:0;root.add(passengerPlatforms);building.name='Solo timber station hall';building.rotation.y=inward<0?Math.PI:0;building.add(panels);root.add(building);
+function stationBuilding(root,{deck,eave,inward,groundY,z,groundAt}){
+ const building=new T.Group(),panels=new T.Group();building.name='Solo timber station hall';building.rotation.y=inward<0?Math.PI:0;building.add(panels);root.add(building);
  const W=20.4,half=W/2,rear=-12,front=15.5,length=front-rear,mid=(rear+front)/2,ridge=eave+.85,portalTop=eave-1.45;
  const timber=[0xa88b66,0x9b7b57,0xb09370].map(c=>mat(c,.88,.02)),backing=mat(0x554d41,.9,.04),plinth=mat(0xc4c5b9,1,0),charcoal=mat(0x344240,.7,.3),roofM=mat(0x46514f,.72,.25),glass=new T.MeshStandardMaterial({color:0x74918b,roughness:.25,metalness:.22,transparent:true,opacity:.72,depthWrite:false,side:T.DoubleSide});
  function cladding(width,height,x,y,v,side=false){
@@ -136,27 +136,13 @@ function stationBuilding(root,{deck,eave,inward,groundY,z,groundAt,style}){
  }
  // Opaque upper walls hide the machinery; a lower ribbon lights the boarding hall.
  const glassBottom=deck+1.25,glassTop=deck+3.8;
- const accessPlan=window.LiftCoSoloPassengers;
- // Real, full-height passenger doorways on both sides of both halls.
  for(const side of [-1,1]){
-  const gaps=[accessPlan.entryU,accessPlan.exitU].map(u=>[u-accessPlan.doorWidth/2,u+accessPlan.doorWidth/2]);let previous=rear;
-  for(const [lo,hi]of [...gaps,[front,front]]){
-   const span=lo-previous;if(span>0){const midU=(previous+lo)/2;box(panels,.32,1.3,span,side*half,deck+.65,midU,plinth);const count=Math.ceil(span/3.3);for(let i=0;i<count;i++)pane(span/count-.12,glassTop-glassBottom,side*(half+.02),(glassTop+glassBottom)/2,previous+(i+.5)*span/count,true);}
-   previous=hi;
-  }
-  cladding(length,eave-glassTop,side*half,(eave+glassTop)/2,mid,true);box(panels,.42,.16,length,side*half,glassTop,mid,charcoal);
-  for(const u of [accessPlan.entryU,accessPlan.exitU]){
-   for(const edge of [-1,1])box(panels,.22,2.9,.14,side*half,deck+1.45,u+edge*accessPlan.doorWidth/2,charcoal);
-   box(panels,.36,.22,accessPlan.doorWidth+.25,side*half,deck+2.9,u,charcoal);
-   box(panels,.9,.12,accessPlan.doorWidth+.5,side*(half+.22),deck+3.08,u,roofM);
-   box(passengerPlatforms,3.4,.18,accessPlan.doorWidth,side*9.1,deck-.09,u,plinth);
-   const x0=side*(style==='faron'&&side>0?16.2:10.2),x1=side*(style==='faron'&&side>0?20.5:14.5),z0=u-accessPlan.doorWidth/2,z1=u+accessPlan.doorWidth/2;
-   const vertices=[],indices=[],columns=8,rows=4;for(let i=0;i<=columns;i++)for(let j=0;j<=rows;j++){const t=i/columns,x=x0+(x1-x0)*t,v=z0+(z1-z0)*j/rows,y=deck+(groundAt(z+inward*v,x*inward)-groundY-deck)*t;vertices.push(x,y,v);if(i<columns&&j<rows){const a=i*(rows+1)+j,b=a+rows+1;indices.push(...(side>0?[a,a+1,b,b,a+1,b+1]:[a,b,a+1,b,b+1,a+1]));}}const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();mesh(passengerPlatforms,g,plinth);
-  }
+  box(panels,.32,1.3,length,side*half,deck+.65,mid,plinth);
+  cladding(length,eave-glassTop,side*half,(eave+glassTop)/2,mid,true);
+  const bays=8,pitch=length/bays;
+  for(let i=0;i<bays;i++)pane(pitch-.12,glassTop-glassBottom,side*(half+.02),(glassTop+glassBottom)/2,rear+(i+.5)*pitch,true);
+  box(panels,.42,.16,length,side*half,glassTop,mid,charcoal);
  }
- // Cross behind the docked cabins, in front of the guarded machinery bay.
- box(passengerPlatforms,20.4,.18,1.3,0,deck-.09,accessPlan.entryU,plinth);
- building.userData.passengerDoors=[-1,1].flatMap(side=>[accessPlan.entryU,accessPlan.exitU].map(u=>({x:side*half,u,width:accessPlan.doorWidth,height:2.8})));
  // Three façade piers leave both carriage lanes open through the full lower face.
  const wing=half-7;
  for(const x of [-half+wing/2,half-wing/2]){
@@ -197,7 +183,7 @@ function stationBuilding(root,{deck,eave,inward,groundY,z,groundAt,style}){
  staticBatch(panels);building.userData.footprint={width:W,rear,front};return building;
 }
 
-function createStation({z,groundY,route,haul,inward,guideLength=12,flatArrival=false,groundAt=()=>groundY,style=null}){
+function createStation({z,groundY,route,haul,inward,guideLength=12,flatArrival=false,groundAt=()=>groundY}){
  const root=new T.Group(),frame=new T.Group(),guards=new T.Group(),head=new T.Group(),sheaves=[];root.position.set(0,groundY,z);root.add(frame,guards,head);
  head.name='Solo station rope rollers';
  const compact=inward<0&&flatArrival,frameFront=compact?15.5:guideLength+1;
@@ -219,8 +205,6 @@ function createStation({z,groundY,route,haul,inward,guideLength=12,flatArrival=f
   }
  }
  for(let u=a;u<=b+.01;u+=4.5)beam(frame,[-7.2,roof(u),u],[7.2,roof(u),u],.2,.28,M.cage);
- // Dock threshold plates meet each cabin doorway without extending along its channel.
- for(const side of [-1,1])for(const x of [3.8,6.3])box(frame,.7,.12,1.4,side*x,deck-.06,0,M.guard);
  const center=(deckA+deckB)/2;
  box(frame,7.2,.7,deckB-deckA,0,deck-.35,center,M.concrete);
  // Back anchor on solid terrain, plus exposed cantilever beams toward the cage.
@@ -233,9 +217,8 @@ function createStation({z,groundY,route,haul,inward,guideLength=12,flatArrival=f
  }
  for(const side of [-1,1]){
   box(frame,2.5,.7,deckB-deckA,side*7.4,deck-.35,center,M.concrete);
-  const gaps=[window.LiftCoSoloPassengers.entryU,window.LiftCoSoloPassengers.exitU].map(u=>[(u-1.3)*inward,(u+1.3)*inward].sort((a,b)=>a-b)).sort((a,b)=>a[0]-b[0]);
-  for(let u=deckA;u<=deckB;u+=2)if(!gaps.some(([a,b])=>u>a&&u<b))box(guards,.06,1,.06,side*8.55,deck+.5,u,M.cage);
-  let last=deckA;for(const [lo,hi]of [...gaps,[deckB,deckB]]){if(lo>last)beam(guards,[side*8.55,deck+1,last],[side*8.55,deck+1,lo],.05,.05,M.cage);last=Math.max(last,hi);}
+  for(let u=deckA;u<=deckB;u+=2)box(guards,.06,1,.06,side*8.55,deck+.5,u,M.cage);
+  beam(guards,[side*8.55,deck+1,deckA],[side*8.55,deck+1,deckB],.05,.05,M.cage);
   // Saddle brackets use the same profile and local normals as the fixed cable.
   for(let contact=Math.min(-4*inward,guideLength*inward);contact<=Math.max(-4*inward,guideLength*inward);contact+=compact?1.6:.8){
    const m=(track(contact+.01)-track(contact-.01))/.02,n=Math.hypot(1,m),r=.18,offset=r+rig.trackRadius,u=contact+offset*m/n,y=track(contact)-offset/n;
@@ -288,7 +271,7 @@ function createStation({z,groundY,route,haul,inward,guideLength=12,flatArrival=f
  }
  const haulSheaves=[];
  const machineryTop=Math.max(...Array.from({length:25},(_,i)=>roof(a+(b-a)*i/24))),frontRope=track(15.5*inward)+(rig.haulY-rig.trackY)*Math.hypot(1,(track(15.51*inward)-track(15.49*inward))/.02);
- const building=stationBuilding(root,{deck,eave:Math.max(machineryTop+.65,frontRope+1.9),inward,groundY,z,groundAt,style});
+ const building=stationBuilding(root,{deck,eave:Math.max(machineryTop+.65,frontRope+1.9),inward,groundY,z,groundAt});
  const syncRollers=packRollers(head,sheaves);staticBatch(frame);staticBatch(guards);for(const m of frame.children)if(m.material===M.concrete)m.userData.cutawayFoundation=true;return {root,sheaves,haulSheaves,building,syncRollers};
 }
 return {createTower,createStation};}};

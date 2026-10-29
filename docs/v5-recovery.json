@@ -1,0 +1,20 @@
+{
+  "baseline": "Published checkpoint recovered 2026-10-29, previously served from /tmp/liftco-recovered-preview",
+  "preserved": "archive/pre-v5-incomplete-source",
+  "restored": [
+    "empty-map.html",
+    "src/resort/station-access.js",
+    "src/resort/guest-network.js",
+    "src/resort/resort-tools.js",
+    "src/resort/interface.js",
+    "src/builder/resort-editor.js",
+    "src/lifts/station-architecture.js",
+    "src/lifts/solo-structures.js",
+    "src/lifts/solo-runtime.js",
+    "src/lifts/station-selected-refinements.js",
+    "src/lifts/station-reference-buildings.js",
+    "src/styles/lift-inspector.css",
+    "src/styles/controls.css",
+    "src/styles/guest-controller.css"
+  ]
+}

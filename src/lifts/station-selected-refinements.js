@@ -97,7 +97,7 @@ export function selectedRefinements(h){
   // Extruded concrete with actual holes. Local X is negative world Z.
   const shape=new T.Shape();shape.moveTo(-z0,0);shape.lineTo(-z1,0);shape.lineTo(-z1,y1);shape.lineTo(-z0,y0);shape.closePath();
   for(const z of [-6,0,6,12]){const cy=9.5+(z-z0)/(z1-z0)*(y1-y0),hole=new T.Path();hole.absarc(-z,cy,.37,0,2*Math.PI,true);shape.holes.push(hole);}
-  for(const u of [-3.35,3.5]){const door=new T.Path();door.moveTo(-u+1.1,.6);door.lineTo(-u+1.1,3.4);door.lineTo(-u-1.1,3.4);door.lineTo(-u-1.1,.6);door.closePath();shape.holes.push(door);}
+  if(side>0){const door=new T.Path();door.moveTo(-1,.6);door.lineTo(-1,3.25);door.lineTo(-3.4,3.25);door.lineTo(-3.4,.6);door.closePath();shape.holes.push(door);}
   const g=new T.ExtrudeGeometry(shape,{depth:.4,bevelEnabled:false,curveSegments:24});g.rotateY(Math.PI/2);mesh(shell,g,M.ivory,side*9.5-.2,0,0);
   for(const z of [-6,0,6,12]){const cy=9.5+(z-z0)/(z1-z0)*(y1-y0);const pane=cylinder(shell,.355,.035,side*9.5,cy,z,M.glass,'x');const ring=mesh(shell,new T.TorusGeometry(.38,.04,8,32),M.steel,side*9.5+side*.22,cy,z);ring.rotation.y=Math.PI/2;}
  }
@@ -120,7 +120,7 @@ export function selectedRefinements(h){
   const x0=9.7,x1=16.2,a=-5,b=11.8,floor=.6,top=5.1;
   box(shell,x1-x0,.3,b-a,(x0+x1)/2,.45,(a+b)/2,M.concrete);box(shell,x1-x0+.6,.24,b-a+.6,(x0+x1)/2,top,(a+b)/2,M.ivory);
   for(const z of [a,b]){for(const [lo,hi]of [[x0,x0+2.25],[x0+4.25,x1]])box(shell,hi-lo,top-.6,.24,(lo+hi)/2,(top+.6)/2,z,M.ivory);frameWindow(shell,{x:x0+3.25,y:1.9,z,w:1.9,height:2.6});box(shell,2.05,1.75,.24,x0+3.25,4.1,z,M.ivory);}
-  let previous=a;for(const [lo,hi]of [[-4.45,-2.25],[2.4,4.6],[b,b]]){const span=lo-previous;if(span>0){box(shell,.24,1.05,span,x1,1.125,(lo+previous)/2,M.ivory);frameWindow(shell,{x:x1+.015,y:3.25,z:(lo+previous)/2,w:span-.12,height:3.1,side:true});}previous=hi;}for(const u of [-3.35,3.5]){for(const edge of [-1,1])box(shell,.3,2.8,.14,x1,2,u+edge*1.1,M.steel);box(shell,.3,.18,2.35,x1,3.5,u,M.steel);}
+  box(shell,.24,1.05,b-a,x1,1.125,(a+b)/2,M.ivory);frameWindow(shell,{x:x1+.015,y:3.25,z:(a+b)/2,w:b-a-.3,height:3.1,side:true});
   box(shell,.25,.24,b-a,x1,4.92,(a+b)/2,M.ivory);for(const z of [a,b])box(shell,.3,top,.3,x1,top/2,z,M.ivory);
   for(const z of [a+.4,b-.4])pedestal(shell,x1,z,.9,1.1);
   stairs(shell,x0+3.25,b+1.2,2.2,.6,2.4,4,-1);stairs(shell,0,z1+1.2,2.3,.6,2.4,4,-1);

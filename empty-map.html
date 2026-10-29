@@ -15,8 +15,8 @@
 </style>
 <script type="importmap">
 { "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    "three": "./assets/vendor/three/three.module.js",
+    "three/addons/": "./assets/vendor/three/"
 } }
 </script>
 </head>
@@ -68,17 +68,16 @@
 <script src="./src/resort/foundations.js?v=3"></script>
 <script src="./src/resort/ui-settings.js?v=4.3.5"></script>
 <script src="./src/resort/graphics.js?v=4.2.0"></script>
-<script src="./src/resort/guest-controller.js?v=4.4.0"></script>
+<script src="./src/resort/guest-controller.js?v=4.3.8"></script>
 <script src="./src/resort/lift-inspector.js?v=4.3.0"></script>
 <script src="./src/resort/interface.js?v=4.2.1"></script>
 <script src="./src/lifts/tower-mast.js?v=3"></script>
 <script src="./src/lifts/wheel-parts.js?v=4.3.0"></script>
 <script src="./src/lifts/gondola-pylons.js?v=4.3.1"></script>
 <script src="./src/lifts/solo.js?v=4.3.0"></script>
-<script src="./src/lifts/solo-passengers.js?v=4.4.1"></script>
-<script src="./src/lifts/solo-structures.js?v=4.4.0"></script>
+<script src="./src/lifts/solo-structures.js?v=3"></script>
 <script src="./src/lifts/solo-machinery.js?v=3"></script>
-<script src="./src/lifts/solo-runtime.js?v=4.4.0"></script>
+<script src="./src/lifts/solo-runtime.js?v=3"></script>
 <script src="./src/lifts/solo-placement.js?v=3"></script>
 <script src="./src/lifts/next-lift-alignment.js?v=3"></script>
 <script src="./src/lifts/next-lift-machinery.js?v=4.3.0"></script>
@@ -95,11 +94,10 @@
 <script src="./src/builder/layout.js?v=3"></script>
 <script src="./src/lifts/station-designs.js?v=1"></script>
 <script src="./src/builder/draft-store.js?v=polish-20261020-1"></script>
-<script src="./src/builder/resort-editor.js?v=4.4.0"></script>
+<script src="./src/builder/resort-editor.js?v=polish-20261020-1"></script>
 <script src="./src/resort/document.js?v=4.3.4"></script>
 <script src="./src/resort/walk-curves.js?v=4.3.2"></script>
-<script src="./src/resort/station-flow.js?v=4.4.1"></script>
-<script src="./src/resort/station-access.js?v=4.4.1"></script>
+<script src="./src/resort/station-access.js?v=4.3.2"></script>
 <script src="./src/resort/piste-access.js?v=station-access-2"></script>
 <script src="./src/resort/piste-planner.js?v=piste-auto-1"></script>
 <script src="./src/resort/piste-workbench.js?v=4.1.0"></script>
@@ -119,12 +117,12 @@
 <script src="./src/resort/ski-motion.js?v=4.3.7"></script>
 <script src="./src/resort/guest-animation.js?v=4.3.8"></script>
 <script src="./src/resort/guest-walking.js?v=4.3.4"></script>
-<script src="./src/resort/guest-network.js?v=4.4.1"></script>
-<script src="./src/resort/resort-tools.js?v=4.4.0"></script>
+<script src="./src/resort/guest-network.js?v=4.3.8"></script>
+<script src="./src/resort/resort-tools.js?v=4.3.2"></script>
 <script type="module">
 import * as THREE from 'three';
 import {createShuttleModel} from './src/resort/shuttle-model.js?v=village-polish-2';
-import './src/lifts/station-architecture.js?v=4.4.0';
+import './src/lifts/station-architecture.js?v=polish-20261020-1';
 import { OrbitControls } from './assets/vendor/three/OrbitControls.js?v=pointer-capture-1';
 
 const errBox = document.getElementById('err');
@@ -1215,7 +1213,7 @@ function createLift(def,index){
   }
  }}
  window.LiftCoWorldSigns.strip(lift.root);
- return window.LiftCoStationFlow.attach(THREE,window.LiftCoOperations.attach(lift),{height:worldTerrainY,stationSettings});
+ return window.LiftCoOperations.attach(lift);
 }
 const lifts=RESORT.lifts.map(createLift);
 // Woodland closes around selected stretches of the lift, rather than a continuous

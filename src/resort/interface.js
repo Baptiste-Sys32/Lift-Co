@@ -18,7 +18,7 @@ window.LiftCoInterface=function(ctx={}){
  document.querySelector('#resortBar .place-title .eyebrow').textContent='UPPER SNOWFIELDS';document.querySelector('#workspace-lines > .section-heading .eyebrow').textContent='LIFT NETWORK';
  const headings=resort.querySelectorAll('.panel-section > .eyebrow');if(headings[0])headings[0].textContent='ATMOSPHERE';if(headings[1])headings[1].textContent='MAP & SAVES';
  const shadow=$('softShadows');shadow.closest('label').hidden=true;shadow.closest('label').nextElementSibling?.remove();
- const original=document.createElement('button');original.type='button';original.id='originalResort';original.textContent='Original resort';original.onclick=()=>window.location.assign('./index.html');resort.append(original);
+ const original=document.createElement('button');original.type='button';original.id='originalResort';original.textContent='Original resort';original.onclick=()=>window.location.assign('./original-resort.html');resort.append(original);
  const trash='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6"/></svg>';
  for(const [id,label]of [['btnDeleteLift','Delete lift'],['removeTower','Delete tower'],['confirmDeleteLift','Delete lift'],['discardLiftDraft','Delete draft'],['featureDelete','Delete route'],['pointDelete','Delete point']]){const button=$(id);if(!button)continue;button.classList.add('danger-button');button.innerHTML=trash+'<span>'+label+'</span>';}
  for(const id of ['typeHelp','stationStyleHelp','transferClearanceHelp'])if($(id))$(id).hidden=true;
