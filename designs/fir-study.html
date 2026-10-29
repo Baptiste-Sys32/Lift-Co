@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lift Co. V5 fir study</title>
+<link rel="stylesheet" href="../src/styles/fir-study.css">
+<script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
+</head>
+<body>
+<header><div><span class="eyebrow">V5 / TREE STUDY 01</span><h1>One fir, three viewpoints.</h1></div><a href="../empty-map.html">Back to the resort</a></header>
+<main>
+<section class="viewer" aria-label="Interactive fir comparison">
+ <div class="toolbar"><div role="group" aria-label="Tree version"><button data-model="before" aria-pressed="false">Before</button><button data-model="after" aria-pressed="true">New fir</button></div><div role="group" aria-label="Camera viewpoint"><button data-view="ground" aria-pressed="true">Ground</button><button data-view="lift" aria-pressed="false">Lift height</button><button data-view="overview" aria-pressed="false">Overview</button></div></div>
+ <div id="firCanvas"></div>
+ <div class="caption"><strong id="firLabel">New fir / 452 triangles</strong><span>Drag to orbit. Scroll to zoom.</span></div>
+ <pre id="studyError" role="alert" hidden></pre>
+</section>
+<section class="notes"><p>Only variant 1 changes. Eight overlapping branch tiers, rounded snow volumes and visible dark undersides. One mesh, one material. The other five variants stay unchanged.</p><p>This is a model study. In-game appearance and laptop frame rate still need browser review.</p><details><summary>Show the geometry comparison</summary><p>Offline software rendering of the same mesh data, with fixed lighting. This is not an in-game screenshot.</p><img src="./data/fir-comparison.png" alt="Before and revised fir geometry from ground, lift and overview viewpoints"></details></section>
+</main>
+<script src="./data/fir-before.js"></script>
+<script src="./data/fir-after.js?v=5.0.1"></script>
+<script type="module">
+import * as T from 'three';
+import {OrbitControls} from '../assets/vendor/three/OrbitControls.js';
+const error=document.getElementById('studyError');
+function fail(value){error.hidden=false;error.textContent=value?.stack||String(value);}
+window.addEventListener('error',event=>fail(event.error||event.message));
+window.addEventListener('unhandledrejection',event=>fail(event.reason));
+try{
+ const host=document.getElementById('firCanvas'),scene=new T.Scene();scene.background=new T.Color(0xe2eaf0);
+ const camera=new T.PerspectiveCamera(38,1,.1,200),renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;host.append(renderer.domElement);
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,6,0);controls.minDistance=12;controls.maxDistance=75;controls.maxPolarAngle=Math.PI*.51;controls.enableDamping=true;
+ scene.add(new T.HemisphereLight(0xe9f2ff,0x647067,2));const sun=new T.DirectionalLight(0xfff2dc,2.4);sun.position.set(-12,24,16);scene.add(sun);
+ const floor=new T.Mesh(new T.PlaneGeometry(160,160),new T.MeshStandardMaterial({color:0xe5ecee,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.025;scene.add(floor);
+ const material=new T.MeshStandardMaterial({vertexColors:true,roughness:.95});
+ function geometry(data){
+  const g=new T.BufferGeometry();
+  function decode(text,Type){return new Type(Uint8Array.from(atob(text),c=>c.charCodeAt(0)).buffer);}
+  for(const [key,name]of [['position','position'],['normal','normal'],['color','color']])g.setAttribute(name,new T.BufferAttribute(decode(data[key],Float32Array),3));g.setIndex(new T.BufferAttribute(decode(data.index,Uint16Array),1));g.computeBoundingSphere();return g;
+ }
+ const models={before:new T.Mesh(geometry(window.LIFT_FIR_BEFORE),material),after:new T.Mesh(geometry(window.LIFT_FIR_AFTER),material)};
+ for(const mesh of Object.values(models)){mesh.scale.setScalar(12);scene.add(mesh);}models.before.visible=false;
+ const views={ground:[15,5,27],lift:[17,15,24],overview:[22,38,24]};
+ function view(name){camera.position.set(...views[name]);controls.target.set(0,6,0);controls.update();for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===name));}
+ for(const button of document.querySelectorAll('[data-model]'))button.addEventListener('click',()=>{const key=button.dataset.model;for(const [name,mesh]of Object.entries(models))mesh.visible=name===key;for(const b of document.querySelectorAll('[data-model]'))b.setAttribute('aria-pressed',String(b===button));document.getElementById('firLabel').textContent=key==='after'?'New fir / 452 triangles':'Before / 212 triangles';});
+ for(const button of document.querySelectorAll('[data-view]'))button.addEventListener('click',()=>view(button.dataset.view));
+ new ResizeObserver(()=>{const {width,height}=host.getBoundingClientRect();camera.aspect=width/height;camera.updateProjectionMatrix();renderer.setSize(width,height);}).observe(host);
+ view('ground');renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);});
+}catch(e){fail(e);}
+</script>
+</body>
+</html>
