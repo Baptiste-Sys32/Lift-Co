@@ -3,10 +3,10 @@ window.LiftCoGuestModel=(()=>{
  'use strict';
  const caches=new WeakMap();
  const styles=Object.freeze([
-  {id:'spruce',name:'Spruce',jacket:0x367c75,pants:0x263c45,headwear:'helmet',hat:0xe5e8df,band:0x34464e,cut:'trim'},
+  {id:'spruce',name:'Spruce',jacket:0x367c75,pants:0x263c45,headwear:'helmet',hat:0xc3842b,band:0x34464e,cut:'trim'},
   {id:'ember',name:'Ember',jacket:0xc66b45,pants:0x29313e,headwear:'pom',hat:0x384f62,band:0xe4ca9a,cut:'roomy'},
   {id:'alpine',name:'Alpine',jacket:0x739db3,pants:0x24364b,headwear:'helmet',hat:0x253d50,band:0xd0d8d9,cut:'regular'},
-  {id:'berry',name:'Berry',jacket:0x805271,pants:0xc2c4b6,headwear:'beanie',hat:0xe7dbbe,band:0x8f566f,cut:'trim'}
+  {id:'berry',name:'Berry',jacket:0x805271,pants:0xc2c4b6,headwear:'beanie',hat:0x56344d,band:0xc78565,cut:'trim'}
  ].map(Object.freeze));
  function appearanceKey(ticket){let n=(ticket>>>0)^0x9e3779b9;n=Math.imul(n^(n>>>16),0x85ebca6b);n=Math.imul(n^(n>>>13),0xc2b2ae35);return(n^(n>>>16))>>>0;}
  function library(T){

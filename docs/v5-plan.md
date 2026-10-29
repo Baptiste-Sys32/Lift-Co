@@ -97,3 +97,9 @@ Initial direction, not accepted: snow-laden, irregular alpine firs; friendly pad
 - Focused isolated checks cover all four looks across standing, walking, skiing and seated animation: driven transforms and boot geometry match the prior base. Each style passes five tested hat/goggle head-turn clearances. A 120-guest sample produces all four outfits, three cached coat geometries, four headwear geometries and four face palettes; every rig retains 31 meshes and nine materials. Appearance remains stable after ticket changes and reapplication. Seat/pole geometry checks still pass.
 - Visible ski triangle counts: Spruce/Alpine 3,236; Ember 3,172; Berry 3,092, versus the prior 3,172. Helmets add 64 triangles, the plain beanie removes 80; no extra meshes/materials or new textures. No measured FPS claim. Inspected offline standing/skiing/seated outfit sheet; actual WebGL/device acceptance remains pending because browser inventory is empty.
 - Modified JS/Python syntax, source regeneration, local HTTP resource availability, lineup framing bounds and diff checks pass. Game entrypoint changes only the guest-model cache query. No repository test suite added or run. Commit/push this outfit work separately; VPS untouched.
+
+
+### Headwear contrast correction
+
+- User rejected pale hats against snow. Changed Spruce's ivory helmet to ochre and Berry's cream beanie to deep burgundy with copper trim in src/resort/guest-model.js. Other outfits, geometry, fit and animation remain unchanged.
+- Updated model cache queries and regenerated the offline before/after/outfit images. Syntax and targeted color-only source checks pass; no repository test suite added or run. Commit/push this palette correction; VPS untouched.
