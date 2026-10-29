@@ -18,8 +18,8 @@ window.LiftCoSkiMotion=(()=>{
   for(const [z,w,y]of rows)for(const top of [-1,1])for(const side of [-1,1])positions.push(side*w,y+top*.025,z);
   for(let i=0;i<rows.length-1;i++){const a=i*4,b=a+4;indices.push(a+2,b+2,a+3,a+3,b+2,b+3,a,a+1,b,a+1,b+1,b,a,b,a+2,a+2,b,b+2,a+1,a+3,b+1,a+3,b+3,b+1);}indices.push(0,2,1,1,2,3);const end=(rows.length-1)*4;indices.push(end,end+1,end+2,end+1,end+3,end+2);
   const skiGeometry=new T.BufferGeometry();skiGeometry.setAttribute('position',new T.Float32BufferAttribute(positions,3));skiGeometry.setIndex(indices);skiGeometry.computeVertexNormals();const oldGeometry=s.skis.children[0]?.geometry;for(const ski of s.skis.children)ski.geometry=skiGeometry;oldGeometry?.dispose();
-  const poleMaterial=new T.MeshStandardMaterial({color:0x626b69,roughness:.55,metalness:.35}),poleGeometry=new T.CylinderGeometry(.013,.009,.86,5),poles=[];
-  for(const {elbow}of s.arms){const pole=new T.Mesh(poleGeometry,poleMaterial);pole.position.set(0,-.73,-.04);pole.rotation.x=.16;elbow.add(pole);pole.visible=false;poles.push(pole);}
+  const poleMaterial=new T.MeshStandardMaterial({color:0x626b69,roughness:.55,metalness:.35}),poleGeometry=new T.CylinderGeometry(.013,.009,.86,5).translate(0,-.43,0),poles=[];
+  for(const {elbow,side}of s.arms){const pole=new T.Mesh(poleGeometry,poleMaterial);pole.position.set(0,-.3,0);pole.rotation.set(.16,0,side*.12);elbow.add(pole);pole.visible=false;poles.push(pole);}
   s.skiRig={original,detail,parts,poles,axis,delta};standing(s);
  }
  function bone(rig,mesh,a,b){rig.delta.subVectors(b,a);mesh.position.copy(a).add(b).multiplyScalar(.5);mesh.scale.set(1,rig.delta.length(),1);mesh.quaternion.setFromUnitVectors(rig.axis,rig.delta.normalize());}
@@ -74,7 +74,7 @@ window.LiftCoSkiMotion=(()=>{
    s.upperBody.position.set(-lean*.17,hipY,-crouch*.09);s.upperBody.rotation.set(.12+crouch*.25+pulse*.12,lean*.20,lean*.60);s.head.rotation.set(-pulse*.04,-lean*.28,0);
    for(let i=0;i<s.arms.length;i++){
     const {arm,elbow,side}=s.arms[i],inside=Math.sign(lean)===side,plant=Math.max(0,Math.abs(lean)-.10)*(inside?1:-.4),relax=Math.sin(s.t*1.4+side)*.04;
-    arm.rotation.set(mix(-.28+crouch*.10+plant*.55+relax,-.24+stroke*.48,skating),-side*brake*.1*(1-skating),-side*(.17+crouch*.05+brake*.08));elbow.rotation.x=-.35-crouch*.24-pulse*.18;rig.poles[i].visible=near;rig.poles[i].rotation.x=mix(.16+plant*.25,.16-stroke*.23,skating);
+    arm.rotation.set(mix(-.28+crouch*.10+plant*.55+relax,-.24+stroke*.48,skating),-side*brake*.1*(1-skating),side*(.17+crouch*.05+brake*.08));elbow.rotation.x=-.35-crouch*.24-pulse*.18;rig.poles[i].visible=near;rig.poles[i].rotation.x=mix(.16+plant*.25,.16-stroke*.23,skating);rig.poles[i].rotation.z=side*.16-lean*.60;
    }
   }
   function clear(s){standing(s);s.skiMotion=null;s.skiPose=null;s.actualSpeed=0;s.lateralOffset=0;}

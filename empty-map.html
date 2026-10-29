@@ -113,10 +113,10 @@
 <script src="./src/resort/shuttle.js?v=village-polish-2"></script>
 <script src="./src/resort/village-tools.js?v=4.2.3"></script>
 <script src="./src/resort/operations.js?v=4.3.0"></script>
-<script src="./src/resort/guest-model.js?v=5.0.3"></script>
+<script src="./src/resort/guest-model.js?v=5.0.4"></script>
 <script src="./src/resort/guest-boots.js?v=4.3.7"></script>
-<script src="./src/resort/ski-motion.js?v=4.3.7"></script>
-<script src="./src/resort/guest-animation.js?v=4.3.8"></script>
+<script src="./src/resort/ski-motion.js?v=5.0.4"></script>
+<script src="./src/resort/guest-animation.js?v=5.0.4"></script>
 <script src="./src/resort/guest-walking.js?v=4.3.4"></script>
 <script src="./src/resort/guest-network.js?v=4.3.8"></script>
 <script src="./src/resort/resort-tools.js?v=4.3.2"></script>
@@ -1403,6 +1403,7 @@ function joinQueue(s){s.ticket=nextTicket++;s.state='queue';s.t=0;}
 function updateSkierEquipment(s){
   const currentLift=lifts[s.liftIndex],chairlift=!!currentLift?.LIFT.isChair,pushing=s.state==='skiPush',seated=chairlift||s.seatedCabin,takingOff=s.state==='takeOff',puttingOn=s.state==='putOn';
   const sitting=seated?(s.state==='ride'?1:s.state==='board'?smoothstep(0,.65,s.t):s.state==='unload'?1-smoothstep(0,.85,s.t):0):0;
+  s.seatPoseAmount=sitting;s.seatedLegs.position.y=(s.seatVisualLift||0)*sitting;
   s.seatedLegs.visible=sitting>.05;s.legs.visible=sitting<.5;
   let carried=['queue','load','board','ride','unload','exitWalk','apres','transfer','networkWalk','networkExit','networkIdle','playerWalk'].includes(s.state)?1:0;
   if(takingOff)carried=smoothstep(.22,.85,s.t/1.15);
@@ -1412,8 +1413,8 @@ function updateSkierEquipment(s){
   s.skis.visible=chairlift||currentLift?.LIFT.funitel||s.state!=='ride'&&!(s.state==='board'&&s.t>=.32)&&!(s.state==='unload'&&s.t<.3);
   // The same pair moves from the boots into the right hand, held together upright.
   s.skis.position.set(.53*carried,.08+1.07*carried,.16*carried);
-  s.skis.rotation.set(-Math.PI/2*carried,0,-.1*carried);if(sitting>0){s.skis.position.y=THREE.MathUtils.lerp(.08,.17,sitting);s.skis.position.z=THREE.MathUtils.lerp(0,.58,sitting);}
-  s.skis.children.forEach((ski,i)=>ski.position.set((i?1:-1)*THREE.MathUtils.lerp(.16,.045,carried),0,0));
+  s.skis.rotation.set(-Math.PI/2*carried,0,-.1*carried);if(sitting>0){s.skis.position.y=THREE.MathUtils.lerp(.08,.08+(s.seatVisualLift||0),sitting);s.skis.position.z=THREE.MathUtils.lerp(0,.58,sitting);}
+  s.skis.children.forEach((ski,i)=>ski.position.set((i?1:-1)*THREE.MathUtils.lerp(THREE.MathUtils.lerp(.16,.12,sitting),.045,carried),0,0));
   s.upperBody.rotation.x=pushing?.12:(takingOff||puttingOn) ? .48*Math.sin(Math.PI*Math.min(1,s.t/1.15)) : 0;
   for(const {arm,elbow,side} of s.arms){
     const hold=side>0&&s.skis.visible?carried:0;

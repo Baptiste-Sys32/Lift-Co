@@ -27,7 +27,7 @@ def render(data,eye,size=(360,570)):
 views=[('stand','Stand / front',(0,1.25,5.2)),('stand','Stand / back',(0,1.25,-5.2)),('walk','Walk / side',(5.2,1.25,0)),('ski','Ski / three-quarter',(3.7,1.65,4.1)),('seat','Sit / three-quarter',(3.7,1.65,4.1))]
 canvas=Image.new('RGB',(1800,1260),'#24343c');draw=ImageDraw.Draw(canvas)
 for row,name in enumerate(['before','after']):
- draw.text((12,row*630+12),'BEFORE'if name=='before'else'FITTED HAT AND TROUSER CUFFS',fill='white')
+ draw.text((12,row*630+12),'BEFORE'if name=='before'else'CURRENT CLOTHING AND POSE',fill='white')
  for col,(mode,label,eye)in enumerate(views):
   image=render(data['models'][name][mode],eye);canvas.paste(image,(col*360,row*630+35));draw.text((col*360+12,row*630+607),label,fill='white')
 path=root/'designs/data/skier-comparison.png';canvas.save(path);print(path.relative_to(root))

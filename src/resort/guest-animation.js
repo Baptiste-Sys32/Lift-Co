@@ -12,7 +12,7 @@ window.LiftCoGuestAnimation=(()=>{
    const distance=Math.hypot(p.x-m.x,p.z-m.z);m.x=p.x;m.z=p.z;m.clock+=dt;
    if(s.skiPose&&(s.state==='ski'||s.state==='skiPush')){m.amount=0;return;}
    // Boarding interpolation, suspended seats and bus seats keep their existing poses.
-   if(['board','ride','unload','busBoard','busRide','busUnload','networkAway'].includes(s.state)||s.retired||s.away||!s.g.visible){m.amount=0;rig.detail.visible=false;rig.original.visible=true;for(const pole of rig.poles)pole.visible=false;s.upperBody.position.set(0,.95,0);s.upperBody.rotation.set(0,0,0);s.head.rotation.set(0,0,0);return;}
+   if(['board','ride','unload','busBoard','busRide','busUnload','networkAway'].includes(s.state)||s.retired||s.away||!s.g.visible){m.amount=0;rig.detail.visible=false;rig.original.visible=true;for(const pole of rig.poles)pole.visible=false;s.upperBody.position.set(0,.95+(s.seatVisualLift||0)*(s.seatPoseAmount||0),0);s.upperBody.rotation.set(0,0,0);s.head.rotation.set(0,0,0);return;}
    const moving=s.walking&&distance>.00001&&distance<Math.max(3,dt*6),carried=s.equipmentCarried??1,shuffle=carried<.3,stride=(shuffle?.34:.64)*(1+u*.12)*(s.playerSprinting?1.4:1),speed=moving?distance/dt:0;
    if(moving)m.phase+=distance/stride*Math.PI; // one footfall per stride, independent of frame rate
    m.amount=mix(m.amount,moving?clamp(speed/2.4,.2,1):0,1-Math.exp(-12*dt));
@@ -45,8 +45,8 @@ window.LiftCoGuestAnimation=(()=>{
    s.head.rotation.set(0,Math.sin(m.clock*.43+u*5)*.13*(1-amount),0);
    for(let i=0;i<s.arms.length;i++){
     const {arm,elbow,side}=s.arms[i],hold=side>0&&s.skis.visible?carried:0,phase=m.phase+(side>0?Math.PI:0);
-    arm.rotation.set(Math.cos(phase)*.34*amount*(1-hold)-hold*.08,0,-side*.1+hold*.45);elbow.rotation.x=-.23-hold*.87-Math.max(0,-Math.cos(phase))*.16*amount*(1-hold);
-    rig.poles[i].visible=near&&!shuffle&&hold<.5;rig.poles[i].rotation.x=.12+Math.cos(phase)*.12*amount;
+    arm.rotation.set(Math.cos(phase)*.34*amount*(1-hold)-hold*.08,0,side*.1*(1-hold)+hold*.35);elbow.rotation.x=-.23-hold*.87-Math.max(0,-Math.cos(phase))*.16*amount*(1-hold);
+    rig.poles[i].visible=near&&!shuffle&&hold<.5;rig.poles[i].rotation.x=.12+Math.cos(phase)*.12*amount;rig.poles[i].rotation.z=side*.16-s.upperBody.rotation.z;
    }
   }
   return{update};

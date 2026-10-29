@@ -91,6 +91,7 @@ window.LiftCoGuestModel=(()=>{
   const data={jacket,heads,hat,sleeve,forearm,mittens,thigh,shin,leg,thighDetail,shinDetail,knee,boot};caches.set(T,data);return data;
  }
  function dress(T,s,{helmet}){
+  s.seatVisualLift=.15;
   const a=library(T),replace=(mesh,geometry)=>{mesh.geometry.dispose();mesh.geometry=geometry;};
   replace(s.torso,a.jacket);s.torso.material.vertexColors=true;s.torso.material.needsUpdate=true;
   replace(s.head,a.heads[(s.ticket>>>0)%a.heads.length]);s.head.material.color.set(0xffffff);s.head.material.vertexColors=true;s.head.material.needsUpdate=true;
