@@ -31,3 +31,11 @@ for row,name in enumerate(['before','after']):
  for col,(mode,label,eye)in enumerate(views):
   image=render(data['models'][name][mode],eye);canvas.paste(image,(col*360,row*630+35));draw.text((col*360+12,row*630+607),label,fill='white')
 path=root/'designs/data/skier-comparison.png';canvas.save(path);print(path.relative_to(root))
+
+looks=[('spruce','Spruce / helmet'),('ember','Ember / pom beanie'),('alpine','Alpine / helmet'),('berry','Berry / plain beanie')]
+canvas=Image.new('RGB',(1440,1890),'#24343c');draw=ImageDraw.Draw(canvas)
+for row,(mode,label,eye)in enumerate([('stand','STANDING',(1.2,1.4,5.1)),('ski','SKIING',(3.7,1.65,4.1)),('seat','SEATED',(3.7,1.65,4.1))]):
+ draw.text((12,row*630+12),label,fill='white')
+ for col,(key,name)in enumerate(looks):
+  canvas.paste(render(data['models'][key][mode],eye),(col*360,row*630+35));draw.text((col*360+12,row*630+607),name,fill='white')
+path=root/'designs/data/skier-outfits.png';canvas.save(path);print(path.relative_to(root))

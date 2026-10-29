@@ -12,8 +12,9 @@ try{
  for(const file of ['src/resort/guest-boots.js','src/resort/ski-motion.js','src/resort/guest-animation.js','designs/data/skier-before-model.js','src/resort/guest-model.js','designs/data/skier-rig.js','designs/data/skier-poses.js'])vm.runInThisContext(fs.readFileSync(path.join(root,file),'utf8'),{filename:file});
  const camera=new T.PerspectiveCamera();camera.position.set(0,1.3,5.7);
  const result={note:'Offline geometry study only; not a WebGL/game screenshot',models:{}};
- for(const [name,dress]of [['before',window.LiftCoGuestModelBefore.dress],['after',window.LiftCoGuestModel.dress]]){
-  const s=window.LiftCoSkierStudyRig.create(T,{dress}),poses=window.LiftCoSkierStudyPose.create(T,s,camera),out={};
+ const styles=window.LiftCoGuestModel.styles;
+ for(const [name,dress,style]of [['before',window.LiftCoGuestModelBefore.dress],['after',window.LiftCoGuestModel.dress,styles[0].id],...styles.map(s=>[s.id,window.LiftCoGuestModel.dress,s.id])]){
+  const s=window.LiftCoSkierStudyRig.create(T,{dress,style}),poses=window.LiftCoSkierStudyPose.create(T,s,camera),out={};
   for(const mode of ['stand','walk','ski','seat']){
    poses.set(mode);for(let i=0;i<40;i++)poses.update(1/60);s.g.updateMatrixWorld(true);
    const positions=[],normal=[],colors=[],index=[];let meshes=0;

@@ -49,6 +49,15 @@ window.LiftCoGuestModelBefore=(()=>{
    const nose=new T.SphereGeometry(.031,7,5);nose.scale(.8,1,1);nose.translate(0,-.066,.239);
    return merge([[face,skin],[nose,skin],[strap,0x283641],[goggles(),0x28313a],[goggles(true),0xd9a65b]]);
   });
+  // Cut the front of the knit brim above the frame, while keeping coverage at the ears/back.
+  function fitBrim(g,band=false){
+   const p=g.attributes.position;
+   for(let i=0;i<p.count;i++){
+    const y=p.getY(i),front=T.MathUtils.smoothstep(p.getZ(i),0,.12),fade=band?1:1-T.MathUtils.smoothstep(y,.025,.242);
+    p.setY(i,y+.135*front*fade);p.setZ(i,p.getZ(i)*(1-.16*front*fade));
+   }
+   g.computeVertexNormals();return g;
+  }
   const hats=new Map();
   function hat(color){
    const key=color.getHex();if(hats.has(key))return hats.get(key);
@@ -57,7 +66,7 @@ window.LiftCoGuestModelBefore=(()=>{
    dome.scale(1,1,.96);
    const band=lathe([[-.042,.252],[-.035,.284],[-.005,.29],[.025,.284],[.033,.264]]);band.scale(1,1,.96);
    const pom=new T.SphereGeometry(.065,8,6);pom.translate(0,.28,-.007);
-   const g=merge([[dome,dye],[band,0xf1d193],[pom,dye]]);hats.set(key,g);return g;
+   const g=merge([[fitBrim(dome),dye],[fitBrim(band,true),0xf1d193],[pom,dye]]);hats.set(key,g);return g;
   }
   const sleeve=new T.CapsuleGeometry(.115,.18,3,7),forearm=new T.CapsuleGeometry(.099,.17,3,7);
   const mittens=[-1,1].map(side=>{
@@ -66,15 +75,30 @@ window.LiftCoGuestModelBefore=(()=>{
    return merge([[palm,0xffffff],[thumb,0xffffff]]);
   });
   const thigh=new T.CylinderGeometry(.105,.095,.54,8);thigh.rotateX(Math.PI/2);
-  const shin=new T.CylinderGeometry(.092,.077,.56,8);
-  const leg=new T.CylinderGeometry(.115,.10,.70,5),thighDetail=new T.CylinderGeometry(.115,.10,1,6),shinDetail=new T.CylinderGeometry(.10,.077,1,6),knee=new T.SphereGeometry(.10,7,5);
-  const data={jacket,heads,hat,sleeve,forearm,mittens,thigh,shin,leg,thighDetail,shinDetail,knee};caches.set(T,data);return data;
+  // The seated visible shin slopes into the boot shaft, rather than ending behind it.
+  const shin=new T.CylinderGeometry(.092,.095,.55,8);shin.translate(0,.005,0);
+  for(let i=0;i<shin.attributes.position.count;i++){const y=shin.attributes.position.getY(i);shin.attributes.position.setZ(i,shin.attributes.position.getZ(i)+(.28-y)/.55*.04);}
+  shin.computeVertexNormals();
+  const leg=new T.CylinderGeometry(.115,.10,.70,5),thighDetail=new T.CylinderGeometry(.115,.10,1,6),shinDetail=new T.CylinderGeometry(.10,.095,.86,6).translate(0,.07,0),knee=new T.SphereGeometry(.10,7,5);
+  // Tuck only the upper boot shaft under the trouser cuff. Sole, toe and contact vertices stay fixed.
+  const boot=window.LiftCoGuestBoots.geometry(T),bp=boot.attributes.position;
+  for(let i=0;i<bp.count;i++){
+   const amount=T.MathUtils.smoothstep(bp.getY(i),.052,.10),z=bp.getZ(i);
+   bp.setX(i,bp.getX(i)*(1-.16*amount));bp.setZ(i,z*(1-(z>0?.61:.20)*amount));
+   if(bp.getY(i)>.052)bp.setY(i,.052+(bp.getY(i)-.052)*.5);
+  }
+  boot.computeVertexNormals();boot.computeBoundingBox();boot.computeBoundingSphere();
+  const data={jacket,heads,hat,sleeve,forearm,mittens,thigh,shin,leg,thighDetail,shinDetail,knee,boot};caches.set(T,data);return data;
  }
  function dress(T,s,{helmet}){
+  s.seatVisualLift=.15;
   const a=library(T),replace=(mesh,geometry)=>{mesh.geometry.dispose();mesh.geometry=geometry;};
   replace(s.torso,a.jacket);s.torso.material.vertexColors=true;s.torso.material.needsUpdate=true;
   replace(s.head,a.heads[(s.ticket>>>0)%a.heads.length]);s.head.material.color.set(0xffffff);s.head.material.vertexColors=true;s.head.material.needsUpdate=true;
   replace(helmet,a.hat(s.torso.material.color));helmet.material.color.set(0xffffff);helmet.material.vertexColors=true;helmet.material.roughness=.88;helmet.material.needsUpdate=true;
+  // Headwear is a cosmetic child of the driven head, so it cannot cut through turning goggles.
+  if(helmet.parent!==s.head){helmet.position.sub(s.head.position);s.head.add(helmet);}
+  const originalBoot=s.bootGeometry;s.g.traverse(mesh=>{if(mesh.geometry===originalBoot)mesh.geometry=a.boot;});s.bootGeometry=a.boot;originalBoot.dispose();
   for(const {arm,elbow,side}of s.arms){
    replace(arm.children[0],a.sleeve);replace(elbow.children[0],a.forearm);replace(elbow.children[1],a.mittens[side>0?1:0]);
   }

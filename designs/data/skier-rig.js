@@ -1,5 +1,5 @@
 /* Generated from makeSkier in empty-map.html. Study only, no resort or save access. */
-window.LiftCoSkierStudyRig={create(THREE,{dress=window.LiftCoGuestModel.dress,color=0x437b79}={}){
+window.LiftCoSkierStudyRig={create(THREE,{dress=window.LiftCoGuestModel.dress,color=0x437b79,style}={}){
 const scene=new THREE.Scene(),lifts=[],skiers=[],JACKETS=[color];let nextTicket=0;
 function makeSkier() {
   const g = new THREE.Group();
@@ -46,7 +46,7 @@ function makeSkier() {
   seatedLegs.visible=false;g.add(seatedLegs);
   scene.add(g);
   const skier={ g, legs, seatedLegs, bootGeometry, bootMaterial, torso, head, skis, upperBody, arms, state: 'arrive', t: Math.random() * 10, qi: -1, chair: -1, seat: -1, u: 0, x: 0, z: 0, speed: 6 + Math.random() * 2.5, wob: Math.random() * 10, liftIndex: lifts.length?skiers.length % lifts.length:0, ticket: nextTicket++, route: null, distance: 0 };
-  window.LiftCoSkiMotion.attachRig(THREE,skier);dress(THREE,skier,{helmet:helm});return skier;
+  window.LiftCoSkiMotion.attachRig(THREE,skier);dress(THREE,skier,{helmet:helm,style});return skier;
 }
 
 const s=makeSkier();s.skiSeed=5100;return s;

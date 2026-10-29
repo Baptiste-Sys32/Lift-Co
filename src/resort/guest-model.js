@@ -2,6 +2,13 @@
 window.LiftCoGuestModel=(()=>{
  'use strict';
  const caches=new WeakMap();
+ const styles=Object.freeze([
+  {id:'spruce',name:'Spruce',jacket:0x367c75,pants:0x263c45,headwear:'helmet',hat:0xe5e8df,band:0x34464e,cut:'trim'},
+  {id:'ember',name:'Ember',jacket:0xc66b45,pants:0x29313e,headwear:'pom',hat:0x384f62,band:0xe4ca9a,cut:'roomy'},
+  {id:'alpine',name:'Alpine',jacket:0x739db3,pants:0x24364b,headwear:'helmet',hat:0x253d50,band:0xd0d8d9,cut:'regular'},
+  {id:'berry',name:'Berry',jacket:0x805271,pants:0xc2c4b6,headwear:'beanie',hat:0xe7dbbe,band:0x8f566f,cut:'trim'}
+ ].map(Object.freeze));
+ function appearanceKey(ticket){let n=(ticket>>>0)^0x9e3779b9;n=Math.imul(n^(n>>>16),0x85ebca6b);n=Math.imul(n^(n>>>13),0xc2b2ae35);return(n^(n>>>16))>>>0;}
  function library(T){
   if(caches.has(T))return caches.get(T);
   function merge(parts){
@@ -58,15 +65,33 @@ window.LiftCoGuestModel=(()=>{
    }
    g.computeVertexNormals();return g;
   }
+  const coats=new Map([['regular',jacket]]);
+  function coatCut(cut){
+   if(coats.has(cut))return coats.get(cut);
+   const g=jacket.clone(),p=g.attributes.position,n=g.attributes.normal,[width,depth]=cut==='roomy'?[1.035,1.03]:[.965,.985];
+   for(let i=0;i<p.count;i++){
+    const x=p.getX(i),y=p.getY(i),z=p.getZ(i),t=T.MathUtils.clamp((y-.28)/.09,0,1),w=1-t*t*(3-2*t),dw=-6*t*(1-t)/.09;
+    const sx=1+(width-1)*w,sz=1+(depth-1)*w,nx=n.getX(i)/sx,nz=n.getZ(i)/sz,ny=n.getY(i)-x*(width-1)*dw*nx-z*(depth-1)*dw*nz,len=Math.hypot(nx,ny,nz);
+    p.setXYZ(i,x*sx,y,z*sz);n.setXYZ(i,nx/len,ny/len,nz/len);
+   }
+   g.computeBoundingBox();g.computeBoundingSphere();coats.set(cut,g);return g;
+  }
   const hats=new Map();
-  function hat(color){
-   const key=color.getHex();if(hats.has(key))return hats.get(key);
-   const dye=color.clone().multiplyScalar(.78);
+  function hat(style){
+   const key=[style.headwear,style.hat,style.band].join(':');if(hats.has(key))return hats.get(key);
+   const dye=new T.Color(style.hat),bandColor=new T.Color(style.band);
+   if(style.headwear==='helmet'){
+    const shell=lathe([[-.032,.255],[-.005,.278],[.07,.273],[.15,.230],[.215,.135],[.242,.03],[.244,0]],12);shell.scale(1,1,.96);
+    const edge=lathe([[-.04,.252],[-.032,.274],[-.012,.281],[.001,.271]],12);edge.scale(1,1,.96);
+    const pads=[-1,1].map(side=>{const g=new T.SphereGeometry(.056,8,5);g.scale(.50,1.3,1.15);g.translate(side*.245,-.076,-.045);return g;});
+    const g=merge([[fitBrim(shell),dye],[fitBrim(edge,true),bandColor],[pads[0],0x34414b],[pads[1],0x34414b]]);hats.set(key,g);return g;
+   }
    const dome=lathe([[-.015,.267],[.015,.278],[.09,.268],[.17,.235],[.22,.16],[.24,.065],[.242,0]]);
    dome.scale(1,1,.96);
    const band=lathe([[-.042,.252],[-.035,.284],[-.005,.29],[.025,.284],[.033,.264]]);band.scale(1,1,.96);
    const pom=new T.SphereGeometry(.065,8,6);pom.translate(0,.28,-.007);
-   const g=merge([[fitBrim(dome),dye],[fitBrim(band,true),0xf1d193],[pom,dye]]);hats.set(key,g);return g;
+   const parts=[[fitBrim(dome),dye],[fitBrim(band,true),bandColor]];if(style.headwear==='pom')parts.push([pom,dye]);else pom.dispose();
+   const g=merge(parts);hats.set(key,g);return g;
   }
   const sleeve=new T.CapsuleGeometry(.115,.18,3,7),forearm=new T.CapsuleGeometry(.099,.17,3,7);
   const mittens=[-1,1].map(side=>{
@@ -88,23 +113,25 @@ window.LiftCoGuestModel=(()=>{
    if(bp.getY(i)>.052)bp.setY(i,.052+(bp.getY(i)-.052)*.5);
   }
   boot.computeVertexNormals();boot.computeBoundingBox();boot.computeBoundingSphere();
-  const data={jacket,heads,hat,sleeve,forearm,mittens,thigh,shin,leg,thighDetail,shinDetail,knee,boot};caches.set(T,data);return data;
+  const data={jacket,coatCut,heads,hat,sleeve,forearm,mittens,thigh,shin,leg,thighDetail,shinDetail,knee,boot};caches.set(T,data);return data;
  }
- function dress(T,s,{helmet}){
+ function dress(T,s,{helmet,style}){
   s.seatVisualLift=.15;
-  const a=library(T),replace=(mesh,geometry)=>{mesh.geometry.dispose();mesh.geometry=geometry;};
-  replace(s.torso,a.jacket);s.torso.material.vertexColors=true;s.torso.material.needsUpdate=true;
-  replace(s.head,a.heads[(s.ticket>>>0)%a.heads.length]);s.head.material.color.set(0xffffff);s.head.material.vertexColors=true;s.head.material.needsUpdate=true;
-  replace(helmet,a.hat(s.torso.material.color));helmet.material.color.set(0xffffff);helmet.material.vertexColors=true;helmet.material.roughness=.88;helmet.material.needsUpdate=true;
+  const key=(s.appearanceKey??=appearanceKey(s.ticket)),look=styles.find(look=>look.id===(style||s.outfitStyle))||styles[key%styles.length];s.outfitStyle=look.id;
+  const a=library(T),replace=(mesh,geometry)=>{if(mesh.geometry!==geometry){mesh.geometry.dispose();mesh.geometry=geometry;}};
+  replace(s.torso,a.coatCut(look.cut));s.torso.material.color.set(look.jacket);s.torso.material.vertexColors=true;s.torso.material.needsUpdate=true;
+  replace(s.head,a.heads[(key>>>8)%a.heads.length]);s.head.material.color.set(0xffffff);s.head.material.vertexColors=true;s.head.material.needsUpdate=true;
+  replace(helmet,a.hat(look));helmet.material.color.set(0xffffff);helmet.material.vertexColors=true;helmet.material.roughness=look.headwear==='helmet'?.54:.88;helmet.material.needsUpdate=true;
   // Headwear is a cosmetic child of the driven head, so it cannot cut through turning goggles.
   if(helmet.parent!==s.head){helmet.position.sub(s.head.position);s.head.add(helmet);}
-  const originalBoot=s.bootGeometry;s.g.traverse(mesh=>{if(mesh.geometry===originalBoot)mesh.geometry=a.boot;});s.bootGeometry=a.boot;originalBoot.dispose();
+  const originalBoot=s.bootGeometry;s.g.traverse(mesh=>{if(mesh.geometry===originalBoot)mesh.geometry=a.boot;});s.bootGeometry=a.boot;if(originalBoot!==a.boot)originalBoot.dispose();
   for(const {arm,elbow,side}of s.arms){
-   replace(arm.children[0],a.sleeve);replace(elbow.children[0],a.forearm);replace(elbow.children[1],a.mittens[side>0?1:0]);
+   arm.children[0].material.color.set(look.jacket);replace(arm.children[0],a.sleeve);replace(elbow.children[0],a.forearm);replace(elbow.children[1],a.mittens[side>0?1:0]);
   }
+  s.skiRig.parts[0].thigh.material.color.set(look.pants);
   for(const part of s.skiRig.parts){replace(part.thigh,a.thighDetail);replace(part.shin,a.shinDetail);replace(part.kneecap,a.knee);}
   for(let i=0;i<s.skiRig.original.children.length;i+=2)replace(s.skiRig.original.children[i],a.leg);
   for(let i=0;i<s.seatedLegs.children.length;i+=3){replace(s.seatedLegs.children[i],a.thigh);replace(s.seatedLegs.children[i+1],a.shin);}
  }
- return{dress};
+ return{dress,styles};
 })();

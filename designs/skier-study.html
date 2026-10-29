@@ -6,23 +6,24 @@
 <script type="importmap">{"imports":{"three":"../assets/vendor/three/three.module.js"}}</script>
 </head>
 <body>
-<header><div><span class="eyebrow">V5 / SKIER STUDY 01</span><h1>A skier with winter clothes.</h1></div><a href="../empty-map.html">Back to the resort</a></header>
+<header><div><span class="eyebrow">V5 / SKIER OUTFITS</span><h1>Four skier outfits.</h1></div><a href="../empty-map.html">Back to the resort</a></header>
 <main>
 <section class="viewer" aria-label="Skier model comparison">
  <div class="toolbar"><div role="group" aria-label="Model"><button data-model="before" aria-pressed="false">Before</button><button data-model="after" aria-pressed="true">New skier</button></div><div role="group" aria-label="Pose"><button data-pose="stand" aria-pressed="true">Stand</button><button data-pose="walk" aria-pressed="false">Walk</button><button data-pose="ski" aria-pressed="false">Ski</button><button data-pose="seat" aria-pressed="false">Sit</button></div></div>
  <div class="toolbar secondary"><div role="group" aria-label="Viewpoint"><button data-view="front" aria-pressed="true">Front</button><button data-view="side" aria-pressed="false">Side</button><button data-view="back" aria-pressed="false">Back</button><button data-view="three" aria-pressed="false">Three-quarter</button><button data-view="face" aria-pressed="false">Face</button><button data-view="boots" aria-pressed="false">Boots</button></div><label><input id="animateSkier" type="checkbox" checked> Animate</label></div>
+ <div class="toolbar outfit-options" role="group" aria-label="Outfit"><button id="showOutfits" aria-pressed="false">All four</button><div id="outfitChoices"></div></div>
  <div id="firCanvas"></div>
  <div class="caption"><strong id="skierLabel">New skier</strong><span>Drag to orbit. Scroll to zoom.</span></div>
  <pre id="studyError" role="alert" hidden></pre>
 </section>
-<section class="notes"><p>Pose revision: the thighs rest on the seat, and the poles pivot at the hands and stay outside the skis. Before compares earlier clothing; both models use the current walking and skiing animation.</p><p>The poses use the game's walking and ski animation code. This study does not open or change a resort save. Browser performance and live lift clearance still need review.</p><details><summary>Show the geometry contact sheet</summary><p>Offline software rendering of the actual rig and mesh data, not an in-game screenshot.</p><img src="./data/skier-comparison.png" alt="Before and revised skier geometry shown standing, walking, skiing and sitting from several viewpoints"></details></section>
+<section class="notes"><p>Four coordinated outfits, one shared rig. Compare helmets and beanies in every pose, or show the full lineup.</p><p>The poses use the game's walking and ski animation code. This study does not open or change a resort save. Browser performance and live lift clearance still need review.</p><details><summary>Outfit contact sheet</summary><p>Offline software rendering of the same mesh data, not an in-game screenshot.</p><img src="./data/skier-outfits.png" alt="Four skier outfits shown standing, skiing and sitting"></details><details><summary>Before and after contact sheet</summary><p>Offline software rendering of the actual rig and mesh data, not an in-game screenshot.</p><img src="./data/skier-comparison.png" alt="Before and revised skier geometry shown standing, walking, skiing and sitting from several viewpoints"></details></section>
 </main>
 <script src="../src/resort/guest-boots.js?v=4.3.7"></script>
 <script src="../src/resort/ski-motion.js?v=5.0.4"></script>
 <script src="../src/resort/guest-animation.js?v=5.0.4"></script>
-<script src="./data/skier-before-model.js?v=5.0.3"></script>
-<script src="../src/resort/guest-model.js?v=5.0.4"></script>
-<script src="./data/skier-rig.js?v=5.0.2"></script>
+<script src="./data/skier-before-model.js?v=5.0.5"></script>
+<script src="../src/resort/guest-model.js?v=5.0.5"></script>
+<script src="./data/skier-rig.js?v=5.0.5"></script>
 <script src="./data/skier-poses.js?v=5.0.4"></script>
 <script type="module">
 import * as T from 'three';
@@ -33,21 +34,38 @@ window.addEventListener('error',e=>fail(e.error||e.message));window.addEventList
 try{
  const scene=new T.Scene();scene.background=new T.Color(0xe2eaf0);
  const camera=new T.PerspectiveCamera(34,1,.05,60),host=document.getElementById('firCanvas'),renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;host.append(renderer.domElement);
- const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.15,0);controls.minDistance=.8;controls.maxDistance=11;controls.maxPolarAngle=Math.PI*.51;controls.enableDamping=true;
+ const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,1.15,0);controls.minDistance=.8;controls.maxDistance=40;controls.maxPolarAngle=Math.PI*.51;controls.enableDamping=true;
  scene.add(new T.HemisphereLight(0xebf3ff,0x76847b,2));const sun=new T.DirectionalLight(0xfff1dd,2.3);sun.position.set(-4,6,5);scene.add(sun);
  const floor=new T.Mesh(new T.PlaneGeometry(60,60),new T.MeshStandardMaterial({color:0xe4eaed,roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.04;scene.add(floor);
- const models={before:window.LiftCoSkierStudyRig.create(T,{dress:window.LiftCoGuestModelBefore.dress}),after:window.LiftCoSkierStudyRig.create(T)};
- const poses={};for(const [name,s]of Object.entries(models)){scene.add(s.g);poses[name]=window.LiftCoSkierStudyPose.create(T,s,camera);}models.before.g.visible=false;
+ const styles=window.LiftCoGuestModel.styles,before=window.LiftCoSkierStudyRig.create(T,{dress:window.LiftCoGuestModelBefore.dress});
+ const variants=Object.fromEntries(styles.map(style=>[style.id,window.LiftCoSkierStudyRig.create(T,{style:style.id})])),models={before,...variants},poses={};
+ let selected=styles[0].id,mode='after',lineup=false,currentPose='stand';
+ for(const [name,s]of Object.entries(models)){scene.add(s.g);poses[name]=window.LiftCoSkierStudyPose.create(T,s,camera);}
  const chair=new T.Group(),seatM=new T.MeshStandardMaterial({color:0x667986,roughness:.85}),legM=new T.MeshStandardMaterial({color:0x485d66,metalness:.35,roughness:.7});
  function box(w,h,d,x,y,z,m){const o=new T.Mesh(new T.BoxGeometry(w,h,d),m);o.position.set(x,y,z);chair.add(o);}
  box(.78,.09,.60,0,.91,.18,seatM);box(.78,.63,.09,0,1.25,-.14,seatM);for(const x of [-.3,.3])for(const z of [-.05,.40])box(.045,.87,.045,x,.435,z,legM);scene.add(chair);chair.visible=false;
+ const chairs=[chair,...Array.from({length:3},()=>{const c=chair.clone();scene.add(c);return c;})];
  const views={front:[0,1.3,5.7],side:[5.7,1.3,0],back:[0,1.3,-5.7],three:[3.6,1.7,4.4],face:[0,2,1.35],boots:[.9,.4,.95]};
- function view(name){camera.position.set(...views[name]);controls.target.set(0,name==='face'?1.95:name==='boots'?.20:1.15,name==='boots'?.10:0);controls.update();for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===name));}
+ function sync(){
+  before.g.visible=mode==='before'&&!lineup;
+  styles.forEach((style,i)=>{const s=variants[style.id];s.g.visible=mode==='after'&&(lineup||style.id===selected);const x=lineup?(i-1.5)*1.8:0;if(s.g.position.x!==x){s.g.position.x=x;s.bodyMotion=null;}});
+  chairs.forEach((c,i)=>{c.visible=currentPose==='seat'&&(lineup||i===0);c.position.x=lineup?(i-1.5)*1.8:0;});
+  for(const b of document.querySelectorAll('[data-model]'))b.setAttribute('aria-pressed',String(b.dataset.model===mode));
+  for(const b of document.querySelectorAll('[data-outfit]'))b.setAttribute('aria-pressed',String(!lineup&&mode==='after'&&b.dataset.outfit===selected));
+  document.getElementById('showOutfits').setAttribute('aria-pressed',String(lineup));
+  const style=styles.find(s=>s.id===selected);document.getElementById('skierLabel').textContent=lineup?'Four coordinated outfits':mode==='before'?'Before':style.name+' / '+(style.headwear==='helmet'?'helmet':'beanie');
+ }
+ function view(name){lineup=false;sync();camera.position.set(...views[name]);controls.target.set(0,name==='face'?1.95:name==='boots'?.20:1.15,name==='boots'?.10:0);controls.update();for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===name));}
+ for(const style of styles){
+  const b=document.createElement('button');b.textContent=style.name;b.dataset.outfit=style.id;b.style.setProperty('--swatch','#'+style.jacket.toString(16).padStart(6,'0'));b.setAttribute('aria-pressed',String(style.id===selected));b.addEventListener('click',()=>{selected=style.id;mode='after';if(lineup)view('front');else{lineup=false;sync();}});document.getElementById('outfitChoices').append(b);
+ }
+ function fitLineup(){const distance=Math.max(7.5,3.6/(Math.tan(T.MathUtils.degToRad(camera.fov)/2)*camera.aspect));camera.position.set(0,1.65,distance);controls.target.set(0,1.15,0);controls.update();}
+ document.getElementById('showOutfits').addEventListener('click',()=>{if(lineup){view('front');return;}lineup=true;mode='after';sync();fitLineup();for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed','false');});
  for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>view(b.dataset.view));
- for(const b of document.querySelectorAll('[data-model]'))b.addEventListener('click',()=>{for(const [name,s]of Object.entries(models))s.g.visible=name===b.dataset.model;for(const button of document.querySelectorAll('[data-model]'))button.setAttribute('aria-pressed',String(button===b));document.getElementById('skierLabel').textContent=b.dataset.model==='after'?'New skier':'Before';});
- for(const b of document.querySelectorAll('[data-pose]'))b.addEventListener('click',()=>{for(const p of Object.values(poses))p.set(b.dataset.pose);chair.visible=b.dataset.pose==='seat';for(const button of document.querySelectorAll('[data-pose]'))button.setAttribute('aria-pressed',String(button===b));});
- new ResizeObserver(()=>{const r=host.getBoundingClientRect();camera.aspect=r.width/r.height;camera.updateProjectionMatrix();renderer.setSize(r.width,r.height);}).observe(host);
- const clock=new T.Clock();view('front');renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05);if(document.getElementById('animateSkier').checked)for(const p of Object.values(poses))p.update(dt);controls.update();renderer.render(scene,camera);});
+ for(const b of document.querySelectorAll('[data-model]'))b.addEventListener('click',()=>{mode=b.dataset.model;if(lineup)view('front');else sync();});
+ for(const b of document.querySelectorAll('[data-pose]'))b.addEventListener('click',()=>{currentPose=b.dataset.pose;for(const p of Object.values(poses))p.set(currentPose);sync();for(const button of document.querySelectorAll('[data-pose]'))button.setAttribute('aria-pressed',String(button===b));});
+ new ResizeObserver(()=>{const r=host.getBoundingClientRect();camera.aspect=r.width/r.height;camera.updateProjectionMatrix();renderer.setSize(r.width,r.height);if(lineup)fitLineup();}).observe(host);
+ const clock=new T.Clock();view('front');renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05);if(document.getElementById('animateSkier').checked)for(const [key,p]of Object.entries(poses))if(models[key].g.visible)p.update(dt);controls.update();renderer.render(scene,camera);});
 }catch(e){fail(e);}
 </script>
 </body></html>
